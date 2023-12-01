@@ -1,6 +1,8 @@
 package com.techelevator.model;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Campaign {
 
@@ -12,9 +14,10 @@ public class Campaign {
     private LocalDateTime endDate;
     private boolean locked;
     private boolean isPublic;
+    private List<Donation> donations = new ArrayList<>();
+    private List<User> managers = new ArrayList<>();
 
     public Campaign(){
-
     }
 
     public Campaign(int id, String name, String description, int fundingGoal, LocalDateTime startDate, LocalDateTime endDate, boolean locked, boolean isPublic) {
@@ -90,5 +93,21 @@ public class Campaign {
 
     public void setPublic(boolean aPublic) {
         isPublic = aPublic;
+    }
+
+    public List<Donation> getDonations() {
+        return donations;
+    }
+
+    public void setDonations(List<Donation> donations) {
+        this.donations = donations;
+    }
+
+    public List<User> getManagers() {
+        return managers;
+    }
+
+    public void setManagers(List<User> managers) {
+        this.managers = managers;
     }
 }

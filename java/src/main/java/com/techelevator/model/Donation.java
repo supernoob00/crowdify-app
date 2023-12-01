@@ -1,11 +1,12 @@
 package com.techelevator.model;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 
 public class Donation {
     private int donationId;
-    private int donorId;
+    private User donor;
     private int campaignId;
     private int amount;
     private LocalDateTime date;
@@ -15,9 +16,9 @@ public class Donation {
     public Donation() {
     }
 
-    public Donation(int donationId, int donorId, int campaignId, int amount, LocalDateTime date, String comment, String status) {
+    public Donation(int donationId, User donor, int campaignId, int amount, LocalDateTime date, String comment, String status) {
         this.donationId = donationId;
-        this.donorId = donorId;
+        this.donor = donor;
         this.campaignId = campaignId;
         this.amount = amount;
         this.date = date;
@@ -31,14 +32,6 @@ public class Donation {
 
     public void setDonationId(int donationId) {
         this.donationId = donationId;
-    }
-
-    public int getDonorId() {
-        return donorId;
-    }
-
-    public void setDonorId(int donorId) {
-        this.donorId = donorId;
     }
 
     public int getCampaignId() {
@@ -79,5 +72,26 @@ public class Donation {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public User getDonor() {
+        return donor;
+    }
+
+    public void setDonor(User donor) {
+        this.donor = donor;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Donation donation = (Donation) o;
+        return donationId == donation.donationId && campaignId == donation.campaignId && amount == donation.amount && Objects.equals(donor, donation.donor) && Objects.equals(date, donation.date) && Objects.equals(comment, donation.comment) && Objects.equals(status, donation.status);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(donationId, donor, campaignId, amount, date, comment, status);
     }
 }

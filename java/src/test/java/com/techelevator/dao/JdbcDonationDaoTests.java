@@ -10,7 +10,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
 
-public class JdbcUserDaoTests extends BaseDaoTests {
+public class JdbcDonationDaoTests extends BaseDaoTests {
     private JdbcUserDao sut;
     @Before
     public void setup() {
