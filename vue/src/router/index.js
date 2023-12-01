@@ -47,7 +47,11 @@ const routes = [
     meta: {
       requiresAuth: false
     }
-  }
+  },
+  // if forbidden, create this view
+  // {
+  //   component: Forbbiden
+  // }
 ];
 
 // Create the router
