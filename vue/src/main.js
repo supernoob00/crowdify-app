@@ -14,7 +14,15 @@ axios.defaults.baseURL = import.meta.env.VITE_REMOTE_API;
  * so that it will be attached to each request.
  */
 let currentToken = localStorage.getItem('token');
-let currentUser = JSON.parse(localStorage.getItem('user'));
+let currentUser = {};
+
+try {
+  currentUser = localStorage.getItem('user');
+} catch {
+  localStorage.removeItem('token');
+  localStorage.removeItem('user');
+  currentToken = '';
+}
 
 if (currentToken) {
   // Set token axios requests
