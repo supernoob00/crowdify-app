@@ -1,6 +1,6 @@
 BEGIN TRANSACTION;
 
-DROP TABLE IF EXISTS users, campaign, campaign_manager, donation, spend_request, votes CASCADE;
+DROP TABLE IF EXISTS users, campaign, campaign_manager, donation, spend_request, vote CASCADE;
 
 CREATE TABLE users (
 	user_id SERIAL,
@@ -44,7 +44,7 @@ CREATE TABLE donation (
     donor_id integer,
     campaign_id integer NOT NULL,
     donation_amount integer NOT NULL, --TODO: add constraint max amount 500,000
-    donation_date integer NOT NULL, --TODO: add constraint between campaign start/end dates
+    donation_date timestamp NOT NULL, --TODO: add constraint between campaign start/end dates
     donation_comment varchar(200),
     donation_status varchar(20), --TODO: pending, approved, rejected statuses?
 

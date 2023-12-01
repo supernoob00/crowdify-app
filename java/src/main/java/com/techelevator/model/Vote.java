@@ -1,5 +1,7 @@
 package com.techelevator.model;
 
+import java.util.Objects;
+
 public class Vote {
     private int userId;
     private int requestId;
@@ -37,4 +39,18 @@ public class Vote {
     public void setApproved(boolean approved) {
         this.approved = approved;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Vote vote = (Vote) o;
+        return userId == vote.userId && requestId == vote.requestId && approved == vote.approved;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(userId, requestId, approved);
+    }
 }
+
