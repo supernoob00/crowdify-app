@@ -17,7 +17,7 @@ let currentToken = localStorage.getItem('token');
 let currentUser = {};
 
 try {
-  currentUser = localStorage.getItem('user');
+  currentUser = JSON.parse(localStorage.getItem('user'));
 } catch {
   localStorage.removeItem('token');
   localStorage.removeItem('user');
