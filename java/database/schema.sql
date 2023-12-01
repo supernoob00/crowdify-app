@@ -15,13 +15,18 @@ CREATE TABLE campaign (
     campaign_id SERIAL,
     campaign_name varchar(50) NOT NULL UNIQUE,
     description varchar(500) NOT NULL,
-    funding_goal integer NOT NULL, --TODO: constraint, >0
-    start_date date NOT NULL,
-    end_date date NOT NULL, --TODO: constraint, start date < end date
+    funding_goal integer NOT NULL,
+    start_date timestamp NOT NULL,
+    end_date timestamp NOT NULL,
     locked boolean DEFAULT false NOT NULL, --TODO: what default?
     public boolean DEFAULT false NOT NULL,
 
-    CONSTRAINT pk_campaign PRIMARY KEY (campaign_id)
+    CONSTRAINT pk_campaign PRIMARY KEY (campaign_id),
+    CONSTRAINT valid_funding_goal CHECK (funding_goal >= 100),
+    --TODO: maybe modify this constraint
+    --end date must be at least 24 hours after start date
+    CONSTRAINT valid_dates_end_after_start
+        CHECK (EXTRACT (EPOCH FROM end_date) - EXTRACT (EPOCH FROM start_date) >= 86400)
 );
 
 CREATE TABLE campaign_manager (
