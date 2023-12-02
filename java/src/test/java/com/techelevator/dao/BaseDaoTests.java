@@ -19,21 +19,21 @@ public abstract class BaseDaoTests {
     protected static final User USER_1 = new User(1, "user1", "user1", "ROLE_USER");
     protected static final User USER_2 = new User(2, "user2", "user2", "ROLE_USER");
     protected static final User USER_3 = new User(3, "user3", "user3", "ROLE_USER");
-    protected static final Campaign CAMPAIGN_1 = new Campaign(1, "Fancy New Tech", "We are making some cool new stuff using technology",
-            1000000, LocalDateTime.of(2024, 1, 1, 0, 0),
-            LocalDateTime.of(2024, 1, 21, 0, 0), false, false);
-    protected static final Campaign CAMPAIGN_2 = new Campaign(1, "Fancy New Robot", "We are making some cool new stuff using a cool robot",
-            2000000, LocalDateTime.of(2024, 1, 2, 0, 0),
-            LocalDateTime.of(2024, 1, 22, 0, 0), false, true);
-    protected static final Campaign CAMPAIGN_3 = new Campaign(1, "Fancy New Computer", "We are making some cool new stuff using a quantum computer",
-            3000000, LocalDateTime.of(2024, 1, 3, 0, 0),
-            LocalDateTime.of(2024, 1, 23, 0, 0), true, false);
     protected static final Donation DONATION_1 = new Donation(1, USER_1, 1, 1000,
             LocalDateTime.of(2024, 1, 11, 0, 0), "Nice stuff with Tech!", null);
     protected static final Donation DONATION_2 = new Donation(2, USER_2, 2, 2000,
             LocalDateTime.of(2024, 1, 12, 0, 0), "Go Robots!", null);
     protected static final Donation DONATION_3 = new Donation(3, USER_3, 3, 3000,
             LocalDateTime.of(2024, 1, 13, 0, 0), "What the frick does Quantum mean??", null);
+    protected static final Campaign CAMPAIGN_1 = new Campaign(1, "Fancy New Tech", "We are making some cool new stuff using technology",
+            1000000, LocalDateTime.of(2024, 1, 1, 0, 0),
+            LocalDateTime.of(2024, 1, 21, 0, 0), false, false);
+    protected static final Campaign CAMPAIGN_2 = new Campaign(2, "Fancy New Robot", "We are making some cool new stuff using a cool robot",
+            2000000, LocalDateTime.of(2024, 1, 2, 0, 0),
+            LocalDateTime.of(2024, 1, 22, 0, 0), false, true);
+    protected static final Campaign CAMPAIGN_3 = new Campaign(3, "Fancy New Computer", "We are making some cool new stuff using a quantum computer",
+            3000000, LocalDateTime.of(2024, 1, 3, 0, 0),
+            LocalDateTime.of(2024, 1, 23, 0, 0), true, false);
     @Autowired
     protected DataSource dataSource;
 

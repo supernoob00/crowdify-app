@@ -34,6 +34,14 @@ public class JdbcCampaignDao {
         return campaignList;
     }
 
+    public Campaign getCampaignById(int id) {
+        return null;
+    }
+
+    public Campaign createCampaign(Campaign newCampaign) {
+        return null;
+    }
+
     private Campaign mapRowtoCampaign(SqlRowSet rowSet) {
         Campaign campaign = new Campaign();
         campaign.setId(rowSet.getInt("campaign_id"));
