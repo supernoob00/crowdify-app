@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@CrossOrigin
 public class CampaignController {
     private UserDao userDao;
 
@@ -20,15 +21,21 @@ public class CampaignController {
         return null;
     }
 
+    @ResponseStatus(HttpStatus.OK)
+    @RequestMapping(path = "/campaigns/{id}", method = RequestMethod.GET)
+    public Campaign getCampaign (@PathVariable int id) {
+        return null;
+    }
+
     @ResponseStatus(HttpStatus.CREATED)
-    @RequestMapping(path = "/campaigns/{id}", method = RequestMethod.POST)
-    public Campaign campaign () {
+    @RequestMapping(path = "/campaigns", method = RequestMethod.POST)
+    public Campaign addCampaign () {
         return null;
     }
 
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(path = "/campaigns/{id}", method = RequestMethod.DELETE)
-    public void deleteCampaign (@PathVariable int campaignId) {
+    public void deleteCampaign (@PathVariable int id) {
         //call DAO delete method here.
     }
 }
