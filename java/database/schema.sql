@@ -1,7 +1,12 @@
-CREATE FUNCTION check_campaign_single_creator() RETURNS trigger AS $check_single_creator$
-    BEGIN
-        invalid_counts integer;
+DROP FUNCTION IF EXISTS check_campaign_single_creator;
+DROP FUNCTION IF EXISTS donation_date_between_start_end_dates;
+DROP FUNCTION IF EXISTS spend_request_approved_only_with_majority_vote;
+DROP FUNCTION IF EXISTS only_non_manager_donors_vote_spend_request;
 
+CREATE FUNCTION check_campaign_single_creator() RETURNS trigger AS $check_single_creator$
+	DECLARE
+		invalid_counts integer;
+    BEGIN
         --check if any campaign has more or less than one creator
         SELECT COUNT (campaign_id)
         FROM
@@ -18,8 +23,15 @@ $check_single_creator$ LANGUAGE plpgsql;
 
 --TODO: needs to be tested
 CREATE FUNCTION donation_date_between_start_end_dates() RETURNS trigger AS $check_donation_date$
+	DECLARE
+		start_end_dates record;
     BEGIN
-        IF NOT NEW.donation_date BETWEEN (SELECT (start_date, end_date) FROM campaign WHERE campaign.campaign_id = NEW.campaign_id)
+		SELECT (start_date, end_date)
+		FROM campaign
+		INTO start_end_dates
+		WHERE (campaign.campaign_id = NEW.campaign_id);
+
+        IF (NOT (NEW.donation_date > start_end_dates.start_date AND NEW.donation_date < start_end_dates.end_date)) THEN
             RAISE EXCEPTION 'Donation date must be between start and end dates of campaign.';
         END IF;
         RETURN NEW;
@@ -28,10 +40,10 @@ $check_donation_date$ LANGUAGE plpgsql;
 
 --TODO: needs to be tested
 CREATE FUNCTION spend_request_approved_only_with_majority_vote() RETURNS trigger AS $check_request_approved$
-    BEGIN
-        approve_votes integer;
+	DECLARE
+		approve_votes integer;
         total_votes integer;
-
+    BEGIN
         SELECT COUNT (donor_id)
         INTO approve_votes
         FROM vote
@@ -42,7 +54,7 @@ CREATE FUNCTION spend_request_approved_only_with_majority_vote() RETURNS trigger
         FROM vote
         WHERE vote.request_id = NEW.request_id;
 
-        IF NEW.approved AND (2 * approve_votes <= total_votes)
+        IF NEW.approved AND (2 * approve_votes <= total_votes) THEN
             RAISE EXCEPTION 'A spend request cannot be approved if there''s not a majority vote';
         END IF;
         RETURN NEW;
@@ -50,10 +62,10 @@ CREATE FUNCTION spend_request_approved_only_with_majority_vote() RETURNS trigger
 $check_request_approved$ LANGUAGE plpgsql;
 
 CREATE FUNCTION only_non_manager_donors_vote_spend_request() RETURNS trigger AS $check_voters$
-    BEGIN
-        manager_voter_count integer;
+	DECLARE
+		manager_voter_count integer;
         non_donor_voter_count integer;
-
+    BEGIN
         --count of voters for spend request who are a manager of the associated campaign
         SELECT COUNT (DISTINCT donor_id)
         FROM vote
@@ -63,7 +75,7 @@ CREATE FUNCTION only_non_manager_donors_vote_spend_request() RETURNS trigger AS 
         ON (vote.donor_id = campaign_manager.manager_id)
         AND (spend_request.campaign_id = campaign_manager.campaign_id);
 
-        IF manager_voter_count > 0
+        IF manager_voter_count > 0 THEN
             RAISE EXCEPTION 'A manager cannot vote for a spend request of their own campaign.';
         END IF;
 
@@ -77,7 +89,7 @@ CREATE FUNCTION only_non_manager_donors_vote_spend_request() RETURNS trigger AS 
         AND (spend_request.campaign_id = donation.campaign_id)
         WHERE (donation.donation_id IS null);
 
-        IF non_donor_voter_count > 0
+        IF non_donor_voter_count > 0 THEN
             RAISE EXCEPTION 'Only donors to a campaign can vote for that campaign''s spend requests.';
         END IF;
         RETURN NEW;
@@ -88,10 +100,10 @@ CREATE TRIGGER check_campaign_single_creator BEFORE INSERT OR UPDATE OR DELETE O
     EXECUTE PROCEDURE check_campaign_single_creator();
 
 CREATE TRIGGER donation_date_between_start_end_dates BEFORE INSERT OR UPDATE ON donation
-    FOR EACH ROW EXECUTE PROCEDURE donation_date_between_start_end_dates();
+    EXECUTE PROCEDURE donation_date_between_start_end_dates();
 
 CREATE TRIGGER spend_request_approved_only_with_majority_vote BEFORE INSERT OR UPDATE on spend_request
-    FOR EACH ROW EXECUTE PROCEDURE spend_request_approved_only_with_majority_vote();
+    EXECUTE PROCEDURE spend_request_approved_only_with_majority_vote();
 
 CREATE TRIGGER only_non_manager_donors_vote_spend_request BEFORE INSERT OR UPDATE on vote
     EXECUTE PROCEDURE only_non_manager_donors_vote_spend_request();
