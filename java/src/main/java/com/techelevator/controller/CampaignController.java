@@ -1,5 +1,6 @@
 package com.techelevator.controller;
 
+import com.techelevator.dao.JdbcCampaignDao;
 import com.techelevator.dao.UserDao;
 import com.techelevator.model.Campaign;
 import org.springframework.http.HttpStatus;
@@ -8,11 +9,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@CrossOrigin
 public class CampaignController {
-    private UserDao userDao;
+    private JdbcCampaignDao jdbcCampaignDao;
 
-    public CampaignController(UserDao userDao) {
-        this.userDao = userDao;
+    public CampaignController(JdbcCampaignDao jdbcCampaignDao) {
+        this.jdbcCampaignDao = jdbcCampaignDao;
     }
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(path = "/campaigns", method = RequestMethod.GET)
@@ -20,15 +22,22 @@ public class CampaignController {
         return null;
     }
 
+    @ResponseStatus(HttpStatus.OK)
+    @RequestMapping(path = "/campaigns/{id}", method = RequestMethod.GET)
+    public Campaign getCampaign (@PathVariable int id) {
+        return null;
+    }
+
     @ResponseStatus(HttpStatus.CREATED)
-    @RequestMapping(path = "/campaigns/{id}", method = RequestMethod.POST)
-    public Campaign campaign () {
+    @RequestMapping(path = "/campaigns", method = RequestMethod.POST)
+    public Campaign addCampaign () {
         return null;
     }
 
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(path = "/campaigns/{id}", method = RequestMethod.DELETE)
-    public void deleteCampaign (@PathVariable int campaignId) {
-        //call DAO delete method here.
+    public void deleteCampaign (@PathVariable int id) {
+
+        //TODO call DAO delete method here.
     }
 }

@@ -1,6 +1,7 @@
 package com.techelevator.dao;
 
 import com.techelevator.exception.DaoException;
+import com.techelevator.model.Campaign;
 import com.techelevator.model.RegisterUserDto;
 import com.techelevator.model.User;
 import org.junit.Assert;
@@ -11,93 +12,51 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import java.util.List;
 
 public class JdbcCampaignDaoTests extends BaseDaoTests {
-    private JdbcUserDao sut;
+    private JdbcCampaignDao sut;
+
     @Before
     public void setup() {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-        sut = new JdbcUserDao(jdbcTemplate);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void getUserByUsername_given_null_throws_exception() {
-        sut.getUserByUsername(null);
+        sut = new JdbcCampaignDao(jdbcTemplate);
     }
 
     @Test
-    public void getUserByUsername_given_invalid_username_returns_null() {
-        Assert.assertNull(sut.getUserByUsername("invalid"));
+    public void getCampaignById_given_invalid_id_returns_null() {
+        Campaign invalidCampaign = sut.getCampaignById(-1);
+        Assert.assertNull(invalidCampaign);
     }
 
     @Test
-    public void getUserByUsername_given_valid_user_returns_user() {
-        User actualUser = sut.getUserByUsername(USER_1.getUsername());
-
-        Assert.assertEquals(USER_1, actualUser);
+    public void getCampaignById_given_valid_id_returns_campaign() {
+        Assert.assertEquals(CAMPAIGN_1, sut.getCampaignById(1));
+        Assert.assertEquals(CAMPAIGN_2, sut.getCampaignById(2));
+        Assert.assertEquals(CAMPAIGN_3, sut.getCampaignById(3));
     }
 
     @Test
-    public void getUserById_given_invalid_user_id_returns_null() {
-        User actualUser = sut.getUserById(-1);
+    public void getCampaigns_returns_all_campaigns() {
+        List<Campaign> campaigns = sut.getCampaignList();
 
-        Assert.assertNull(actualUser);
-    }
-
-    @Test
-    public void getUserById_given_valid_user_id_returns_user() {
-        User actualUser = sut.getUserById(USER_1.getId());
-
-        Assert.assertEquals(USER_1, actualUser);
-    }
-
-    @Test
-    public void getUsers_returns_all_users() {
-        List<User> users = sut.getUsers();
-
-        Assert.assertNotNull(users);
-        Assert.assertEquals(3, users.size());
-        Assert.assertEquals(USER_1, users.get(0));
-        Assert.assertEquals(USER_2, users.get(1));
-        Assert.assertEquals(USER_3, users.get(2));
+        Assert.assertNotNull(campaigns);
+        Assert.assertEquals(3, campaigns.size());
+        Assert.assertEquals(CAMPAIGN_1, campaigns.get(0));
+        Assert.assertEquals(CAMPAIGN_2, campaigns.get(1));
+        Assert.assertEquals(CAMPAIGN_3, campaigns.get(2));
     }
 
     @Test(expected = DaoException.class)
-    public void createUser_with_null_username() {
-        RegisterUserDto registerUserDto = new RegisterUserDto();
-        registerUserDto.setUsername(null);
-        registerUserDto.setPassword(USER_3.getPassword());
-        registerUserDto.setRole("ROLE_USER");
-        sut.createUser(registerUserDto);
-    }
-
-    @Test(expected = DaoException.class)
-    public void createUser_with_existing_username() {
-        RegisterUserDto registerUserDto = new RegisterUserDto();
-        registerUserDto.setUsername(USER_1.getUsername());
-        registerUserDto.setPassword(USER_3.getPassword());
-        registerUserDto.setRole("ROLE_USER");
-        sut.createUser(registerUserDto);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void createUser_with_null_password() {
-        RegisterUserDto registerUserDto = new RegisterUserDto();
-        registerUserDto.setUsername(USER_3.getUsername());
-        registerUserDto.setPassword(null);
-        registerUserDto.setRole("ROLE_USER");
-        sut.createUser(registerUserDto);
+    public void createCampaign_with_null_name() {
+        Campaign newCampaign = new Campaign();
+        newCampaign.setName(null);
+        sut.createCampaign(newCampaign);
     }
 
     @Test
-    public void createUser_creates_a_user() {
-        RegisterUserDto user = new RegisterUserDto();
-        user.setUsername("new");
-        user.setPassword("user");
-        user.setRole("ROLE_USER");
-        User createdUser = sut.createUser(user);
-
-        Assert.assertNotNull(createdUser);
-
-        User retrievedUser = sut.getUserByUsername(createdUser.getUsername());
-        Assert.assertEquals(retrievedUser, createdUser);
+    public void createCampaign_creates_a_campaign() {
+        Campaign newCampaign = new Campaign();
+        Campaign createdCampaign = sut.createCampaign(newCampaign);
+        Assert.assertNotNull(createdCampaign);
+        Campaign retrievedCampaign = sut.getCampaignById(createdCampaign.getId());
+        Assert.assertEquals(retrievedCampaign, createdCampaign);
     }
 }

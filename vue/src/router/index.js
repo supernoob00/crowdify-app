@@ -6,6 +6,8 @@ import HomeView from '../views/HomeView.vue';
 import LoginView from '../views/LoginView.vue';
 import LogoutView from '../views/LogoutView.vue';
 import RegisterView from '../views/RegisterView.vue';
+import CampaignView from '../views/CampaignView.vue';
+import AddCampaignView from '../views/AddCampaignView.vue';
 
 /**
  * The Vue Router is used to "direct" the browser to render a specific view component
@@ -48,6 +50,22 @@ const routes = [
       requiresAuth: false
     }
   },
+  {
+    path: "/campaigns/:id",
+    name: "CampaignView",
+    component: CampaignView,
+    meta: {
+      requiresAuth: false
+    }
+  },
+  {
+    path: "/campaigns/create",
+    name: 'AddCampaignView',
+    component: AddCampaignView,
+    meta: {
+      requiresAuth: true
+    }
+  }
   // if forbidden, create this view
   // {
   //   component: Forbbiden
@@ -70,7 +88,7 @@ router.beforeEach((to) => {
 
   // If it does and they are not logged in, send the user to "/login"
   if (requiresAuth && store.state.token === '') {
-    return {name: "login"};
+    return { name: "login" };
   }
   // Otherwise, do nothing and they'll go to their next destination
 });
