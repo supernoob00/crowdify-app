@@ -30,6 +30,13 @@ export default {
             },
             amount: 50,
             comment: 'Gotta support the poop train!'
+          },
+          {
+            donor: {
+              name: 'Jimminy Billy Bob'
+            },
+            amount: 150,
+            comment: 'Not too sure about this but why not!'
           }
         ]
       },

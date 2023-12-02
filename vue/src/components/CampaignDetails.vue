@@ -1,9 +1,12 @@
 <template>
   <div class="content">
-    <h1>{{ campaign.name }}</h1>
-    <p>{{ campaign.description }}</p>
-    <h6>Funding Goal: {{ campaign.fundingGoal }}</h6>
-    <h6>Total Backing: {{ totalDonated }}</h6>
+    <h1 class="campaign-name">{{ campaign.name }}</h1>
+    <div class="campaign-description">
+      <p>{{ campaign.description }}</p>
+    </div>
+    <h6>Funding Goal: ${{ campaign.fundingGoal / 100 }}</h6>
+    <h6 class="total-backing">Total Backing: ${{ totalDonated / 100 }}</h6>
+    <h2>Donations</h2>
     <donation-display v-for="donation in campaign.donations" :key="donation.id" :donation="donation"></donation-display>
   </div>
 </template>
@@ -24,4 +27,15 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.campaign-description {
+  padding: 1em 0 0 0;
+  margin: 1em 0 1em 0;
+  border-top: 1px solid lightgrey;
+}
+
+.total-backing {
+  padding-bottom: 1em;
+  border-bottom: 1px solid lightgrey;
+}
+</style>

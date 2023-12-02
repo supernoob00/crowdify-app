@@ -1,36 +1,19 @@
 <template>
   <div id="capstone-app" class="container">
-    <div v-bind:class="notificationClass" v-show="notification" v-on:click="clearNotification">
-      {{ notification?.message }}
-    </div>
+    <notification-text></notification-text>
     <nav-bar></nav-bar>
-    <router-view />
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
 import NavBar from '@/components/NavBar.vue'
+import NotificationText from '@/components/NotificationText.vue';
 export default {
   components: {
-    NavBar
+    NavBar,
+    NotificationText
   },
-  computed: {
-    notification() {
-      return this.$store.state.notification;
-    },
-    notificationClass() {
-      return {
-        'status-message': true,
-        error: this.notification?.type?.toLowerCase() === 'error',
-        success: this.notification?.type?.toLowerCase() === 'success'
-      };
-    }
-  },
-  methods: {
-    clearNotification() {
-      this.$store.commit('CLEAR_NOTIFICATION');
-    },
-  }
 };
 </script>
 
@@ -41,23 +24,8 @@ export default {
   margin: 0 auto;
 }
 
-.status-message {
-  display: block;
-  border-radius: 5px;
-  font-weight: bold;
-  font-size: 1rem;
-  text-align: center;
-  padding: 10px;
-  margin-bottom: 10px;
-  cursor: pointer;
-}
-
-.status-message.success {
-  background-color: #90ee90;
-}
-
-.status-message.error {
-  background-color: #f08080;
+h1 {
+  margin-top: 0.5em;
 }
 
 nav {
