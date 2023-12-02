@@ -18,6 +18,14 @@ export default {
 </script>
 
 <style>
+:root {
+  --app-background: white;
+}
+
+body {
+  background-color: var(--app-background)
+}
+
 .container {
   width: 100%;
   max-width: 1100px;
