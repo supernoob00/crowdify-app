@@ -1,13 +1,20 @@
 <template>
   <div class="content">
-    <h1 class="campaign-name">{{ campaign.name }}</h1>
-    <div class="campaign-description">
-      <p>{{ campaign.description }}</p>
+    <h1 id="campaign-name">{{ campaign.name }}</h1>
+    <hr>
+    <div id="campaign-description" class="block">{{ campaign.description }}</div>
+    <div class="progress-container">
+      <div class="block" id="progress-meter-heading">
+        <h3 class="amount-raised">${{ totalDonated }}</h3>
+        <span class="goal-text"> raised of ${{ fundingGoal }} Goal</span>
+      </div>
+      <progress class="progress is-success is-small" :value="totalDonated" :max="fundingGoal"></progress>
+      <div class="num-donations">{{ numberOfDonations }} donations</div>
     </div>
-    <h6>Funding Goal: ${{ campaign.fundingGoal / 100 }}</h6>
-    <h6 class="total-backing">Total Backing: ${{ totalDonated / 100 }}</h6>
-    <h2>Donations</h2>
-    <donation-display v-for="donation in campaign.donations" :key="donation.id" :donation="donation"></donation-display>
+    <hr>
+    <h2 class="block">Donations</h2>
+    <donation-display v-for="donation in donationsSortedByAmount" :key="donation.id"
+      :donation="donation"></donation-display>
   </div>
 </template>
 
@@ -20,7 +27,17 @@ export default {
   props: ['campaign'],
   computed: {
     totalDonated() {
-      return this.campaign.donations.reduce((sum, currDonation) => sum += currDonation.amount, 0)
+      return this.campaign.donations.reduce((sum, currDonation) => sum += currDonation.amount, 0) / 100;
+    },
+    fundingGoal() {
+      return this.campaign.fundingGoal / 100;
+    },
+    numberOfDonations() {
+      return this.campaign.donations.length;
+    },
+    donationsSortedByAmount() {
+      const donationsCopy = [...this.campaign.donations]
+      return donationsCopy.sort((d1, d2) => d2.amount - d1.amount);
     }
   }
 
@@ -28,14 +45,28 @@ export default {
 </script>
 
 <style scoped>
-.campaign-description {
-  padding: 1em 0 0 0;
-  margin: 1em 0 1em 0;
-  border-top: 1px solid lightgrey;
+.content {
+  max-width: 75%;
 }
 
-.total-backing {
-  padding-bottom: 1em;
-  border-bottom: 1px solid lightgrey;
+hr {
+  margin: 1rem 0;
+}
+
+.progress-container {
+  max-width: 50%;
+}
+
+.progress-container .goal-text,
+.progress-container .num-donations {
+  color: grey;
+}
+
+.progress-container .amount-raised {
+  display: inline;
+}
+
+.progress-container progress {
+  margin-bottom: 0.5rem;
 }
 </style>

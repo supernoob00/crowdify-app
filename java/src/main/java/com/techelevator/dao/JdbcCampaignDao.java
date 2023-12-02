@@ -6,13 +6,14 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.CannotGetJdbcConnectionException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
+import org.springframework.stereotype.Component;
 
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class JdbcCampaignDao {
-
     private final JdbcTemplate jdbcTemplate;
     //private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss"); SCRAPPED THIS APPROACH?
 

@@ -1,7 +1,7 @@
 <template>
   <nav class="navbar" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
-      <div  class="navbar-item">
+      <div class="navbar-item">
         <img src="@/assets/icon1.png">
       </div>
     </div>
@@ -21,4 +21,8 @@
 </template>
 <script>
 </script>
-<style scoped></style>
+<style scoped>
+nav {
+  background-color: var(--app-background);
+}
+</style>
