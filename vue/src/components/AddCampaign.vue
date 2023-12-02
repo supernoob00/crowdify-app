@@ -55,7 +55,11 @@ import campaignService from '../services/CampaignService';
 export default {
   data() {
     return {
-      newCampaign: {}
+      newCampaign: {
+        name: '',
+        description: '',
+        public: false,
+      }
     }
   },
   methods: {
@@ -74,7 +78,6 @@ export default {
         campaignService.handleErrorResponse(this.$store, error, 'adding', 'campaign');
       }
     },
-
     validateAddForm() {
       let msg = '';
       if (this.newCampaign.name.length === 0) {
