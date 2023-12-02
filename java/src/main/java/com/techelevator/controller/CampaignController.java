@@ -1,5 +1,6 @@
 package com.techelevator.controller;
 
+import com.techelevator.dao.JdbcCampaignDao;
 import com.techelevator.dao.UserDao;
 import com.techelevator.model.Campaign;
 import org.springframework.http.HttpStatus;
@@ -10,10 +11,10 @@ import java.util.List;
 @RestController
 @CrossOrigin
 public class CampaignController {
-    private UserDao userDao;
+    private JdbcCampaignDao jdbcCampaignDao;
 
-    public CampaignController(UserDao userDao) {
-        this.userDao = userDao;
+    public CampaignController(JdbcCampaignDao jdbcCampaignDao) {
+        this.jdbcCampaignDao = jdbcCampaignDao;
     }
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(path = "/campaigns", method = RequestMethod.GET)
