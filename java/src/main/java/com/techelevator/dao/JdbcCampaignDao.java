@@ -10,7 +10,6 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.ToDoubleBiFunction;
 
 public class JdbcCampaignDao {
 
@@ -54,8 +53,8 @@ public class JdbcCampaignDao {
     public Campaign createCampaign(Campaign campaign) {
         Campaign newCampaign;
 
-        // do we also need to insert default values for the booleans? what happens if they're not met?
-        // maybe public/private doesn't need a default?
+        // TODO do we also need to insert default values for the booleans? what happens if they're not met?
+        //  maybe public/private doesn't need a default?
 
         String sql = "INSERT into campaign (campaign_name, description, funding_goal, start_date, end_date) " +
                 "values(?,?,?,?,?) returning campaign_id;";

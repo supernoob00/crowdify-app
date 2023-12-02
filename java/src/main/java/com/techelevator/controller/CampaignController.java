@@ -37,6 +37,7 @@ public class CampaignController {
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(path = "/campaigns/{id}", method = RequestMethod.DELETE)
     public void deleteCampaign (@PathVariable int id) {
-        //call DAO delete method here.
+
+        //TODO call DAO delete method here.
     }
 }
