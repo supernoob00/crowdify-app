@@ -1,23 +1,27 @@
 <template>
-  <div class="campaign">
+  <div class="content">
     <h1>{{ campaign.name }}</h1>
     <p>{{ campaign.description }}</p>
-    <p>{{ campaign.fundingGoal }}</p>
-    <div class="donation" v-for="donation in campaign.donations" :key="donation.id">
-      <p>{{ donation.user.name }}</p>
-      <p>{{ donation.comment }}</p>
-    </div>
+    <h6>Funding Goal: {{ campaign.fundingGoal }}</h6>
+    <h6>Total Backing: {{ totalDonated }}</h6>
+    <donation-display v-for="donation in campaign.donations" :key="donation.id" :donation="donation"></donation-display>
   </div>
 </template>
 
 <script>
+import DonationDisplay from './DonationDisplay.vue';
 export default {
-  props: ['campaign']
+  components: {
+    DonationDisplay
+  },
+  props: ['campaign'],
+  computed: {
+    totalDonated() {
+      return this.campaign.donations.reduce((sum, currDonation) => sum += currDonation.amount, 0)
+    }
+  }
+
 }
 </script>
 
-<style scoped>
-.campaign{
-  
-}
-</style>
+<style scoped></style>
