@@ -7,6 +7,7 @@ import LoginView from '../views/LoginView.vue';
 import LogoutView from '../views/LogoutView.vue';
 import RegisterView from '../views/RegisterView.vue';
 import CampaignView from '../views/CampaignView.vue';
+import AddCampaignView from '../views/AddCampaignView.vue';
 
 /**
  * The Vue Router is used to "direct" the browser to render a specific view component
@@ -55,6 +56,14 @@ const routes = [
     component: CampaignView,
     meta: {
       requiresAuth: false
+    }
+  },
+  {
+    path: "/campaigns/create",
+    name: 'AddCampaignView',
+    component: AddCampaignView,
+    meta: {
+      requiresAuth: true
     }
   }
   // if forbidden, create this view

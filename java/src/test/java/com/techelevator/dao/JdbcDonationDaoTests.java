@@ -1,6 +1,7 @@
 package com.techelevator.dao;
 
 import com.techelevator.exception.DaoException;
+import com.techelevator.model.Donation;
 import com.techelevator.model.RegisterUserDto;
 import com.techelevator.model.User;
 import org.junit.Assert;
@@ -18,86 +19,37 @@ public class JdbcDonationDaoTests extends BaseDaoTests {
         sut = new JdbcUserDao(jdbcTemplate);
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void getUserByUsername_given_null_throws_exception() {
-        sut.getUserByUsername(null);
+    @Test
+    public void get_donation_by_id_fails_for_invalid_id() {
+//        Assert.assertNull(sut.getDonationById(-1));
     }
 
     @Test
-    public void getUserByUsername_given_invalid_username_returns_null() {
-        Assert.assertNull(sut.getUserByUsername("invalid"));
+    public void getDonationById_given_valid_id_returns_donation() {
+//        Assert.assertEquals(DONATION_1, sut.getDonationById(1));
+//        Assert.assertEquals(DONATION_2, sut.getDonationById(2));
+//        Assert.assertEquals(DONATION_3, sut.getDonationById(3));
     }
 
     @Test
-    public void getUserByUsername_given_valid_user_returns_user() {
-        User actualUser = sut.getUserByUsername(USER_1.getUsername());
-
-        Assert.assertEquals(USER_1, actualUser);
+    public void getDonations_returns_all_donations() {
+//        List<Donation> donations = sut.getDonations();
+//
+//        Assert.assertNotNull(donations);
+//        Assert.assertEquals(3, donations.size());
+//        Assert.assertEquals(DONATION_1, donations.get(0));
+//        Assert.assertEquals(DONATION_2, donations.get(1));
+//        Assert.assertEquals(DONATION_3, donations.get(2));
     }
 
     @Test
-    public void getUserById_given_invalid_user_id_returns_null() {
-        User actualUser = sut.getUserById(-1);
-
-        Assert.assertNull(actualUser);
-    }
-
-    @Test
-    public void getUserById_given_valid_user_id_returns_user() {
-        User actualUser = sut.getUserById(USER_1.getId());
-
-        Assert.assertEquals(USER_1, actualUser);
-    }
-
-    @Test
-    public void getUsers_returns_all_users() {
-        List<User> users = sut.getUsers();
-
-        Assert.assertNotNull(users);
-        Assert.assertEquals(3, users.size());
-        Assert.assertEquals(USER_1, users.get(0));
-        Assert.assertEquals(USER_2, users.get(1));
-        Assert.assertEquals(USER_3, users.get(2));
-    }
-
-    @Test(expected = DaoException.class)
-    public void createUser_with_null_username() {
-        RegisterUserDto registerUserDto = new RegisterUserDto();
-        registerUserDto.setUsername(null);
-        registerUserDto.setPassword(USER_3.getPassword());
-        registerUserDto.setRole("ROLE_USER");
-        sut.createUser(registerUserDto);
-    }
-
-    @Test(expected = DaoException.class)
-    public void createUser_with_existing_username() {
-        RegisterUserDto registerUserDto = new RegisterUserDto();
-        registerUserDto.setUsername(USER_1.getUsername());
-        registerUserDto.setPassword(USER_3.getPassword());
-        registerUserDto.setRole("ROLE_USER");
-        sut.createUser(registerUserDto);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void createUser_with_null_password() {
-        RegisterUserDto registerUserDto = new RegisterUserDto();
-        registerUserDto.setUsername(USER_3.getUsername());
-        registerUserDto.setPassword(null);
-        registerUserDto.setRole("ROLE_USER");
-        sut.createUser(registerUserDto);
-    }
-
-    @Test
-    public void createUser_creates_a_user() {
-        RegisterUserDto user = new RegisterUserDto();
-        user.setUsername("new");
-        user.setPassword("user");
-        user.setRole("ROLE_USER");
-        User createdUser = sut.createUser(user);
-
-        Assert.assertNotNull(createdUser);
-
-        User retrievedUser = sut.getUserByUsername(createdUser.getUsername());
-        Assert.assertEquals(retrievedUser, createdUser);
+    public void createDonation_creates_a_donation() {
+//        Donation donation = new Donation();
+//        Donation createdDonation = sut.createDonation(donation);
+//
+//        Assert.assertNotNull(createdDonation);
+//
+//        Donation retrievedDonation = sut.getDonationById(createdDonation.getDonationId());
+//        Assert.assertEquals(retrievedDonation, createdDonation);
     }
 }

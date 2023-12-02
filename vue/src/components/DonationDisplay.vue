@@ -1,12 +1,11 @@
 <template>
-  <main>
-    <h2>Donations</h2>
+  <div>
     <div class="donation">
-      <h3>{{ donation.donor.name }}</h3>
-      <h4>Amount: {{ donation.amount }}</h4>
+      <h4 class="donor-name">{{ donation.donor.name }}</h4>
+      <p class="amount">${{ donation.amount / 100 }}</p>
       <p>{{ donation.comment }}</p>
     </div>
-  </main>
+  </div>
 </template>
 
 <script>
@@ -19,22 +18,17 @@ export default {
 .donation {
   border: 1px black solid;
   border-radius: 6px;
-  padding: 1rem;
   margin: 10px;
+  padding: 0.5em;
+  max-width: 400px;
 }
 
-.donation p {
-  margin: 20px;
+.donation .amount {
+  margin: 0;
+  color: grey;
 }
 
-.donation h4 {
-  font-size: 1em;
-}
-
-.rating {
-  height: 2rem;
-  display: inline-block;
-  vertical-align: top;
-  margin: 0 0.5rem;
+.donor-name {
+  margin-bottom: 5px;
 }
 </style>

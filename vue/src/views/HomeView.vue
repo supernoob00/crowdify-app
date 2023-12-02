@@ -7,8 +7,9 @@
     </div>
     <div v-else class="content">
       <h1>Campaigns</h1>
-      <p>You must be authenticated to see this</p>
       <campaign-list :campaigns="campaigns"></campaign-list>
+      <br>
+      <router-link :to="{ name: 'AddCampaignView' }" class="button is-link">Create new Campaign</router-link>
     </div>
   </div>
 </template>
@@ -44,9 +45,18 @@ export default {
   },
   async created() {
     this.isLoading = false;
-    //for testing purposes, commented out api call while backend not ready
+    // for testing purposes, commented out api call while backend not ready
     // await this.retrieveCampaigns();
   }
 }
 </script>
-<style scoped></style>
+<style scoped>
+.header {
+  display: flex;
+  align-items: center;
+}
+
+.header h1 {
+  margin-right: 10px;
+}
+</style>
