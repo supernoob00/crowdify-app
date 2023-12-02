@@ -5,12 +5,13 @@ ALTER SEQUENCE campaign_campaign_id_seq RESTART WITH 1;
 ALTER SEQUENCE donation_donation_id_seq RESTART WITH 1;
 ALTER SEQUENCE spend_request_request_id_seq RESTART WITH 1;
 
-INSERT INTO users (username,password_hash,role) VALUES ('user','$2a$08$UkVvwpULis18S19S5pZFn.YHPZt3oaqHZnDwqbCW9pft6uFtkXKDC','ROLE_USER');
-INSERT INTO users (username,password_hash,role) VALUES ('sam','$2a$08$UkVvwpULis18S19S5pZFn.YHPZt3oaqHZnDwqbCW9pft6uFtkXKDC','ROLE_USER');
-INSERT INTO users (username,password_hash,role) VALUES ('adi','$2a$08$UkVvwpULis18S19S5pZFn.YHPZt3oaqHZnDwqbCW9pft6uFtkXKDC','ROLE_USER');
-INSERT INTO users (username,password_hash,role) VALUES ('chad','$2a$08$UkVvwpULis18S19S5pZFn.YHPZt3oaqHZnDwqbCW9pft6uFtkXKDC','ROLE_USER');
-INSERT INTO users (username,password_hash,role) VALUES ('josh','$2a$08$UkVvwpULis18S19S5pZFn.YHPZt3oaqHZnDwqbCW9pft6uFtkXKDC','ROLE_USER');
-INSERT INTO users (username,password_hash,role) VALUES ('admin','$2a$08$UkVvwpULis18S19S5pZFn.YHPZt3oaqHZnDwqbCW9pft6uFtkXKDC','ROLE_ADMIN');
+--username: "password"
+INSERT INTO users (username,password_hash,role) VALUES ('user','$2a$10$3i4qTmbIul5.SPOo.5oFHOQnSPBcC5ryKiOyekvEYXSuy5HqsYkre','ROLE_USER');
+INSERT INTO users (username,password_hash,role) VALUES ('sam','$2a$10$3i4qTmbIul5.SPOo.5oFHOQnSPBcC5ryKiOyekvEYXSuy5HqsYkre','ROLE_USER');
+INSERT INTO users (username,password_hash,role) VALUES ('adi','$2a$10$3i4qTmbIul5.SPOo.5oFHOQnSPBcC5ryKiOyekvEYXSuy5HqsYkre','ROLE_USER');
+INSERT INTO users (username,password_hash,role) VALUES ('chad','$2a$10$3i4qTmbIul5.SPOo.5oFHOQnSPBcC5ryKiOyekvEYXSuy5HqsYkre','ROLE_USER');
+INSERT INTO users (username,password_hash,role) VALUES ('josh','$2a$10$3i4qTmbIul5.SPOo.5oFHOQnSPBcC5ryKiOyekvEYXSuy5HqsYkre','ROLE_USER');
+INSERT INTO users (username,password_hash,role) VALUES ('admin','$2a$10$3i4qTmbIul5.SPOo.5oFHOQnSPBcC5ryKiOyekvEYXSuy5HqsYkre','ROLE_ADMIN');
 
 INSERT INTO campaign
 (
