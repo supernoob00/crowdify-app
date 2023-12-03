@@ -4,14 +4,15 @@ import com.techelevator.model.RegisterUserDto;
 import com.techelevator.model.User;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserDao {
 
     List<User> getUsers();
 
-    User getUserById(int id);
+    Optional<User> getUserById(int id);
 
-    User getUserByUsername(String username);
+    Optional<User> getUserByUsername(String username);
 
     User createUser(RegisterUserDto user);
 }

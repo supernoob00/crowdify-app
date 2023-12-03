@@ -1,4 +1,4 @@
 package com.techelevator.dao;
 
-public class VoteDao {
+public class JdbcVoteDao {
 }

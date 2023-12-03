@@ -2,6 +2,7 @@ package com.techelevator.dao;
 
 import com.techelevator.exception.DaoException;
 import com.techelevator.model.Donation;
+import com.techelevator.model.User;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.CannotGetJdbcConnectionException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -96,9 +97,10 @@ public class JdbcDonationDao {
 
     public Donation mapRowToDonation(SqlRowSet results) {
         Donation donation = new Donation();
+        User donor = userDao.getUserById(results.getInt("donor_id")).orElseThrow();
 
         donation.setDonationId(results.getInt("donation_id"));
-        donation.setDonor(userDao.getUserById(results.getInt("donor_id")));
+        donation.setDonor(donor);
         donation.setCampaignId(results.getInt("campaign_id"));
         donation.setAmount(results.getInt("donation_amount"));
         donation.setDate(results.getTimestamp("donation_date").toLocalDateTime());
