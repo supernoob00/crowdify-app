@@ -1,6 +1,7 @@
 package com.techelevator.dao;
 
 import com.techelevator.exception.DaoException;
+import com.techelevator.model.Campaign;
 import com.techelevator.model.Donation;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.CannotGetJdbcConnectionException;
@@ -20,7 +21,7 @@ public class JdbcDonationDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    // get a list of donations made by the logged-in user
+    // TODO get a list of donations made by the logged-in user?
 
     public List<Donation> donationList(int userId) {
         List<Donation> donationList = new ArrayList<>();
@@ -30,11 +31,21 @@ public class JdbcDonationDao {
         return null;
     }
 
+    public List<Donation> getDonationList(int campaignId) {
 
-    // get a list of donations to a campaign for the campaign manager
+        List<Donation> donationList = new ArrayList<>();
+        String sql = "SELECT * from donation WHERE campaign_id = ?;";
 
-
-    // make a new donation to a campaign
+        try {
+            SqlRowSet results = jdbcTemplate.queryForRowSet(sql, campaignId);
+            while (results.next()) {
+                donationList.add(mapRowToDonation(results));
+            }
+        } catch (CannotGetJdbcConnectionException e) {
+            throw new DaoException("Unable to connect to server or database", e);
+        }
+        return donationList;
+    }
 
     public Donation createDonation(Donation donationToCreate) {
         String sql = "INSERT into donation " +
@@ -58,17 +69,6 @@ public class JdbcDonationDao {
         }
     }
 
-
-  /*
-
-
-
-
-
-*/
-
-    // get donation by Id
-
     public Donation getDonationById(int id) {
         String sql = "SELECT * FROM donation WHERE donation_id = ?;";
 
@@ -76,7 +76,7 @@ public class JdbcDonationDao {
             SqlRowSet results = jdbcTemplate.queryForRowSet(sql, id);
 
             if (results.next()) {
-                Donation retrievedDonation = mapRowToTransfer(results);
+                Donation retrievedDonation = mapRowToDonation(results);
                 return retrievedDonation;
             }
         } catch (CannotGetJdbcConnectionException e) {
@@ -89,7 +89,7 @@ public class JdbcDonationDao {
     }
 
 
-    public Donation mapRowToTransfer(SqlRowSet results) {
+    public Donation mapRowToDonation(SqlRowSet results) {
         Donation donation = new Donation();
 
         donation.setDonationId(results.getInt("donation_id"));
