@@ -19,6 +19,8 @@ import com.techelevator.dao.UserDao;
 import com.techelevator.security.jwt.JWTFilter;
 import com.techelevator.security.jwt.TokenProvider;
 
+import java.util.Optional;
+
 @RestController
 @CrossOrigin
 public class AuthenticationController {
@@ -45,7 +47,8 @@ public class AuthenticationController {
 
         User user;
         try {
-            user = userDao.getUserByUsername(loginDto.getUsername());
+            Optional<User> optionalUser = userDao.getUserByUsername(loginDto.getUsername());
+            user = optionalUser.orElseThrow();
         } catch (DaoException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Username or password is incorrect.");
         }
