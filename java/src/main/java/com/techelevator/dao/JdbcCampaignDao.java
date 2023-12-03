@@ -8,9 +8,11 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 
+import javax.validation.constraints.NotNull;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class JdbcCampaignDao {
@@ -35,22 +37,21 @@ public class JdbcCampaignDao {
         return campaignList;
     }
 
-    public Campaign getCampaignById(int CampaignId) {
-        Campaign campaign = null;
+    public Optional<Campaign> getCampaignById(int CampaignId) {
         String sql = "SELECT * FROM campaign WHERE campaign_id = ?;";
 
         try {
             SqlRowSet results = jdbcTemplate.queryForRowSet(sql, CampaignId);
             if (results.next()) {
-                campaign = mapRowtoCampaign(results);
+                return Optional.of(mapRowtoCampaign(results));
             }
         } catch (CannotGetJdbcConnectionException e) {
             throw new DaoException("Unable to connect to server or database", e);
         }
-        return campaign;
+        return Optional.empty();
     }
 
-    public Campaign createCampaign(Campaign campaign) {
+    public Campaign createCampaign(@NotNull Campaign campaign) {
         Campaign newCampaign;
 
         // TODO do we also need to insert default values for the booleans? what happens if they're not met?
@@ -67,7 +68,7 @@ public class JdbcCampaignDao {
                     campaign.getStartDate(),
                     campaign.getEndDate());
 
-            newCampaign = getCampaignById(campaignId);
+            newCampaign = getCampaignById(campaignId).get();
 
         } catch (CannotGetJdbcConnectionException e) {
             throw new DaoException("Unable to connect to server or database", e);
@@ -76,6 +77,7 @@ public class JdbcCampaignDao {
         }
         return newCampaign;
     }
+
     public void deleteCampaignById (int campaignId) {
 
 //TODO do we want managers to be able to delete campaigns entirely, or should they remain in the database
