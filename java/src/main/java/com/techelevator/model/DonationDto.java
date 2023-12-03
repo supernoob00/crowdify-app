@@ -8,6 +8,7 @@ public class DonationDto {
     private int campaignId;
     private int donationAmount;
     private Timestamp donationDate;
+    // TODO do we want the TS generated on the front end or as a default in the DB?
     private String donationComment;
     private String donationStatus;
 
