@@ -17,9 +17,11 @@ public class Campaign {
 
     @JsonDeserialize(using = LocalDateDeserializer.class)
     private LocalDateTime startDate;
-
     @JsonDeserialize(using = LocalDateDeserializer.class)
     private LocalDateTime endDate;
+
+    // TODO: these LocalDateTime stamps are causing a 400 BAD REQUEST
+    //  because the format doesn't line up with the JSON object, presumably
     private boolean locked;
     private boolean isPublic;
     private List<Donation> donations = new ArrayList<>();
