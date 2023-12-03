@@ -60,6 +60,7 @@ public class JdbcDonationDao {
                 "values (?,?,?,?,?,?) returning donation_id;";
 
         try {
+            // TODO: we shouldn't be putting date in
             int donationId = jdbcTemplate.queryForObject(sql, Integer.class,
                     // TODO same question about donor id
                     donationToCreate.getDonor().getId(),
