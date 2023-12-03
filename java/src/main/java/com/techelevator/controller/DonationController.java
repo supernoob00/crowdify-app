@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Principal;
+import java.util.Optional;
 
 @RestController
 @PreAuthorize("isAuthenticated")
@@ -48,7 +49,8 @@ public class DonationController {
 
     public boolean isCorrectUser(Principal principal, Donation donation) {
         String username = principal.getName();
-        User user = userDao.getUserByUsername(username);
+        Optional<User>optionalUser = userDao.getUserByUsername(username);
+        User user = optionalUser.orElseThrow();
         int loggedInUserID = user.getId();
         return loggedInUserID == donation.getDonor().getId();
     }
