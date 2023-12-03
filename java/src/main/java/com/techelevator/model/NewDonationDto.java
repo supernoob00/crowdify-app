@@ -1,24 +1,25 @@
 package com.techelevator.model;
 
-import java.sql.Timestamp;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 
-public class DonationDto {
+public class NewDonationDto {
 
     private int donorId;
+    @NotNull
     private int campaignId;
+    @Positive
     private int donationAmount;
-    private Timestamp donationDate;
     private String donationComment;
     private String donationStatus;
 
-    public DonationDto() {
+    public NewDonationDto() {
     }
 
-    public DonationDto(int donorId, int campaignId, int donationAmount, Timestamp donationDate, String donationComment, String donationStatus) {
+    public NewDonationDto(int donorId, int campaignId, int donationAmount, String donationComment, String donationStatus) {
         this.donorId = donorId;
         this.campaignId = campaignId;
         this.donationAmount = donationAmount;
-        this.donationDate = donationDate;
         this.donationComment = donationComment;
         this.donationStatus = donationStatus;
 
@@ -46,14 +47,6 @@ public class DonationDto {
 
     public void setDonationAmount(int donationAmount) {
         this.donationAmount = donationAmount;
-    }
-
-    public Timestamp getDonationDate() {
-        return donationDate;
-    }
-
-    public void setDonationDate(Timestamp donationDate) {
-        this.donationDate = donationDate;
     }
 
     public String getDonationComment() {
