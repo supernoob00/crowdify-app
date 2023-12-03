@@ -15,7 +15,6 @@ import java.util.List;
 @Component
 public class JdbcCampaignDao {
     private final JdbcTemplate jdbcTemplate;
-    //private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss"); SCRAPPED THIS APPROACH?
 
     public JdbcCampaignDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -93,6 +92,7 @@ public class JdbcCampaignDao {
         campaign.setEndDate(rowSet.getTimestamp("end_date").toLocalDateTime());
         campaign.setLocked(rowSet.getBoolean("locked"));
         campaign.setPublic(rowSet.getBoolean("public"));
+        //TODO: getDonations by campaignId and set to donations property of campaign using DonationDAO
         return campaign;
     }
 }

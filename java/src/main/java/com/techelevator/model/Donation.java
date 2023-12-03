@@ -1,5 +1,6 @@
 package com.techelevator.model;
 
+import javax.validation.constraints.Positive;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -8,6 +9,7 @@ public class Donation {
     private int donationId;
     private User donor;
     private int campaignId;
+    @Positive
     private int amount;
     private LocalDateTime date;
     private String comment;
