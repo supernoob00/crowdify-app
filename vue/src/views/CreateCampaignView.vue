@@ -1,15 +1,15 @@
 <template>
   <div class="content">
     <h1>Create new Campaign</h1>
-    <add-campaign></add-campaign>
+    <create-campaign></create-campaign>
   </div>
 </template>
 
 <script>
-import AddCampaign from '../components/AddCampaign.vue';
+import CreateCampaign from '@/components/CreateCampaign.vue';
 export default {
   components: {
-    AddCampaign
+    CreateCampaign
   }
 }
 </script>

@@ -9,7 +9,7 @@
       <h1>Campaigns</h1>
       <campaign-list :campaigns="campaigns"></campaign-list>
       <br>
-      <router-link :to="{ name: 'AddCampaignView' }" class="button is-link">Create new Campaign</router-link>
+      <router-link :to="{ name: 'CreateCampaignView' }" class="button is-link">Create new Campaign</router-link>
     </div>
   </div>
 </template>

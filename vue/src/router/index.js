@@ -7,8 +7,8 @@ import LoginView from '../views/LoginView.vue';
 import LogoutView from '../views/LogoutView.vue';
 import RegisterView from '../views/RegisterView.vue';
 import CampaignView from '../views/CampaignView.vue';
-import AddCampaignView from '../views/AddCampaignView.vue';
-
+import CreateCampaignView from '../views/CreateCampaignView.vue';
+import CreateDonationView from '../views/CreateDonationView.vue';
 /**
  * The Vue Router is used to "direct" the browser to render a specific view component
  * inside of App.vue depending on the URL.
@@ -60,8 +60,16 @@ const routes = [
   },
   {
     path: "/campaigns/create",
-    name: 'AddCampaignView',
-    component: AddCampaignView,
+    name: 'CreateCampaignView',
+    component: CreateCampaignView,
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: "/campaigns/:id/createDonation",
+    name: 'CreateDonationView',
+    component: CreateDonationView,
     meta: {
       requiresAuth: true
     }
