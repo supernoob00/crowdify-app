@@ -17,9 +17,11 @@ import java.util.Optional;
 @Component
 public class JdbcCampaignDao {
     private final JdbcTemplate jdbcTemplate;
+    private final JdbcDonationDao jdbcDonationDao;
 
-    public JdbcCampaignDao(JdbcTemplate jdbcTemplate) {
+    public JdbcCampaignDao(JdbcTemplate jdbcTemplate, JdbcDonationDao jdbcDonationDao) {
         this.jdbcTemplate = jdbcTemplate;
+        this.jdbcDonationDao = jdbcDonationDao;
     }
 
     public List<Campaign> getCampaignList() {
@@ -94,7 +96,8 @@ public class JdbcCampaignDao {
         campaign.setEndDate(rowSet.getTimestamp("end_date").toLocalDateTime());
         campaign.setLocked(rowSet.getBoolean("locked"));
         campaign.setPublic(rowSet.getBoolean("public"));
-        //TODO: getDonations by campaignId and set to donations property of campaign using DonationDAO
+        campaign.setDonations(jdbcDonationDao.getDonationList(rowSet.getInt("campaign_id")));
+        //TODO: getDonations by campaignId and set to donations property of campaign using DonationDAO: DONE?
         return campaign;
     }
 }
