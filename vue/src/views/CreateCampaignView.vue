@@ -1,5 +1,6 @@
 <template>
-  <div class="form-section">
+  <div class="content">
+    <h1>Create Campaign</h1>
     <form @submit.prevent="">
       <div class="field">
         <label class="label">Campaign Name</label>
@@ -15,7 +16,7 @@
         </div>
       </div>
       <div class="field">
-        <label class="label"> Funding Goal ($)</label>
+        <label class="label">Funding Goal ($)</label>
         <div class="control">
           <input type="Number" class="input" placeholder="$1 Minimum" v-model="newCampaign.fundingGoal">
         </div>
@@ -51,7 +52,6 @@
 
 <script>
 import campaignService from '../services/CampaignService';
-
 export default {
   data() {
     return {
@@ -73,6 +73,7 @@ export default {
           this.$store.commit('SET_NOTIFICATION', { message: 'Created Campaign!', type: 'success' })
           this.isLoading = true;
           this.resetAddForm();
+          this.$router.push({ name: 'home' })
         }
       } catch (error) {
         campaignService.handleErrorResponse(this.$store, error, 'adding', 'campaign');
@@ -96,26 +97,19 @@ export default {
       return true;
     },
     resetAddForm() {
-      this.newCampaign = {}
+      this.newCampaign = {
+        name: '',
+        description: '',
+        public: false,
+      }
     },
   }
+
 }
 </script>
 
 <style scoped>
-.form-section {
-  margin: 15px 0;
-}
-
-.form-control {
-  margin-bottom: 10px;
-}
-
-.btn {
-  margin-bottom: 35px;
-}
-
-.loading {
-  flex: 3;
+.content {
+  max-width: 50%;
 }
 </style>

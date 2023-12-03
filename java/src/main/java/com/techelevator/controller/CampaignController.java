@@ -16,27 +16,28 @@ public class CampaignController {
     public CampaignController(JdbcCampaignDao jdbcCampaignDao) {
         this.jdbcCampaignDao = jdbcCampaignDao;
     }
+
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(path = "/campaigns", method = RequestMethod.GET)
-    public List<Campaign> campaignList () {
-        return null;
+    public List<Campaign> campaignList() {
+        return jdbcCampaignDao.getCampaignList();
     }
 
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(path = "/campaigns/{id}", method = RequestMethod.GET)
-    public Campaign getCampaign (@PathVariable int id) {
-        return null;
+    public Campaign getCampaign(@PathVariable int id) {
+        return jdbcCampaignDao.getCampaignById(id);
     }
 
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(path = "/campaigns", method = RequestMethod.POST)
-    public Campaign addCampaign () {
-        return null;
+    public Campaign addCampaign(@RequestBody Campaign newCampaign) {
+        return jdbcCampaignDao.createCampaign(newCampaign);
     }
 
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(path = "/campaigns/{id}", method = RequestMethod.DELETE)
-    public void deleteCampaign (@PathVariable int id) {
+    public void deleteCampaign(@PathVariable int id) {
 
         //TODO call DAO delete method here.
     }

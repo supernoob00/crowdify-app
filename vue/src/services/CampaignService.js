@@ -14,6 +14,10 @@ export default {
     return axios.post('/campaigns', newCampaign);
   },
 
+  createDonation(newDonation) {
+    return axios.post('/donations', newDonation);
+  },
+
   handleErrorResponse(store, error, verb, object) {
     if (error.response) {
       store.commit('SET_NOTIFICATION',

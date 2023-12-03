@@ -13,6 +13,8 @@
     </div>
     <hr>
     <h2 class="block">Donations</h2>
+    <router-link class="button is-link block"
+      :to="{ name: 'CreateDonationView', params: { id: campaign.id } }">Donate</router-link>
     <donation-display v-for="donation in donationsSortedByAmount" :key="donation.id"
       :donation="donation"></donation-display>
   </div>
