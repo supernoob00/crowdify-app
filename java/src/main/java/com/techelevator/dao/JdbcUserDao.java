@@ -3,6 +3,7 @@ package com.techelevator.dao;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import com.techelevator.exception.DaoException;
 import com.techelevator.model.RegisterUserDto;
@@ -15,9 +16,10 @@ import org.springframework.stereotype.Component;
 
 import com.techelevator.model.User;
 
+import javax.validation.constraints.NotNull;
+
 @Component
 public class JdbcUserDao implements UserDao {
-
     private final JdbcTemplate jdbcTemplate;
 
     public JdbcUserDao(JdbcTemplate jdbcTemplate) {
@@ -25,18 +27,17 @@ public class JdbcUserDao implements UserDao {
     }
 
     @Override
-    public User getUserById(int userId) {
-        User user = null;
+    public Optional<User> getUserById(int userId) {
         String sql = "SELECT user_id, username, password_hash, role FROM users WHERE user_id = ?";
         try {
             SqlRowSet results = jdbcTemplate.queryForRowSet(sql, userId);
             if (results.next()) {
-                user = mapRowToUser(results);
+                return Optional.of(mapRowToUser(results));
             }
         } catch (CannotGetJdbcConnectionException e) {
             throw new DaoException("Unable to connect to server or database", e);
         }
-        return user;
+        return Optional.empty();
     }
 
     @Override
@@ -56,39 +57,48 @@ public class JdbcUserDao implements UserDao {
     }
 
     @Override
-    public User getUserByUsername(String username) {
-        if (username == null) throw new IllegalArgumentException("Username cannot be null");
-        User user = null;
+    public Optional<User> getUserByUsername(@NotNull String username) {
         String sql = "SELECT user_id, username, password_hash, role FROM users WHERE username = LOWER(TRIM(?));";
         try {
             SqlRowSet rowSet = jdbcTemplate.queryForRowSet(sql, username);
             if (rowSet.next()) {
-                user = mapRowToUser(rowSet);
+                return Optional.of(mapRowToUser(rowSet));
             }
         } catch (CannotGetJdbcConnectionException e) {
             throw new DaoException("Unable to connect to server or database", e);
         }
-        return user;
+        return Optional.empty();
     }
 
     @Override
     public User createUser(RegisterUserDto user) {
-        User newUser = null;
         String insertUserSql = "INSERT INTO users (username, password_hash, role) values (LOWER(TRIM(?)), ?, ?) RETURNING user_id";
         String password_hash = new BCryptPasswordEncoder().encode(user.getPassword());
         String ssRole = user.getRole().toUpperCase().startsWith("ROLE_") ? user.getRole().toUpperCase() : "ROLE_" + user.getRole().toUpperCase();
         try {
             int newUserId = jdbcTemplate.queryForObject(insertUserSql, int.class, user.getUsername(), password_hash, ssRole);
-            newUser = getUserById(newUserId);
+            return getUserById(newUserId).orElseThrow();
         } catch (CannotGetJdbcConnectionException e) {
             throw new DaoException("Unable to connect to server or database", e);
         } catch (DataIntegrityViolationException e) {
             throw new DaoException("Data integrity violation", e);
         }
-        return newUser;
     }
 
-    // TODO: getManager
+    public List<User> getManagersByCampaignId(int campaignId) {
+        String sql = "SELECT * FROM campaign_manager WHERE campaign_id = ?;";
+        List<User> users = new ArrayList<>();
+        try {
+            SqlRowSet results = jdbcTemplate.queryForRowSet(sql, campaignId);
+            while (results.next()) {
+                User user = mapRowToUser(results);
+                users.add(user);
+            }
+        } catch (CannotGetJdbcConnectionException e) {
+            throw new DaoException("Unable to connect to server or database", e);
+        }
+        return users;
+    }
 
     private User mapRowToUser(SqlRowSet rs) {
         User user = new User();
