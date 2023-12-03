@@ -57,7 +57,7 @@ public class DonationController {
         String username = principal.getName();
         User user = userDao.getUserByUsername(username);
         int loggedInUserID = user.getId();
-// TODO is this the right way to get the donor id?
+        // TODO is this the right way to get the donor id?
         return loggedInUserID == donation.getDonor().getId();
     }
 

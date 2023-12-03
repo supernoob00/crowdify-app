@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,7 +48,7 @@ public class JdbcDonationDao {
         return donationList;
     }
 
-    public Donation createDonation(Donation donationToCreate) {
+    public Donation createDonation(@NotNull Donation donationToCreate) {
         String sql = "INSERT into donation " +
                 "(donor_id, campaign_id, donation_amount, donation_date, donation_comment, donation_status " +
                 "values (?,?,?,?,?,?) returning donation_id;";
