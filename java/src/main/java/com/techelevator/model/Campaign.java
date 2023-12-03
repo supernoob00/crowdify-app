@@ -3,6 +3,7 @@ package com.techelevator.model;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Campaign {
 
@@ -94,7 +95,6 @@ public class Campaign {
     public void setPublic(boolean aPublic) {
         isPublic = aPublic;
     }
-
     public List<Donation> getDonations() {
         return donations;
     }
@@ -109,5 +109,18 @@ public class Campaign {
 
     public void setManagers(List<User> managers) {
         this.managers = managers;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Campaign campaign = (Campaign) o;
+        return id == campaign.id && fundingGoal == campaign.fundingGoal && locked == campaign.locked && isPublic == campaign.isPublic && Objects.equals(name, campaign.name) && Objects.equals(description, campaign.description) && Objects.equals(startDate, campaign.startDate) && Objects.equals(endDate, campaign.endDate) && Objects.equals(donations, campaign.donations) && Objects.equals(managers, campaign.managers);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, description, fundingGoal, startDate, endDate, locked, isPublic, donations, managers);
     }
 }

@@ -73,6 +73,7 @@ export default {
           this.$store.commit('SET_NOTIFICATION', { message: 'Created Campaign!', type: 'success' })
           this.isLoading = true;
           this.resetAddForm();
+          this.$router.push({ name: 'home' })
         }
       } catch (error) {
         campaignService.handleErrorResponse(this.$store, error, 'adding', 'campaign');

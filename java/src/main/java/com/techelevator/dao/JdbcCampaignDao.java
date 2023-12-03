@@ -23,7 +23,7 @@ public class JdbcCampaignDao {
 
     public List<Campaign> getCampaignList() {
         List<Campaign> campaignList = new ArrayList<>();
-        String sql = "SELECT * FROM campaign ORDER BY campaign_name ASC;";
+        String sql = "SELECT * FROM campaign;";
 
         try {
             SqlRowSet results = jdbcTemplate.queryForRowSet(sql);
@@ -88,7 +88,7 @@ public class JdbcCampaignDao {
         campaign.setId(rowSet.getInt("campaign_id"));
         campaign.setName(rowSet.getString("campaign_name"));
         campaign.setDescription(rowSet.getString("description"));
-        campaign.setFundingGoal(rowSet.getInt(" funding_goal"));
+        campaign.setFundingGoal(rowSet.getInt("funding_goal"));
         campaign.setStartDate(rowSet.getTimestamp("start_date").toLocalDateTime());
         campaign.setEndDate(rowSet.getTimestamp("end_date").toLocalDateTime());
         campaign.setLocked(rowSet.getBoolean("locked"));
