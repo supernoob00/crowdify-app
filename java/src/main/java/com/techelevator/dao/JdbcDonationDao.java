@@ -1,7 +1,6 @@
 package com.techelevator.dao;
 
 import com.techelevator.exception.DaoException;
-import com.techelevator.model.Campaign;
 import com.techelevator.model.Donation;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.CannotGetJdbcConnectionException;
@@ -12,10 +11,10 @@ import org.springframework.stereotype.Component;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class JdbcDonationDao {
-
     private final JdbcTemplate jdbcTemplate;
     private final UserDao userDao;
 
@@ -24,18 +23,22 @@ public class JdbcDonationDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    // TODO get a list of donations made by the logged-in user?
-
-    public List<Donation> donationList(int userId) {
+    public List<Donation> getDonationsByUserId(int userId) {
         List<Donation> donationList = new ArrayList<>();
+        String sql = "SELECT * FROM donation WHERE donor_id = ?;";
 
-        // String sql =
-
-        return null;
+        try {
+            SqlRowSet results = jdbcTemplate.queryForRowSet(sql, userId);
+            while (results.next()) {
+                donationList.add(mapRowToDonation(results));
+            }
+        } catch (CannotGetJdbcConnectionException e) {
+            throw new DaoException("Unable to connect to server or database", e);
+        }
+        return donationList;
     }
 
     public List<Donation> getDonationList(int campaignId) {
-
         List<Donation> donationList = new ArrayList<>();
         String sql = "SELECT * from donation WHERE campaign_id = ?;";
 
@@ -64,7 +67,7 @@ public class JdbcDonationDao {
                     donationToCreate.getDate(),
                     donationToCreate.getComment(),
                     donationToCreate.getStatus());
-            return getDonationById(donationId);
+            return getDonationById(donationId).orElseThrow();
         } catch (CannotGetJdbcConnectionException e) {
             throw new DaoException("Unable to connect to server or database", e);
         } catch (DataIntegrityViolationException e) {
@@ -72,7 +75,7 @@ public class JdbcDonationDao {
         }
     }
 
-    public Donation getDonationById(int id) {
+    public Optional<Donation> getDonationById(int id) {
         String sql = "SELECT * FROM donation WHERE donation_id = ?;";
 
         try {
@@ -80,15 +83,14 @@ public class JdbcDonationDao {
 
             if (results.next()) {
                 Donation retrievedDonation = mapRowToDonation(results);
-                return retrievedDonation;
+                return Optional.of(retrievedDonation);
             }
         } catch (CannotGetJdbcConnectionException e) {
             throw new DaoException("Unable to connect to server or database", e);
         } catch (DataIntegrityViolationException e) {
             throw new DaoException("Data integrity violation", e);
         }
-        return null;
-
+        return Optional.empty();
     }
 
 
