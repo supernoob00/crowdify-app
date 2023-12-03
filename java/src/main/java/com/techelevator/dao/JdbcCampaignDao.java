@@ -97,8 +97,7 @@ public class JdbcCampaignDao {
         campaign.setLocked(rowSet.getBoolean("locked"));
         campaign.setPublic(rowSet.getBoolean("public"));
         campaign.setDonations(jdbcDonationDao.getDonationList(rowSet.getInt("campaign_id")));
-        // TODO: getDonations by campaignId and set to donations property of
-        //  campaign using DonationDAO: DONE?
+        //TODO: add list of managers
         return campaign;
     }
 }

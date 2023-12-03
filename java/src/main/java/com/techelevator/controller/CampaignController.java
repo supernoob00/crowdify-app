@@ -5,8 +5,10 @@ import com.techelevator.dao.UserDao;
 import com.techelevator.model.Campaign;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @CrossOrigin
@@ -26,7 +28,10 @@ public class CampaignController {
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(path = "/campaigns/{id}", method = RequestMethod.GET)
     public Campaign getCampaign(@PathVariable int id) {
-        return jdbcCampaignDao.getCampaignById(id);
+        Optional<Campaign> campaign = jdbcCampaignDao.getCampaignById(id);
+        return campaign.orElseThrow(() -> {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Campaign not found.");
+        });
     }
 
     @ResponseStatus(HttpStatus.CREATED)

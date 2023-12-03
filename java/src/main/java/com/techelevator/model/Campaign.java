@@ -1,5 +1,8 @@
 package com.techelevator.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +14,11 @@ public class Campaign {
     private String name;
     private String description;
     private int fundingGoal;
+
+    @JsonDeserialize(using = LocalDateDeserializer.class)
     private LocalDateTime startDate;
+
+    @JsonDeserialize(using = LocalDateDeserializer.class)
     private LocalDateTime endDate;
     private boolean locked;
     private boolean isPublic;
