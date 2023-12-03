@@ -16,8 +16,10 @@ import java.util.List;
 public class JdbcDonationDao {
 
     private final JdbcTemplate jdbcTemplate;
+    private final UserDao userDao;
 
-    public JdbcDonationDao(JdbcTemplate jdbcTemplate) {
+    public JdbcDonationDao(JdbcTemplate jdbcTemplate, UserDao userDao) {
+        this.userDao = userDao;
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -93,7 +95,7 @@ public class JdbcDonationDao {
         Donation donation = new Donation();
 
         donation.setDonationId(results.getInt("donation_id"));
-        // donor id?
+        donation.setDonor(userDao.getUserById(results.getInt("donor_id")));
         donation.setCampaignId(results.getInt("campaign_id"));
         donation.setAmount(results.getInt("donation_amount"));
         donation.setDate(results.getTimestamp("donation_date").toLocalDateTime());
