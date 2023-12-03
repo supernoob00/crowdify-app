@@ -32,8 +32,6 @@ public class DonationController {
 
         Donation donation = new Donation();
 
-        // donor ID?
-
         donation.setCampaignId(newDonationDto.getCampaignId());
         donation.setAmount(newDonationDto.getDonationAmount());
         donation.setComment(newDonationDto.getDonationComment());

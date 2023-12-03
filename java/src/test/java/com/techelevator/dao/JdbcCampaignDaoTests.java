@@ -17,7 +17,9 @@ public class JdbcCampaignDaoTests extends BaseDaoTests {
     @Before
     public void setup() {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-        sut = new JdbcCampaignDao(jdbcTemplate);
+        JdbcDonationDao jdbcDonationDao = new JdbcDonationDao(
+                jdbcTemplate, new JdbcUserDao(jdbcTemplate));
+        sut = new JdbcCampaignDao(jdbcTemplate, jdbcDonationDao);
     }
 
     @Test
