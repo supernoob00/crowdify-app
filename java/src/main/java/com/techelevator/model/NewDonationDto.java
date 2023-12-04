@@ -17,7 +17,7 @@ public class NewDonationDto {
     private int amount;
     @NotBlank
     private String comment;
-    @NotBlank
+    // TODO: might want default
     private String donationStatus;
 
     public NewDonationDto() {

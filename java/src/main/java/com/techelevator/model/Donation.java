@@ -19,7 +19,7 @@ public class Donation {
     private LocalDateTime date;
     @NotBlank
     private String comment;
-    @NotBlank
+    // default status?
     private String status;
 
     public Donation() {
