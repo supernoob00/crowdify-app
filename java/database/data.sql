@@ -30,9 +30,9 @@ VALUES
 
 INSERT INTO campaign_manager (campaign_id, manager_id, creator) VALUES
 (1, 1, true),
-(1, 2, true),
+(1, 2, false),
 (2, 3, true),
-(3, 1, false);
+(3, 1, true);
 
 INSERT INTO donation (donor_id, campaign_id, donation_amount, donation_date, donation_status) VALUES
 (1, 1, 5000, '2020-06-22 20:00:00', 'sent'),
