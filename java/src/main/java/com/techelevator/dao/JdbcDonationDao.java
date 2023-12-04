@@ -2,6 +2,7 @@ package com.techelevator.dao;
 
 import com.techelevator.exception.DaoException;
 import com.techelevator.model.Donation;
+import com.techelevator.model.NewDonationDto;
 import com.techelevator.model.User;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.CannotGetJdbcConnectionException;
@@ -54,21 +55,20 @@ public class JdbcDonationDao {
         return donationList;
     }
 
-    public Donation createDonation(@NotNull Donation donationToCreate) {
-        String sql = "INSERT into donation " +
-                "(donor_id, campaign_id, donation_amount, donation_date, donation_comment, donation_status " +
-                "values (?,?,?,?,?,?) returning donation_id;";
-
+    public Donation createDonation(@NotNull NewDonationDto newDonationDto) {
+        String sql = "INSERT INTO donation " +
+                "(donor_id, campaign_id, donation_amount, donation_comment) " +
+                "VALUES (?,?,?,?) RETURNING donation_id;";
         try {
-            // TODO: we shouldn't be putting date in
-            int donationId = jdbcTemplate.queryForObject(sql, Integer.class,
-                    // TODO same question about donor id
-                    donationToCreate.getDonor().getId(),
-                    donationToCreate.getCampaignId(),
-                    donationToCreate.getAmount(),
-                    donationToCreate.getDate(),
-                    donationToCreate.getComment(),
-                    donationToCreate.getStatus());
+            Integer donationId = jdbcTemplate.queryForObject(sql, Integer.class,
+                    newDonationDto.getDonorId(),
+                    newDonationDto.getCampaignId(),
+                    newDonationDto.getAmount(),
+                    newDonationDto.getComment()
+            );
+            if (donationId == null) {
+                throw new DaoException("Failed to donate.");
+            }
             return getDonationById(donationId).orElseThrow();
         } catch (CannotGetJdbcConnectionException e) {
             throw new DaoException("Unable to connect to server or database", e);
