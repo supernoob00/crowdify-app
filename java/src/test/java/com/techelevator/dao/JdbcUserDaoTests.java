@@ -9,6 +9,7 @@ import org.junit.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
+import java.util.Optional;
 
 public class JdbcUserDaoTests extends BaseDaoTests {
     private JdbcUserDao sut;
@@ -18,34 +19,26 @@ public class JdbcUserDaoTests extends BaseDaoTests {
         sut = new JdbcUserDao(jdbcTemplate);
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void getUserByUsername_given_null_throws_exception() {
-        sut.getUserByUsername(null);
-    }
-
     @Test
     public void getUserByUsername_given_invalid_username_returns_null() {
-        Assert.assertNull(sut.getUserByUsername("invalid"));
+        Assert.assertTrue(sut.getUserByUsername("invalid").isEmpty());
     }
 
     @Test
     public void getUserByUsername_given_valid_user_returns_user() {
-        User actualUser = sut.getUserByUsername(USER_1.getUsername());
-
+        User actualUser = sut.getUserByUsername(USER_1.getUsername()).orElseThrow();
         Assert.assertEquals(USER_1, actualUser);
     }
 
     @Test
     public void getUserById_given_invalid_user_id_returns_null() {
-        User actualUser = sut.getUserById(-1);
-
-        Assert.assertNull(actualUser);
+        Optional<User> actualUser = sut.getUserById(-1);
+        Assert.assertTrue(actualUser.isEmpty());
     }
 
     @Test
     public void getUserById_given_valid_user_id_returns_user() {
-        User actualUser = sut.getUserById(USER_1.getId());
-
+        User actualUser = sut.getUserById(USER_1.getId()).orElseThrow();
         Assert.assertEquals(USER_1, actualUser);
     }
 
@@ -97,7 +90,8 @@ public class JdbcUserDaoTests extends BaseDaoTests {
 
         Assert.assertNotNull(createdUser);
 
-        User retrievedUser = sut.getUserByUsername(createdUser.getUsername());
+        User retrievedUser =
+                sut.getUserByUsername(createdUser.getUsername()).orElseThrow();
         Assert.assertEquals(retrievedUser, createdUser);
     }
 }
