@@ -22,11 +22,15 @@ public class Campaign {
     private boolean isPublic;
     private List<Donation> donations = new ArrayList<>();
     private List<User> managers = new ArrayList<>();
+    @NotNull
+    private User creator;
 
     public Campaign() {
     }
 
-    public Campaign(int id, String name, String description, int fundingGoal, LocalDateTime startDate, LocalDateTime endDate, boolean locked, boolean isPublic) {
+    public Campaign(int id, String name, String description, int fundingGoal,
+                    LocalDateTime startDate, LocalDateTime endDate,
+                    boolean locked, boolean isPublic, User creator) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -35,6 +39,8 @@ public class Campaign {
         this.endDate = endDate;
         this.locked = locked;
         this.isPublic = isPublic;
+        this.creator = creator;
+        this.managers.add(creator);
     }
 
     public int getId() {
@@ -115,6 +121,18 @@ public class Campaign {
 
     public void setManagers(List<User> managers) {
         this.managers = managers;
+    }
+
+    public int getDonationTotal() {
+        int total = 0;
+        for (Donation donation : donations) {
+            total += donation.getAmount();
+        }
+        return total;
+    }
+
+    public User getCreator() {
+        return creator;
     }
 
     @Override
