@@ -1,9 +1,12 @@
 package com.techelevator.model;
 
+import javax.validation.constraints.Min;
 import java.util.Objects;
 
 public class Vote {
+    @Min(1)
     private int userId;
+    @Min(1)
     private int requestId;
     private boolean approved;
 
