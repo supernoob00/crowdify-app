@@ -30,7 +30,7 @@ VALUES
 
 INSERT INTO campaign_manager (campaign_id, manager_id, creator) VALUES
 (1, 1, true),
-(1, 2, false),
+(1, 2, true),
 (2, 3, true),
 (3, 1, false);
 
