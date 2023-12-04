@@ -12,6 +12,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import javax.sql.DataSource;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = TestingDatabaseConfig.class)
@@ -34,6 +35,16 @@ public abstract class BaseDaoTests {
     protected static final Campaign CAMPAIGN_3 = new Campaign(3, "Fancy New Computer", "We are making some cool new stuff using a quantum computer",
             3000000, LocalDateTime.of(2024, 1, 3, 0, 0),
             LocalDateTime.of(2024, 1, 23, 0, 0), true, false);
+
+    static {
+        CAMPAIGN_1.setManagers(List.of(USER_1));
+        CAMPAIGN_2.setManagers(List.of(USER_2));
+        CAMPAIGN_3.setManagers(List.of(USER_3));
+        CAMPAIGN_1.setDonations(List.of(DONATION_1));
+        CAMPAIGN_2.setDonations(List.of(DONATION_2));
+        CAMPAIGN_3.setDonations(List.of(DONATION_3));
+    }
+
     @Autowired
     protected DataSource dataSource;
 

@@ -153,5 +153,19 @@ public class Campaign {
         return Objects.hash(id, name, description, fundingGoal, startDate, endDate, locked, isPublic, donations, managers);
     }
 
-
+    @Override
+    public String toString() {
+        return "Campaign{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", fundingGoal=" + fundingGoal +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                ", locked=" + locked +
+                ", isPublic=" + isPublic +
+                ", donations=" + donations +
+                ", managers=" + managers +
+                '}';
+    }
 }

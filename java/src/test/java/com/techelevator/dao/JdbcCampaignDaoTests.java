@@ -45,6 +45,8 @@ public class JdbcCampaignDaoTests extends BaseDaoTests {
 
         Assert.assertNotNull(campaigns);
         Assert.assertEquals(3, campaigns.size());
+        System.out.println(CAMPAIGN_1);
+        System.out.println(campaigns.get(0));
         Assert.assertEquals(CAMPAIGN_1, campaigns.get(0));
         Assert.assertEquals(CAMPAIGN_2, campaigns.get(1));
         Assert.assertEquals(CAMPAIGN_3, campaigns.get(2));
