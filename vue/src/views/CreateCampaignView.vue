@@ -22,6 +22,12 @@
         </div>
       </div>
       <div class="field">
+        <label class="label">Start Date</label>
+        <div class="control">
+          <input type="date" class="input" placeholder="Start Date" v-model="newCampaign.startDate">
+        </div>
+      </div>
+      <div class="field">
         <label class="label">End Date</label>
         <div class="control">
           <input type="date" class="input" placeholder="End Date" v-model="newCampaign.endDate">
@@ -55,11 +61,20 @@ import campaignService from '../services/CampaignService';
 export default {
   data() {
     return {
+      isLoading: true,
       newCampaign: {
-        name: '',
-        description: '',
+        name: 'test',
+        description: 'test',
         public: false,
+        endDate: '2023-12-10',
+        startDate: '2023-12-07',
+        fundingGoal: 2
       }
+    }
+  },
+  computed:{
+    currentUser() {
+      return this.$store.state.user;
     }
   },
   methods: {
@@ -68,6 +83,10 @@ export default {
         return;
       }
       try {
+        this.newCampaign.endDate = `${this.newCampaign.endDate} 00:00:00`;
+        this.newCampaign.startDate = `${this.newCampaign.startDate} 00:00:00`;
+        this.newCampaign.fundingGoal *= 100;
+        this.newCampaign.creatorId = this.currentUser.id;
         const response = await campaignService.addCampaign(this.newCampaign);
         if (response.status === 201) {
           this.$store.commit('SET_NOTIFICATION', { message: 'Created Campaign!', type: 'success' })
@@ -76,7 +95,7 @@ export default {
           this.$router.push({ name: 'home' })
         }
       } catch (error) {
-        campaignService.handleErrorResponse(this.$store, error, 'adding', 'campaign');
+        campaignService.handleErrorResponse(this.$store, error, 'creating', 'campaign');
       }
     },
     validateAddForm() {
@@ -110,6 +129,6 @@ export default {
 
 <style scoped>
 .content {
-  max-width: 50%;
+  max-width: 500px;
 }
 </style>

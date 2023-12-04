@@ -1,19 +1,17 @@
 <template>
   <div class="content">
-    <h1>Donate to Poop</h1>
-    <!-- Switch to below once endpoint is hooked up all correctly for everything -->
-    <!-- <h1>Donate to {{ campaign.name }}</h1> -->
+    <h1>Donate to {{ campaign.name }}</h1>
     <form @submit.prevent="">
       <div class="field">
         <label class="label">Comment</label>
         <div class="control">
-          <textarea class="textarea" placeholder="Optional" v-model="newDonation.comment"></textarea>
+          <textarea class="textarea" placeholder="Optional" v-model="newDonationDto.comment"></textarea>
         </div>
       </div>
       <div class="field">
         <label class="label">Amount ($)</label>
         <div class="control">
-          <input type="Number" class="input" placeholder="$1 Minimum" v-model="newDonation.amount">
+          <input type="Number" class="input" placeholder="$1 Minimum" v-model="newDonationDto.amount">
         </div>
       </div>
       <div class="field is-grouped">
@@ -37,20 +35,23 @@ import campaignService from '../services/CampaignService';
 export default {
   data() {
     return {
-      newDonation: {
-        donor: {},
-        comment: ''
+      newDonationDto: {
+        comment: '',
       },
-      campaign: {}
+      campaign: {},
+      isLoading: true,
     }
   },
   computed: {
     campaignId() {
       return parseInt(this.$route.params.id);
     },
+    currentUser() {
+      return this.$store.state.user;
+    },
   },
   methods: {
-    async getCurrentCampaign() {
+    async getCampaign() {
       try {
         const response = await campaignService.getCampaign(this.campaignId);
         if (response.status === 200) {
@@ -65,20 +66,23 @@ export default {
         return;
       }
       try {
-        const response = await campaignService.createDonation(this.NewDonation);
+        this.newDonationDto.campaignId = this.campaignId;
+        this.newDonationDto.donorId = this.currentUser.id;
+        this.newDonationDto.amount *= 100;
+        const response = await campaignService.createDonation(this.newDonationDto);
         if (response.status === 201) {
-          this.$store.commit('SET_NOTIFICATION', { message: 'Created Campaign!', type: 'success' })
+          this.$store.commit('SET_NOTIFICATION', { message: 'Created Donation!', type: 'success' })
           this.isLoading = true;
           this.resetAddForm();
           this.$router.push({ name: 'CampaignView', params: { id: this.campaignId } })
         }
       } catch (error) {
-        campaignService.handleErrorResponse(this.$store, error, 'adding', 'campaign');
+        campaignService.handleErrorResponse(this.$store, error, 'creating', 'donation');
       }
     },
     validateAddForm() {
       let msg = '';
-      if (this.newDonation.amount < 1 || this.newDonation.amount == null) {
+      if (this.newDonationDto.amount < 1 || this.newDonationDto.amount == null) {
         msg += 'A donation must have an amount of at least $1. ';
       }
       if (msg.length > 0) {
@@ -88,21 +92,19 @@ export default {
       return true;
     },
     resetAddForm() {
-      this.newDonation = {
-        donor: {},
+      this.newDonationDto = {
         comment: ''
       }
     },
   },
   created() {
-    this.getCurrentCampaign();
+    this.getCampaign();
   }
-
 }
 </script>
 
 <style scoped>
 .content {
-  max-width: 50%;
+  max-width: 500px;
 }
 </style>
