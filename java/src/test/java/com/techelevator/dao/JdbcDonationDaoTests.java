@@ -2,6 +2,7 @@ package com.techelevator.dao;
 
 import com.techelevator.exception.DaoException;
 import com.techelevator.model.Donation;
+import com.techelevator.model.NewDonationDto;
 import com.techelevator.model.RegisterUserDto;
 import com.techelevator.model.User;
 import org.junit.Assert;
@@ -9,28 +10,31 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class JdbcDonationDaoTests extends BaseDaoTests {
-    private JdbcUserDao sut;
+    private JdbcDonationDao sut;
+
     @Before
     public void setup() {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-        sut = new JdbcUserDao(jdbcTemplate);
+        sut = new JdbcDonationDao(jdbcTemplate, new JdbcUserDao(jdbcTemplate));
     }
 
     @Test
     public void get_donation_by_id_fails_for_invalid_id() {
-//        Assert.assertNull(sut.getDonationById(-1));
+        Assert.assertTrue(sut.getDonationById(-1).isEmpty());
     }
 
     @Test
     public void getDonationById_given_valid_id_returns_donation() {
-//        Assert.assertEquals(DONATION_1, sut.getDonationById(1));
-//        Assert.assertEquals(DONATION_2, sut.getDonationById(2));
-//        Assert.assertEquals(DONATION_3, sut.getDonationById(3));
+        Assert.assertEquals(DONATION_1, sut.getDonationById(1).orElseThrow());
+        Assert.assertEquals(DONATION_2, sut.getDonationById(2).orElseThrow());
+        Assert.assertEquals(DONATION_3, sut.getDonationById(3).orElseThrow());
     }
 
+    // TODO: test not needed right now
     @Test
     public void getDonations_returns_all_donations() {
 //        List<Donation> donations = sut.getDonations();
@@ -44,12 +48,11 @@ public class JdbcDonationDaoTests extends BaseDaoTests {
 
     @Test
     public void createDonation_creates_a_donation() {
-//        Donation donation = new Donation();
-//        Donation createdDonation = sut.createDonation(donation);
-//
-//        Assert.assertNotNull(createdDonation);
-//
-//        Donation retrievedDonation = sut.getDonationById(createdDonation.getDonationId());
-//        Assert.assertEquals(retrievedDonation, createdDonation);
+        NewDonationDto donation = new NewDonationDto(1, 1, 5000, "test", "approved");
+        Donation createdDonation = sut.createDonation(donation);
+
+        Donation retrievedDonation =
+                sut.getDonationById(createdDonation.getDonationId()).orElseThrow();
+        Assert.assertEquals(retrievedDonation, createdDonation);
     }
 }
