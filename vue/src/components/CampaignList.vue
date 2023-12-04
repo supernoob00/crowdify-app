@@ -1,22 +1,39 @@
 <template>
-  <div class="campaigns">
+  <div class="campaigns block">
     <router-link v-for="campaign in campaigns" :key="campaign.id"
       :to="{ name: 'CampaignView', params: { id: campaign.id } }">
-      <div class="campaign">{{ campaign.name }}</div>
+      <div class="campaign" :class="campaignClass(campaign)">{{ campaign.name }}</div>
     </router-link>
   </div>
 </template>
 
 <script>
 export default {
-  props: ['campaigns']
+  props: ['campaigns'],
+  computed: {
+    currentUser() {
+      return this.$store.state.user;
+    }
+  },
+  methods: {
+    campaignClass(c) {
+      if (c.public && c.managers.filter(m => m.username === this.currentUser.username).length > 0) {
+        return { 'managed-public': true }
+      }
+      if ((!c.public && c.managers.filter(m => m.username === this.currentUser.username).length > 0)) {
+        return { 'managed-private': true }
+      }
+      return {}
+    }
+
+  }
 }
 </script>
 
 <style scoped>
 .campaigns {
   display: flex;
-  margin: 0 20px 0 0;
+  margin-right: 20px;
   flex-wrap: wrap;
   column-gap: 20px;
   row-gap: 25px;
@@ -30,6 +47,14 @@ export default {
   padding: 40px;
   text-align: center;
   background-color: grey;
+}
+
+.managed-private {
+  background-color: var(--user-is-manager-private);
+}
+
+.managed-public {
+  background-color: var(--user-is-manager-public);
 }
 
 a:link,

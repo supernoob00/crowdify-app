@@ -46,7 +46,7 @@ CREATE TABLE donation (
     donor_id integer,
     campaign_id integer NOT NULL,
     donation_amount integer NOT NULL,
-    donation_date timestamp NOT NULL,
+    donation_date timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
     donation_comment varchar(200),
     donation_status varchar(20), --TODO: pending, approved, rejected statuses? Add constraint that only be these statuses Also what happens if campaign is locked/made private
 

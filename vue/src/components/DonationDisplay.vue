@@ -1,7 +1,7 @@
 <template>
   <article class="message">
     <div class="message-header">
-      <p id="donor-name">{{ donation.donor.name }} </p>
+      <p id="donor-name">{{ donation.donor.username }} </p>
     </div>
     <div class="message-body">
       <span id="amount">${{ donation.amount / 100 }}</span>

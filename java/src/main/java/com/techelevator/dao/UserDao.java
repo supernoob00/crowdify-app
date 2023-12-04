@@ -15,4 +15,6 @@ public interface UserDao {
     Optional<User> getUserByUsername(String username);
 
     User createUser(RegisterUserDto user);
+
+    List<User> getManagersByCampaignId(int campaignId);
 }

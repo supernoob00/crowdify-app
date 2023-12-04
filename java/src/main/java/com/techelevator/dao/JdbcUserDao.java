@@ -85,19 +85,20 @@ public class JdbcUserDao implements UserDao {
         }
     }
 
+    @Override
     public List<User> getManagersByCampaignId(int campaignId) {
         String sql = "SELECT * FROM campaign_manager WHERE campaign_id = ?;";
-        List<User> users = new ArrayList<>();
+        List<User> managers = new ArrayList<>();
         try {
             SqlRowSet results = jdbcTemplate.queryForRowSet(sql, campaignId);
             while (results.next()) {
-                User user = getUserById(results.getInt("manager_id")).orElseThrow();
-                users.add(user);
+                User manager = getUserById(results.getInt("manager_id")).orElseThrow();
+                managers.add(manager);
             }
         } catch (CannotGetJdbcConnectionException e) {
             throw new DaoException("Unable to connect to server or database", e);
         }
-        return users;
+        return managers;
     }
 
     private User mapRowToUser(SqlRowSet rs) {

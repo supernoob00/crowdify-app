@@ -56,10 +56,9 @@ public class TestingDatabaseConfig {
         dataSource.setUrl(String.format("jdbc:postgresql://%s:%s/%s", DB_HOST, DB_PORT, DB_NAME));
         dataSource.setUsername(DB_USERNAME);
         dataSource.setPassword(DB_PASSWORD);
-        dataSource.setAutoCommit(false); //So we can rollback after each test.
+        dataSource.setAutoCommit(false); //So we can roll back after each test.
 
-        ScriptUtils.executeSqlScript(dataSource.getConnection(),
-                new FileSystemResource("database/schema_test.sql"));
+        ScriptUtils.executeSqlScript(dataSource.getConnection(), new FileSystemResource("database/schema_test.sql"));
         ScriptUtils.executeSqlScript(dataSource.getConnection(), new ClassPathResource("test-data.sql"));
 
         ds = dataSource;

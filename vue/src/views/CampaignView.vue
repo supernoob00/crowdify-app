@@ -20,6 +20,7 @@ export default {
     return {
       // campaign has junk default data while backend isn't ready
       campaign: {
+        id: 1,
         name: 'Poop',
         description: 'Just dropping some poop off as is my usual way of doing thangs. Just need some money to help out with this',
         fundingGoal: 1000,
@@ -48,7 +49,7 @@ export default {
       try {
         let campaignId = parseInt(this.$route.params.id)
         const response = await campaignService.getCampaign(campaignId);
-        this.campaigns = response.data;
+        this.campaign = response.data;
       } catch (error) {
         campaignService.handleErrorResponse(this.$store, error, 'getting', 'campaign');
       } finally {
@@ -57,9 +58,9 @@ export default {
     }
   },
   async created() {
-    this.isLoading = false;
+    // this.isLoading = false;
     //for testing purposes, commented out api call while backend not ready
-    // this.retrieveCampaign()
+    this.retrieveCampaign()
   }
 }
 </script>
