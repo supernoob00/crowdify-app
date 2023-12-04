@@ -1,24 +1,31 @@
 <template>
-  <div id="login">
+  <div id="login" class="content">
     <form v-on:submit.prevent="login">
-      <h1 >Please Sign In</h1>
+      <h1>Please Sign In</h1>
       <div role="alert" v-if="invalidCredentials">
         Invalid username and password!
       </div>
       <div role="alert" v-if="this.$route.query.registration">
         Thank you for registering, please sign in.
       </div>
-      <div class="form-input-group">
-        <label for="username">Username</label>
-        <input type="text" id="username" v-model="user.username" required autofocus />
+      <div class="field">
+        <label class="label">Username</label>
+        <div class="control">
+          <input type="text" class="input" v-model="user.username" required autofocus />
+        </div>
       </div>
-      <div class="form-input-group">
-        <label for="password">Password</label>
-        <input type="password" id="password" v-model="user.password" required />
+      <div class="field">
+        <label class="label">Password</label>
+        <div class="control">
+          <input type="password" class="input" v-model="user.password" required />
+        </div>
       </div>
-      <button type="submit">Sign in</button>
+      <div class="control">
+        <button class="button is-link" type="submit">Sign in</button>
+      </div>
       <p>
-      <router-link v-bind:to="{ name: 'register' }">Need an account? Sign up.</router-link></p>
+        <router-link v-bind:to="{ name: 'register' }">Need an account? Sign up.</router-link>
+      </p>
     </form>
   </div>
 </template>
@@ -61,10 +68,7 @@ export default {
 </script>
 
 <style scoped>
-.form-input-group {
-  margin-bottom: 1rem;
-}
-label {
-  margin-right: 0.5rem;
+input {
+  max-width: 150px;
 }
 </style>

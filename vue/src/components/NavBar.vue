@@ -26,9 +26,4 @@
 </template>
 <script>
 </script>
-<style scoped>
-nav {
-  /* background-color: var(--app-background); */
-  /* border-bottom: 1px solid black; */
-}
-</style>
+<style scoped></style>
