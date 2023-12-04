@@ -136,8 +136,8 @@ CREATE FUNCTION spend_request_approved_only_with_majority_vote() RETURNS trigger
         FROM vote
         WHERE vote.request_id = NEW.request_id;
 
-        IF NEW.approved AND (2 * approve_votes <= total_votes) THEN
-            RAISE EXCEPTION ''A spend request cannot be approved if not a majority vote'';
+        IF (NEW.request_approved AND (2 * approve_votes <= total_votes)) THEN
+            RAISE EXCEPTION 'A spend request cannot be approved if not a majority vote';
         END IF;
         RETURN NEW;
     END;
@@ -158,7 +158,7 @@ CREATE FUNCTION only_non_manager_donors_vote_spend_request() RETURNS trigger AS 
         AND (spend_request.campaign_id = campaign_manager.campaign_id);
 
         IF manager_voter_count > 0 THEN
-            RAISE EXCEPTION ''A manager cannot vote for a spend request of their own campaign.'';
+            RAISE EXCEPTION 'A manager cannot vote for a spend request of their own campaign.';
         END IF;
 
         --count of voters for spend request who are not a donor
@@ -172,7 +172,7 @@ CREATE FUNCTION only_non_manager_donors_vote_spend_request() RETURNS trigger AS 
         WHERE (donation.donation_id IS null);
 
         IF non_donor_voter_count > 0 THEN
-            RAISE EXCEPTION ''Only donors to a campaign can vote for that campaign spend requests.'';
+            RAISE EXCEPTION 'Only donors to a campaign can vote for that campaign spend requests.';
         END IF;
         RETURN NEW;
     END;
