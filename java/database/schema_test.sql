@@ -1,5 +1,3 @@
---- *** ---
-
 BEGIN TRANSACTION;
 
 DROP TABLE IF EXISTS users, campaign, campaign_manager, donation, spend_request, vote CASCADE;
@@ -18,7 +16,7 @@ CREATE TABLE campaign (
     campaign_name varchar(50) NOT NULL UNIQUE,
     description varchar(500) NOT NULL,
     funding_goal integer NOT NULL,
-    start_date timestamp NOT NULL,
+    start_date timestamp NOT NULL, 
     end_date timestamp NOT NULL,
     locked boolean DEFAULT false NOT NULL, --TODO: what default?
     public boolean DEFAULT false NOT NULL,
@@ -46,7 +44,7 @@ CREATE TABLE donation (
     donor_id integer,
     campaign_id integer NOT NULL,
     donation_amount integer NOT NULL,
-    donation_date timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    donation_date timestamp NOT NULL,
     donation_comment varchar(200),
     donation_status varchar(20), --TODO: pending, approved, rejected statuses? Add constraint that only be these statuses Also what happens if campaign is locked/made private
 
@@ -80,12 +78,14 @@ CREATE TABLE vote (
 
 COMMIT TRANSACTION;
 
+--- *** ---
+
 DROP FUNCTION IF EXISTS check_campaign_single_creator;
 DROP FUNCTION IF EXISTS donation_date_between_start_end_dates;
 DROP FUNCTION IF EXISTS spend_request_approved_only_with_majority_vote;
 DROP FUNCTION IF EXISTS only_non_manager_donors_vote_spend_request;
 
-CREATE FUNCTION check_campaign_single_creator() RETURNS trigger AS $check_single_creator$
+CREATE FUNCTION check_campaign_single_creator() RETURNS trigger AS '
 	DECLARE
 		invalid_counts integer;
     BEGIN
@@ -97,14 +97,13 @@ CREATE FUNCTION check_campaign_single_creator() RETURNS trigger AS $check_single
         WHERE counts.creator_count != 1;
 
         IF invalid_counts > 0 THEN
-            RAISE EXCEPTION 'Every campaign must have exactly one creator.';
+            RAISE EXCEPTION ''Every campaign must have exactly one creator.'';
         END IF;
         RETURN NEW;
-    END;
-$check_single_creator$ LANGUAGE plpgsql;
+    END;' LANGUAGE plpgsql;
 
 --TODO: needs to be tested
-CREATE FUNCTION donation_date_between_start_end_dates() RETURNS trigger AS $check_donation_date$
+CREATE FUNCTION donation_date_between_start_end_dates() RETURNS trigger AS '
 	DECLARE
 		start_end_dates campaign%ROWTYPE;
     BEGIN
@@ -114,17 +113,16 @@ CREATE FUNCTION donation_date_between_start_end_dates() RETURNS trigger AS $chec
 		WHERE (campaign.campaign_id = NEW.campaign_id);
 
         IF (NOT (NEW.donation_date > start_end_dates.start_date AND NEW.donation_date < start_end_dates.end_date)) THEN
-            RAISE EXCEPTION 'Donation date must be between start and end dates of campaign.';
+            RAISE EXCEPTION ''Donation date must be between start and end dates of campaign.'';
         END IF;
         RETURN NEW;
-    END;
-$check_donation_date$ LANGUAGE plpgsql;
+    END;' LANGUAGE plpgsql;
 
 --TODO: needs to be tested
-CREATE FUNCTION spend_request_approved_only_with_majority_vote() RETURNS trigger AS $check_request_approved$
+CREATE FUNCTION spend_request_approved_only_with_majority_vote() RETURNS trigger AS '
 	DECLARE
-    		approve_votes integer;
-            total_votes integer;
+		approve_votes integer;
+        total_votes integer;
     BEGIN
         SELECT COUNT (donor_id)
         INTO approve_votes
@@ -136,17 +134,16 @@ CREATE FUNCTION spend_request_approved_only_with_majority_vote() RETURNS trigger
         FROM vote
         WHERE vote.request_id = NEW.request_id;
 
-        IF (NEW.request_approved AND (2 * approve_votes <= total_votes)) THEN
-            RAISE EXCEPTION 'A spend request cannot be approved if not a majority vote';
+        IF NEW.approved AND (2 * approve_votes <= total_votes) THEN
+            RAISE EXCEPTION ''A spend request cannot be approved if not a majority vote'';
         END IF;
         RETURN NEW;
-    END;
-$check_request_approved$ LANGUAGE plpgsql;
+    END;' LANGUAGE plpgsql;
 
-CREATE FUNCTION only_non_manager_donors_vote_spend_request() RETURNS trigger AS $check_voters$
+CREATE FUNCTION only_non_manager_donors_vote_spend_request() RETURNS trigger AS '
 	DECLARE
-    		manager_voter_count integer;
-            non_donor_voter_count integer;
+		manager_voter_count integer;
+        non_donor_voter_count integer;
     BEGIN
         --count of voters for spend request who are a manager of the associated campaign
         SELECT COUNT (DISTINCT donor_id)
@@ -158,7 +155,7 @@ CREATE FUNCTION only_non_manager_donors_vote_spend_request() RETURNS trigger AS 
         AND (spend_request.campaign_id = campaign_manager.campaign_id);
 
         IF manager_voter_count > 0 THEN
-            RAISE EXCEPTION 'A manager cannot vote for a spend request of their own campaign.';
+            RAISE EXCEPTION ''A manager cannot vote for a spend request of their own campaign.'';
         END IF;
 
         --count of voters for spend request who are not a donor
@@ -172,11 +169,10 @@ CREATE FUNCTION only_non_manager_donors_vote_spend_request() RETURNS trigger AS 
         WHERE (donation.donation_id IS null);
 
         IF non_donor_voter_count > 0 THEN
-            RAISE EXCEPTION 'Only donors to a campaign can vote for that campaign spend requests.';
+            RAISE EXCEPTION ''Only donors to a campaign can vote for that campaign spend requests.'';
         END IF;
         RETURN NEW;
-    END;
-$check_voters$ LANGUAGE plpgsql;
+    END;' LANGUAGE plpgsql;
 
 CREATE TRIGGER check_campaign_single_creator BEFORE INSERT OR UPDATE OR DELETE ON campaign_manager
     EXECUTE PROCEDURE check_campaign_single_creator();
@@ -189,3 +185,5 @@ CREATE TRIGGER spend_request_approved_only_with_majority_vote BEFORE INSERT OR U
 
 CREATE TRIGGER only_non_manager_donors_vote_spend_request BEFORE INSERT OR UPDATE on vote
     EXECUTE PROCEDURE only_non_manager_donors_vote_spend_request();
+
+

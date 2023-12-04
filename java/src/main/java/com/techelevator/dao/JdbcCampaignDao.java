@@ -2,14 +2,16 @@ package com.techelevator.dao;
 
 import com.techelevator.exception.DaoException;
 import com.techelevator.model.Campaign;
+import com.techelevator.model.NewCampaignDto;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.CannotGetJdbcConnectionException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.constraints.NotNull;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -18,10 +20,12 @@ import java.util.Optional;
 public class JdbcCampaignDao {
     private final JdbcTemplate jdbcTemplate;
     private final JdbcDonationDao jdbcDonationDao;
+    private final UserDao userDao;
 
-    public JdbcCampaignDao(JdbcTemplate jdbcTemplate, JdbcDonationDao jdbcDonationDao) {
+    public JdbcCampaignDao(JdbcTemplate jdbcTemplate, JdbcDonationDao jdbcDonationDao, UserDao userDao) {
         this.jdbcTemplate = jdbcTemplate;
         this.jdbcDonationDao = jdbcDonationDao;
+        this.userDao = userDao;
     }
 
     public List<Campaign> getCampaignList() {
@@ -53,37 +57,46 @@ public class JdbcCampaignDao {
         return Optional.empty();
     }
 
-    public Campaign createCampaign(@NotNull Campaign campaign) {
-        Campaign newCampaign;
-
-        // TODO do we also need to insert default values for the booleans? what happens if they're not met?
-        //  maybe public/private doesn't need a default?
-
-        String sql = "INSERT into campaign (campaign_name, description, funding_goal, start_date, end_date) " +
-                "values(?,?,?,?,?) returning campaign_id;";
-
+    public Campaign createCampaign(@NotNull NewCampaignDto newCampaignDto) {
+        Campaign createdCampaign;
+        String sql = "INSERT INTO campaign (campaign_name, description, funding_goal, start_date, end_date, public) " +
+                "VALUES (?,?,?,?,?,?) returning campaign_id;";
         try {
-            int campaignId = jdbcTemplate.queryForObject(sql, int.class,
-                    campaign.getName(),
-                    campaign.getDescription(),
-                    campaign.getFundingGoal(),
-                    campaign.getStartDate(),
-                    campaign.getEndDate());
-
-            newCampaign = getCampaignById(campaignId).get();
+            Integer newCampaignId = jdbcTemplate.queryForObject(sql, int.class,
+                    newCampaignDto.getName(),
+                    newCampaignDto.getDescription(),
+                    newCampaignDto.getFundingGoal(),
+                    newCampaignDto.getStartDate(),
+                    newCampaignDto.getEndDate(),
+                    newCampaignDto.isPublic());
+            if (newCampaignId == null) {
+                throw new DaoException("Failed to create campaign");
+            }
+            linkCampaignManager(newCampaignId, newCampaignDto.getCreatorId(), true);
+            createdCampaign = getCampaignById(newCampaignId).get();
 
         } catch (CannotGetJdbcConnectionException e) {
             throw new DaoException("Unable to connect to server or database", e);
         } catch (DataIntegrityViolationException e) {
             throw new DaoException("Data integrity violation", e);
         }
-        return newCampaign;
+        return createdCampaign;
     }
 
-    public void deleteCampaignById (int campaignId) {
+    public void deleteCampaignById(int campaignId) {
 
 //TODO do we want managers to be able to delete campaigns entirely, or should they remain in the database
 // as deleted but hidden from the front end?
+    }
+
+    private int linkCampaignManager(int campaignId, int managerId, boolean isCreator) {
+        String sql = "INSERT INTO campaign_manager (campaign_id, manager_id, creator) " +
+                     "VALUES (?,?,?)";
+        try {
+            return jdbcTemplate.update(sql, campaignId, managerId, isCreator);
+        } catch (CannotGetJdbcConnectionException e) {
+            throw new DaoException("Unable to connect to server or database", e);
+        }
     }
 
     private Campaign mapRowtoCampaign(SqlRowSet rowSet) {
@@ -96,8 +109,8 @@ public class JdbcCampaignDao {
         campaign.setEndDate(rowSet.getTimestamp("end_date").toLocalDateTime());
         campaign.setLocked(rowSet.getBoolean("locked"));
         campaign.setPublic(rowSet.getBoolean("public"));
-        campaign.setDonations(jdbcDonationDao.getDonationList(rowSet.getInt("campaign_id")));
-        //TODO: add list of managers
+        campaign.setDonations(jdbcDonationDao.getDonationsByCampaignId(rowSet.getInt("campaign_id")));
+        campaign.setManagers(userDao.getManagersByCampaignId(rowSet.getInt("campaign_id")));
         return campaign;
     }
 }
