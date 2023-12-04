@@ -20,6 +20,8 @@ export default {
 <style>
 :root {
   --app-background: white;
+  --user-is-manager-public: green;
+  --user-is-manager-private: teal;
 }
 
 body {
