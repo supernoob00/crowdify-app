@@ -1,8 +1,10 @@
 package com.techelevator.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,20 +16,17 @@ public class Campaign {
     private String name;
     private String description;
     private int fundingGoal;
-
-    @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime startDate;
-    @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime endDate;
-
-    // TODO: these LocalDateTime stamps are causing a 400 BAD REQUEST
-    //  because the format doesn't line up with the JSON object, presumably
     private boolean locked;
+    @NotNull
     private boolean isPublic;
     private List<Donation> donations = new ArrayList<>();
     private List<User> managers = new ArrayList<>();
 
-    public Campaign(){
+    public Campaign() {
     }
 
     public Campaign(int id, String name, String description, int fundingGoal, LocalDateTime startDate, LocalDateTime endDate, boolean locked, boolean isPublic) {
@@ -104,6 +103,7 @@ public class Campaign {
     public void setPublic(boolean aPublic) {
         isPublic = aPublic;
     }
+
     public List<Donation> getDonations() {
         return donations;
     }

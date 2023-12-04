@@ -59,8 +59,8 @@ public class JdbcCampaignDao {
         // TODO do we also need to insert default values for the booleans? what happens if they're not met?
         //  maybe public/private doesn't need a default?
 
-        String sql = "INSERT into campaign (campaign_name, description, funding_goal, start_date, end_date) " +
-                "values(?,?,?,?,?) returning campaign_id;";
+        String sql = "INSERT into campaign (campaign_name, description, funding_goal, start_date, end_date, public) " +
+                "values(?,?,?,?,?,?) returning campaign_id;";
 
         try {
             int campaignId = jdbcTemplate.queryForObject(sql, int.class,
@@ -68,7 +68,8 @@ public class JdbcCampaignDao {
                     campaign.getDescription(),
                     campaign.getFundingGoal(),
                     campaign.getStartDate(),
-                    campaign.getEndDate());
+                    campaign.getEndDate(),
+                    campaign.isPublic());
 
             newCampaign = getCampaignById(campaignId).get();
 
