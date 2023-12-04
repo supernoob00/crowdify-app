@@ -101,6 +101,22 @@ public class JdbcUserDao implements UserDao {
         return managers;
     }
 
+
+    public Optional<User> getCreatorByCampaignId(int campaignId) {
+        String sql = "SELECT user_id, username, password_hash, role FROM " +
+                "users INNER JOIN campaign_manager ON (manager_id = " +
+                "user_id) WHERE campaign_id = ? AND creator;";
+        try {
+            SqlRowSet results = jdbcTemplate.queryForRowSet(sql, campaignId);
+            if (results.next()) {
+                return Optional.of(mapRowToUser(results));
+            }
+        } catch (CannotGetJdbcConnectionException e) {
+            throw new DaoException("Unable to connect to server or database", e);
+        }
+        return Optional.empty();
+    }
+
     private User mapRowToUser(SqlRowSet rs) {
         User user = new User();
         user.setId(rs.getInt("user_id"));

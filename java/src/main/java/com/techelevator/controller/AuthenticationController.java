@@ -63,6 +63,8 @@ public class AuthenticationController {
     public void register(@Valid @RequestBody RegisterUserDto newUser) {
         try {
             User user = userDao.createUser(newUser);
+            // TODO: this might need to be changed because user will never be
+            //  null
             if (user == null) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User registration failed.");
             }

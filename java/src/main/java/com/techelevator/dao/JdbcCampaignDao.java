@@ -57,6 +57,7 @@ public class JdbcCampaignDao {
         return Optional.empty();
     }
 
+    // TODO: insert campaign creator into database as well
     public Campaign createCampaign(@NotNull NewCampaignDto newCampaignDto) {
         Campaign createdCampaign;
         String sql = "INSERT INTO campaign (campaign_name, description, funding_goal, start_date, end_date, public) " +
@@ -111,6 +112,7 @@ public class JdbcCampaignDao {
         campaign.setPublic(rowSet.getBoolean("public"));
         campaign.setDonations(jdbcDonationDao.getDonationsByCampaignId(rowSet.getInt("campaign_id")));
         campaign.setManagers(userDao.getManagersByCampaignId(rowSet.getInt("campaign_id")));
+        campaign.setCreator(userDao.getCreatorByCampaignId(rowSet.getInt("campaign_id")).orElseThrow());
         return campaign;
     }
 }
