@@ -24,13 +24,13 @@
       <div class="field">
         <label class="label">Start Date</label>
         <div class="control">
-          <input type="date" class="input" placeholder="Start Date" v-model="newCampaign.startDate">
+          <input type="date" class="input" :min="minStartDate" placeholder="Start Date" v-model="newCampaign.startDate">
         </div>
       </div>
       <div class="field">
         <label class="label">End Date</label>
         <div class="control">
-          <input type="date" class="input" placeholder="End Date" v-model="newCampaign.endDate">
+          <input type="date" class="input" :min="minEndDate" placeholder="End Date" v-model="newCampaign.endDate">
         </div>
       </div>
       <div class="field">
@@ -63,16 +63,19 @@ export default {
     return {
       isLoading: true,
       newCampaign: {
+        id: -1,
         name: 'test',
         description: 'test',
         public: false,
         endDate: '2023-12-10',
         startDate: '2023-12-07',
         fundingGoal: 2
-      }
+      },
+      minStartDate: new Date().toJSON().slice(0, 10),
+      minEndDate: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() + 1).toJSON().slice(0, 10)
     }
   },
-  computed:{
+  computed: {
     currentUser() {
       return this.$store.state.user;
     }
