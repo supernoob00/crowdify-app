@@ -2,13 +2,16 @@ package com.techelevator.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import javax.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
 public class User {
 
+   @NotNull
    private int id;
+   @NotNull
    private String username;
    @JsonIgnore
    private String password;

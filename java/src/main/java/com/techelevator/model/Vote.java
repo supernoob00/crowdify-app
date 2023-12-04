@@ -1,9 +1,12 @@
 package com.techelevator.model;
 
+import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
 public class Vote {
+    @NotNull
     private int userId;
+    @NotNull
     private int requestId;
     private boolean approved;
 

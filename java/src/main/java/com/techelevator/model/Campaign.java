@@ -1,14 +1,12 @@
 package com.techelevator.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import org.hibernate.validator.constraints.UniqueElements;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
+import javax.validation.constraints.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,13 +26,25 @@ public class Campaign {
     private LocalDateTime startDate;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime endDate;
+
     private boolean locked;
     @NotNull
     private boolean isPublic;
 
     private List<Donation> donations = new ArrayList<>();
-    @Min(1)
+    @NotEmpty
     private List<User> managers = new ArrayList<>();
+
+    @AssertTrue
+    private boolean doesManagersListContainAtLeastOneManager() {
+        return managers.size() > 0;
+    }
+
+//    @AssertTrue
+//    private boolean doesManagersListContainOnlyOneCreator() {
+//        Campaign campaign;
+//        return campaign.
+//    }
 
     public Campaign() {
     }
@@ -142,4 +152,6 @@ public class Campaign {
     public int hashCode() {
         return Objects.hash(id, name, description, fundingGoal, startDate, endDate, locked, isPublic, donations, managers);
     }
+
+
 }
