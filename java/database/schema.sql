@@ -65,7 +65,8 @@ CREATE TABLE spend_request (
     end_date timestamp, --TODO: Ask Jennifer is end date needed
 
     CONSTRAINT pk_request_id PRIMARY KEY (request_id),
-    CONSTRAINT fk_campaign_id FOREIGN KEY (campaign_id) REFERENCES campaign (campaign_id)
+    CONSTRAINT fk_campaign_id FOREIGN KEY (campaign_id) REFERENCES campaign,
+    CONSTRAINT request_amount_valid CHECK (request_amount > 0)
 );
 
 CREATE TABLE vote (

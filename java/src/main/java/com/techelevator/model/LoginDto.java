@@ -1,4 +1,7 @@
 package com.techelevator.model;
+
+import javax.validation.constraints.NotBlank;
+
 /*
     The acronym DTO is being used for "data transfer object". It means that this type of class is specifically
     created to transfer data between the client and the server. For example, LoginDto represents the data a
@@ -6,8 +9,9 @@ package com.techelevator.model;
     from the server to the client from a login endpoint.
  */
 public class LoginDto {
-
+   @NotBlank
    private String username;
+   @NotBlank
    private String password;
 
    public String getUsername() {

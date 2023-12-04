@@ -1,6 +1,11 @@
 package com.techelevator.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.boot.context.properties.bind.DefaultValue;
+
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -9,9 +14,13 @@ import java.util.Objects;
 
 public class Campaign {
 
+    @Min(1)
     private int id;
+    @NotBlank
     private String name;
+    @NotBlank
     private String description;
+    @Min(100)
     private int fundingGoal;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime startDate;
@@ -20,7 +29,9 @@ public class Campaign {
     private boolean locked;
     @NotNull
     private boolean isPublic;
+    @NotNull
     private List<Donation> donations = new ArrayList<>();
+    @NotEmpty
     private List<User> managers = new ArrayList<>(); // contains creator
     @NotNull
     private User creator;

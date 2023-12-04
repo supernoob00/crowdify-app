@@ -1,5 +1,6 @@
 package com.techelevator.model;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 /*
     The acronym DTO is being used for "data transfer object". It means that this type of class is specifically
@@ -9,13 +10,13 @@ import javax.validation.constraints.NotEmpty;
  */
 public class RegisterUserDto {
 
-    @NotEmpty
+    @NotBlank
     private String username;
-    @NotEmpty
+    @NotBlank
     private String password;
-    @NotEmpty
+    @NotBlank
     private String confirmPassword;
-    @NotEmpty(message = "Please select a role for this user.")
+    @NotBlank(message = "Please select a role for this user.")
     private String role;
 
     public String getUsername() {
