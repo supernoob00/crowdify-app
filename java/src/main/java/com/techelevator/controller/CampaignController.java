@@ -26,6 +26,7 @@ public class CampaignController {
     @RequestMapping(path = "/campaigns", method = RequestMethod.GET)
     public List<Campaign> campaignList() {
         return jdbcCampaignDao.getCampaignList();
+        //TODO: Filter campaign list based on user logged in here, instead of in frontend.
     }
 
     @ResponseStatus(HttpStatus.OK)

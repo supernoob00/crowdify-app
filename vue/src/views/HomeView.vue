@@ -20,7 +20,6 @@ export default {
   },
   data() {
     return {
-      // campaigns has junk default data while backend isn't ready
       campaigns: [{
         name: 'Poop',
         id: 1,
@@ -65,8 +64,6 @@ export default {
     },
   },
   async created() {
-    // this.isLoading = false;
-    // for testing purposes, commented out api call while backend not ready
     await this.retrieveCampaigns();
   }
 }

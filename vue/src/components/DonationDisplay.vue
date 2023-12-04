@@ -18,7 +18,7 @@ export default {
 
 <style scoped>
 article {
-  max-width: 40%;
+  max-width: 300px;
 }
 
 .message-body {
