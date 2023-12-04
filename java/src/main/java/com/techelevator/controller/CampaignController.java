@@ -32,7 +32,12 @@ public class CampaignController {
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(path = "/campaigns", method = RequestMethod.GET)
     public List<Campaign> campaignList(Principal principal) {
-        Optional<User> loggedInUser = jdbcUserDao.getUserByUsername(principal.getName());
+        Optional<User> loggedInUser;
+        if (principal == null) {
+            loggedInUser = Optional.empty();
+        } else {
+            loggedInUser = jdbcUserDao.getUserByUsername(principal.getName());
+        }
         List<Campaign> campaigns = new ArrayList<>();
 
         for (Campaign campaign : jdbcCampaignDao.getCampaignList()) {

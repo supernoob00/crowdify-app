@@ -94,4 +94,13 @@ public class JdbcUserDaoTests extends BaseDaoTests {
                 sut.getUserByUsername(createdUser.getUsername()).orElseThrow();
         Assert.assertEquals(retrievedUser, createdUser);
     }
+
+    @Test
+    public void get_creator_by_campaign_id_returns_correct_creator() {
+        User creator = sut.getCreatorByCampaignId(1).orElseThrow();
+        Assert.assertEquals(USER_1, creator);
+
+        Optional<User> invalid = sut.getCreatorByCampaignId(99);
+        Assert.assertTrue(invalid.isEmpty());
+    }
 }
