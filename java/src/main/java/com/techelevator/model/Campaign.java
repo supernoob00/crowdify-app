@@ -21,12 +21,16 @@ public class Campaign {
     @NotNull
     private boolean isPublic;
     private List<Donation> donations = new ArrayList<>();
-    private List<User> managers = new ArrayList<>();
+    private List<User> managers = new ArrayList<>(); // contains creator
+    @NotNull
+    private User creator;
 
     public Campaign() {
     }
 
-    public Campaign(int id, String name, String description, int fundingGoal, LocalDateTime startDate, LocalDateTime endDate, boolean locked, boolean isPublic) {
+    public Campaign(int id, String name, String description, int fundingGoal,
+                    LocalDateTime startDate, LocalDateTime endDate,
+                    boolean locked, boolean isPublic, User creator) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -35,6 +39,8 @@ public class Campaign {
         this.endDate = endDate;
         this.locked = locked;
         this.isPublic = isPublic;
+        this.creator = creator;
+        this.managers.add(creator);
     }
 
     public int getId() {
@@ -117,17 +123,34 @@ public class Campaign {
         this.managers = managers;
     }
 
+    public int getDonationTotal() {
+        int total = 0;
+        for (Donation donation : donations) {
+            total += donation.getAmount();
+        }
+        return total;
+    }
+
+    public User getCreator() {
+        return creator;
+    }
+
+    public void setCreator(User creator) {
+        this.creator = creator;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Campaign campaign = (Campaign) o;
-        return id == campaign.id && fundingGoal == campaign.fundingGoal && locked == campaign.locked && isPublic == campaign.isPublic && Objects.equals(name, campaign.name) && Objects.equals(description, campaign.description) && Objects.equals(startDate, campaign.startDate) && Objects.equals(endDate, campaign.endDate) && Objects.equals(donations, campaign.donations) && Objects.equals(managers, campaign.managers);
+        return id == campaign.id && fundingGoal == campaign.fundingGoal && locked == campaign.locked && isPublic == campaign.isPublic && Objects.equals(name, campaign.name) && Objects.equals(description, campaign.description) && Objects.equals(startDate, campaign.startDate) && Objects.equals(endDate, campaign.endDate) && Objects.equals(donations, campaign.donations) && Objects.equals(managers, campaign.managers) && Objects.equals(creator, campaign.creator);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description, fundingGoal, startDate, endDate, locked, isPublic, donations, managers);
+        return Objects.hash(id, name, description, fundingGoal, startDate,
+                endDate, locked, isPublic, donations, managers, creator);
     }
 
     @Override
@@ -143,6 +166,7 @@ public class Campaign {
                 ", isPublic=" + isPublic +
                 ", donations=" + donations +
                 ", managers=" + managers +
+                ", creator=" + creator +
                 '}';
     }
 }

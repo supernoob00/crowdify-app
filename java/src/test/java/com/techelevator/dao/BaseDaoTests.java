@@ -28,13 +28,13 @@ public abstract class BaseDaoTests {
             LocalDateTime.of(2024, 1, 13, 0, 0), "What the frick does Quantum mean??", null);
     protected static final Campaign CAMPAIGN_1 = new Campaign(1, "Fancy New Tech", "We are making some cool new stuff using technology",
             1000000, LocalDateTime.of(2024, 1, 1, 0, 0),
-            LocalDateTime.of(2024, 1, 21, 0, 0), false, false);
+            LocalDateTime.of(2024, 1, 21, 0, 0), false, false, USER_1);
     protected static final Campaign CAMPAIGN_2 = new Campaign(2, "Fancy New Robot", "We are making some cool new stuff using a cool robot",
             2000000, LocalDateTime.of(2024, 1, 2, 0, 0),
-            LocalDateTime.of(2024, 1, 22, 0, 0), false, true);
+            LocalDateTime.of(2024, 1, 22, 0, 0), false, true, USER_2);
     protected static final Campaign CAMPAIGN_3 = new Campaign(3, "Fancy New Computer", "We are making some cool new stuff using a quantum computer",
             3000000, LocalDateTime.of(2024, 1, 3, 0, 0),
-            LocalDateTime.of(2024, 1, 23, 0, 0), true, false);
+            LocalDateTime.of(2024, 1, 23, 0, 0), true, false, USER_3);
 
     static {
         CAMPAIGN_1.setManagers(List.of(USER_1));
