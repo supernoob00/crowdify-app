@@ -13,7 +13,7 @@ import java.util.Optional;
 @RestController
 @CrossOrigin
 public class CampaignController {
-    private JdbcCampaignDao jdbcCampaignDao;
+    private final JdbcCampaignDao jdbcCampaignDao;
 
     public CampaignController(JdbcCampaignDao jdbcCampaignDao) {
         this.jdbcCampaignDao = jdbcCampaignDao;

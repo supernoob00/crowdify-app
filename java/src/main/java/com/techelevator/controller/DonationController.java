@@ -34,8 +34,8 @@ public class DonationController {
         Donation donation = new Donation();
 
         donation.setCampaignId(newDonationDto.getCampaignId());
-        donation.setAmount(newDonationDto.getDonationAmount());
-        donation.setComment(newDonationDto.getDonationComment());
+        donation.setAmount(newDonationDto.getAmount());
+        donation.setComment(newDonationDto.getComment());
         donation.setStatus(newDonationDto.getDonationStatus());
 
         boolean result = isCorrectUser(principal, donation);

@@ -1,26 +1,29 @@
 package com.techelevator.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
 public class NewDonationDto {
 
+    @NotNull
     private int donorId;
     @NotNull
     private int campaignId;
     @Positive
-    private int donationAmount;
-    private String donationComment;
+    private int amount;
+    private String comment;
     private String donationStatus;
 
     public NewDonationDto() {
     }
 
-    public NewDonationDto(int donorId, int campaignId, int donationAmount, String donationComment, String donationStatus) {
+    public NewDonationDto(int donorId, int campaignId, int amount, String comment, String donationStatus) {
         this.donorId = donorId;
         this.campaignId = campaignId;
-        this.donationAmount = donationAmount;
-        this.donationComment = donationComment;
+        this.amount = amount;
+        this.comment = comment;
         this.donationStatus = donationStatus;
 
     }
@@ -41,20 +44,20 @@ public class NewDonationDto {
         this.campaignId = campaignId;
     }
 
-    public int getDonationAmount() {
-        return donationAmount;
+    public int getAmount() {
+        return amount;
     }
 
-    public void setDonationAmount(int donationAmount) {
-        this.donationAmount = donationAmount;
+    public void setAmount(int amount) {
+        this.amount = amount;
     }
 
-    public String getDonationComment() {
-        return donationComment;
+    public String getComment() {
+        return comment;
     }
 
-    public void setDonationComment(String donationComment) {
-        this.donationComment = donationComment;
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
     public String getDonationStatus() {
