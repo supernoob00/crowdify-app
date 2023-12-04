@@ -1,18 +1,25 @@
 package com.techelevator.model;
 
-import javax.validation.constraints.Positive;
+import javax.validation.constraints.*;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 
 public class Donation {
+    @Min(1)
     private int donationId;
+    @NotNull
     private User donor;
+    @Min(1)
     private int campaignId;
-    @Positive
+    @Min(1)
+    @Max(50000000)
     private int amount;
+    @NotNull
     private LocalDateTime date;
+    @NotBlank
     private String comment;
+    @NotBlank
     private String status;
 
     public Donation() {
