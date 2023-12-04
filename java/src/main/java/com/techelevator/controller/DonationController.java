@@ -38,7 +38,7 @@ public class DonationController {
 
     public boolean isCorrectUser(Principal principal, NewDonationDto newDonationDto) {
         String username = principal.getName();
-        Optional<User>optionalUser = userDao.getUserByUsername(username);
+        Optional<User> optionalUser = userDao.getUserByUsername(username);
         User user = optionalUser.orElseThrow();
         int loggedInUserID = user.getId();
         return loggedInUserID == newDonationDto.getDonorId();
