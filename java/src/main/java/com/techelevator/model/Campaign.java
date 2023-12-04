@@ -21,7 +21,7 @@ public class Campaign {
     @NotNull
     private boolean isPublic;
     private List<Donation> donations = new ArrayList<>();
-    private List<User> managers = new ArrayList<>();
+    private List<User> managers = new ArrayList<>(); // contains creator
     @NotNull
     private User creator;
 
@@ -135,17 +135,22 @@ public class Campaign {
         return creator;
     }
 
+    public void setCreator(User creator) {
+        this.creator = creator;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Campaign campaign = (Campaign) o;
-        return id == campaign.id && fundingGoal == campaign.fundingGoal && locked == campaign.locked && isPublic == campaign.isPublic && Objects.equals(name, campaign.name) && Objects.equals(description, campaign.description) && Objects.equals(startDate, campaign.startDate) && Objects.equals(endDate, campaign.endDate) && Objects.equals(donations, campaign.donations) && Objects.equals(managers, campaign.managers);
+        return id == campaign.id && fundingGoal == campaign.fundingGoal && locked == campaign.locked && isPublic == campaign.isPublic && Objects.equals(name, campaign.name) && Objects.equals(description, campaign.description) && Objects.equals(startDate, campaign.startDate) && Objects.equals(endDate, campaign.endDate) && Objects.equals(donations, campaign.donations) && Objects.equals(managers, campaign.managers) && Objects.equals(creator, campaign.creator);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description, fundingGoal, startDate, endDate, locked, isPublic, donations, managers);
+        return Objects.hash(id, name, description, fundingGoal, startDate,
+                endDate, locked, isPublic, donations, managers, creator);
     }
 
     @Override
@@ -161,6 +166,7 @@ public class Campaign {
                 ", isPublic=" + isPublic +
                 ", donations=" + donations +
                 ", managers=" + managers +
+                ", creator=" + creator +
                 '}';
     }
 }
