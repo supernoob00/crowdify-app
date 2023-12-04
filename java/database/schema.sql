@@ -106,7 +106,7 @@ $check_single_creator$ LANGUAGE plpgsql;
 --TODO: needs to be tested
 CREATE FUNCTION donation_date_between_start_end_dates() RETURNS trigger AS $check_donation_date$
 	DECLARE
-		start_end_dates record;
+		start_end_dates campaign%ROWTYPE;
     BEGIN
 		SELECT (start_date, end_date)
 		FROM campaign
@@ -123,8 +123,8 @@ $check_donation_date$ LANGUAGE plpgsql;
 --TODO: needs to be tested
 CREATE FUNCTION spend_request_approved_only_with_majority_vote() RETURNS trigger AS $check_request_approved$
 	DECLARE
-		approve_votes integer;
-        total_votes integer;
+    		approve_votes integer;
+            total_votes integer;
     BEGIN
         SELECT COUNT (donor_id)
         INTO approve_votes
@@ -137,7 +137,7 @@ CREATE FUNCTION spend_request_approved_only_with_majority_vote() RETURNS trigger
         WHERE vote.request_id = NEW.request_id;
 
         IF NEW.approved AND (2 * approve_votes <= total_votes) THEN
-            RAISE EXCEPTION 'A spend request cannot be approved if there''s not a majority vote';
+            RAISE EXCEPTION ''A spend request cannot be approved if not a majority vote'';
         END IF;
         RETURN NEW;
     END;
@@ -145,8 +145,8 @@ $check_request_approved$ LANGUAGE plpgsql;
 
 CREATE FUNCTION only_non_manager_donors_vote_spend_request() RETURNS trigger AS $check_voters$
 	DECLARE
-		manager_voter_count integer;
-        non_donor_voter_count integer;
+    		manager_voter_count integer;
+            non_donor_voter_count integer;
     BEGIN
         --count of voters for spend request who are a manager of the associated campaign
         SELECT COUNT (DISTINCT donor_id)
@@ -158,7 +158,7 @@ CREATE FUNCTION only_non_manager_donors_vote_spend_request() RETURNS trigger AS 
         AND (spend_request.campaign_id = campaign_manager.campaign_id);
 
         IF manager_voter_count > 0 THEN
-            RAISE EXCEPTION 'A manager cannot vote for a spend request of their own campaign.';
+            RAISE EXCEPTION ''A manager cannot vote for a spend request of their own campaign.'';
         END IF;
 
         --count of voters for spend request who are not a donor
@@ -172,7 +172,7 @@ CREATE FUNCTION only_non_manager_donors_vote_spend_request() RETURNS trigger AS 
         WHERE (donation.donation_id IS null);
 
         IF non_donor_voter_count > 0 THEN
-            RAISE EXCEPTION 'Only donors to a campaign can vote for that campaign''s spend requests.';
+            RAISE EXCEPTION ''Only donors to a campaign can vote for that campaign spend requests.'';
         END IF;
         RETURN NEW;
     END;
