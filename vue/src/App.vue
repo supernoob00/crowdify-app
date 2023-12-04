@@ -38,7 +38,4 @@ h1 {
   margin-top: 0.5em;
 }
 
-nav {
-  border-bottom: 1px solid black;
-}
 </style>

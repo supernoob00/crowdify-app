@@ -1,33 +1,35 @@
 <template>
-  <div class="content">
+  <main class="content">
     <h1>Donate to {{ campaign.name }}</h1>
-    <form @submit.prevent="">
-      <div class="field">
-        <label class="label">Comment</label>
-        <div class="control">
-          <textarea class="textarea" placeholder="Optional" v-model="newDonationDto.comment"></textarea>
+    <div class="body">
+      <form @submit.prevent="">
+        <div class="field">
+          <label class="label">Comment</label>
+          <div class="control">
+            <textarea class="textarea" placeholder="Optional" v-model="newDonationDto.comment"></textarea>
+          </div>
         </div>
-      </div>
-      <div class="field">
-        <label class="label">Amount ($)</label>
-        <div class="control">
-          <input type="Number" class="input" placeholder="$1 Minimum" v-model="newDonationDto.amount">
+        <div class="field">
+          <label class="label">Amount ($)</label>
+          <div class="control">
+            <input type="Number" class="input" placeholder="$1 Minimum" v-model="newDonationDto.amount">
+          </div>
         </div>
-      </div>
-      <div class="field is-grouped">
-        <div class="control">
-          <button class="button is-link" @click="saveNewDonation">Save</button>
+        <div class="field is-grouped">
+          <div class="control">
+            <button class="button is-link" @click="saveNewDonation">Save</button>
+          </div>
+          <div class="control">
+            <button class="button is-light" @click="resetAddForm">Reset Form</button>
+          </div>
+          <div class="control">
+            <button class="button is-danger"
+              @click="$router.push({ name: 'CampaignView', params: { id: campaignId } })">Cancel</button>
+          </div>
         </div>
-        <div class="control">
-          <button class="button is-light" @click="resetAddForm">Reset Form</button>
-        </div>
-        <div class="control">
-          <button class="button is-danger"
-            @click="$router.push({ name: 'CampaignView', params: { id: campaignId } })">Cancel</button>
-        </div>
-      </div>
-    </form>
-  </div>
+      </form>
+    </div>
+  </main>
 </template>
 
 <script>
@@ -37,6 +39,7 @@ export default {
     return {
       newDonationDto: {
         comment: '',
+        amount: 2
       },
       campaign: {},
       isLoading: true,
@@ -104,7 +107,7 @@ export default {
 </script>
 
 <style scoped>
-.content {
+.body {
   max-width: 500px;
 }
 </style>
