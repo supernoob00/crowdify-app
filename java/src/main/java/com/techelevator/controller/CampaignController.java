@@ -3,6 +3,7 @@ package com.techelevator.controller;
 import com.techelevator.dao.JdbcCampaignDao;
 import com.techelevator.dao.UserDao;
 import com.techelevator.model.Campaign;
+import com.techelevator.model.NewCampaignDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -36,8 +37,8 @@ public class CampaignController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(path = "/campaigns", method = RequestMethod.POST)
-    public Campaign addCampaign(@RequestBody Campaign newCampaign) {
-        return jdbcCampaignDao.createCampaign(newCampaign);
+    public Campaign addCampaign(@RequestBody NewCampaignDto newCampaignDto) {
+        return jdbcCampaignDao.createCampaign(newCampaignDto);
     }
 
     @ResponseStatus(HttpStatus.OK)

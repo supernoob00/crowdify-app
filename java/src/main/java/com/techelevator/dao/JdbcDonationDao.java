@@ -39,7 +39,7 @@ public class JdbcDonationDao {
         return donationList;
     }
 
-    public List<Donation> getDonationList(int campaignId) {
+    public List<Donation> getDonationsByCampaignId(int campaignId) {
         List<Donation> donationList = new ArrayList<>();
         String sql = "SELECT * from donation WHERE campaign_id = ?;";
 
