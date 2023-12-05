@@ -1,7 +1,10 @@
 <template>
   <main class="content">
     <h1>Donate to {{ campaign.name }}</h1>
-    <div class="body">
+    <div v-if="isLoading" class="loading">
+      <img src="../assets/ping_pong_loader.gif">
+    </div>
+    <div v-else class="body">
       <form @submit.prevent="">
         <div class="field">
           <label class="label">Comment</label>
@@ -17,7 +20,7 @@
         </div>
         <div class="field is-grouped">
           <div class="control">
-            <button class="button is-link" @click="saveNewDonation">Save</button>
+            <button class="button is-link" @click="submitForm">Save</button>
           </div>
           <div class="control">
             <button class="button is-light" @click="resetAddForm">Reset Form</button>
@@ -38,7 +41,7 @@ export default {
   data() {
     return {
       newDonationDto: {
-        comment: '',
+        comment: 'Test Comment',
         amount: 2
       },
       campaign: {},
@@ -62,25 +65,31 @@ export default {
         }
       } catch (error) {
         campaignService.handleErrorResponse(this.$store, error, 'retrieving', 'campaign');
+      } finally {
+        this.isLoading = false;
       }
     },
-    async saveNewDonation() {
+    async submitForm() {
       if (!this.validateAddForm()) {
         return;
       }
+      const rawUserInput = { ...this.newDonationDto };
+      this.newDonationDto.campaignId = this.campaignId;
+      this.newDonationDto.donorId = this.currentUser.id;
+      this.newDonationDto.amount *= 100;
       try {
-        this.newDonationDto.campaignId = this.campaignId;
-        this.newDonationDto.donorId = this.currentUser.id;
-        this.newDonationDto.amount *= 100;
+        this.isLoading = true;
         const response = await campaignService.createDonation(this.newDonationDto);
         if (response.status === 201) {
           this.$store.commit('SET_NOTIFICATION', { message: 'Created Donation!', type: 'success' })
-          this.isLoading = true;
           this.resetAddForm();
           this.$router.push({ name: 'CampaignView', params: { id: this.campaignId } })
         }
       } catch (error) {
+        this.newDonationDto = rawUserInput;
         campaignService.handleErrorResponse(this.$store, error, 'creating', 'donation');
+      } finally {
+        this.isLoading = false;
       }
     },
     validateAddForm() {
@@ -96,7 +105,8 @@ export default {
     },
     resetAddForm() {
       this.newDonationDto = {
-        comment: ''
+        comment: '',
+        amount: null,
       }
     },
   },

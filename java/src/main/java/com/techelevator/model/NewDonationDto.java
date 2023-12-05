@@ -2,18 +2,22 @@ package com.techelevator.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
 public class NewDonationDto {
 
-    @NotNull
+    @Min(1)
     private int donorId;
-    @NotNull
+    @Min(1)
     private int campaignId;
-    @Positive
+    @Min(1)
     private int amount;
+    @NotBlank
     private String comment;
+    // TODO: might want default
     private String donationStatus;
 
     public NewDonationDto() {

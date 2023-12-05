@@ -15,7 +15,7 @@ CREATE TABLE users (
 
 CREATE TABLE campaign (
     campaign_id SERIAL,
-    campaign_name varchar(50) NOT NULL UNIQUE,
+    campaign_name varchar(50) NOT NULL,
     description varchar(500) NOT NULL,
     funding_goal integer NOT NULL,
     start_date timestamp NOT NULL,
@@ -65,7 +65,8 @@ CREATE TABLE spend_request (
     end_date timestamp, --TODO: Ask Jennifer is end date needed
 
     CONSTRAINT pk_request_id PRIMARY KEY (request_id),
-    CONSTRAINT fk_campaign_id FOREIGN KEY (campaign_id) REFERENCES campaign (campaign_id)
+    CONSTRAINT fk_campaign_id FOREIGN KEY (campaign_id) REFERENCES campaign,
+    CONSTRAINT request_amount_valid CHECK (request_amount > 0)
 );
 
 CREATE TABLE vote (

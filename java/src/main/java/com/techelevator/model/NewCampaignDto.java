@@ -2,19 +2,24 @@ package com.techelevator.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 public class NewCampaignDto {
+    @NotBlank
     private String name;
+    @NotBlank
     private String description;
+    @Min(100)
     private int fundingGoal;
+    @Min(1)
     private int creatorId;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime startDate;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime endDate;
-    @NotNull
     private boolean isPublic;
 
     public NewCampaignDto() {

@@ -10,15 +10,14 @@
 </template>
 
 <script>
-import CampaignDetails from '@/components/CampaignDetails.vue';
-import campaignService from '@/services/CampaignService';
+import CampaignDetails from '../components/CampaignDetails.vue';
+import campaignService from '../services/CampaignService';
 export default {
   components: {
     CampaignDetails
   },
   data() {
     return {
-      // campaign has junk default data while backend isn't ready
       campaign: {
         id: 1,
         name: 'Poop',
@@ -58,8 +57,6 @@ export default {
     }
   },
   async created() {
-    // this.isLoading = false;
-    //for testing purposes, commented out api call while backend not ready
     this.retrieveCampaign()
   }
 }

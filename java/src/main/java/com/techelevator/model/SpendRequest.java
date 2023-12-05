@@ -1,21 +1,24 @@
 package com.techelevator.model;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class SpendRequest {
-    @NotNull
+    @Min(1)
     private int id;
-    @NotNull
+    @Min(1)
     private int campaign_id;
     @Positive
     private int amount;
-    @NotNull
+    @NotBlank
     private String description;
     @NotNull
     private boolean approved;
+    @NotNull
     private LocalDateTime endDate;
 
     public SpendRequest() {

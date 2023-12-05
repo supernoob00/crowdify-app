@@ -4,12 +4,10 @@ import com.techelevator.exception.DaoException;
 import com.techelevator.model.Campaign;
 import com.techelevator.model.NewCampaignDto;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.CannotGetJdbcConnectionException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
-import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
@@ -57,6 +55,7 @@ public class JdbcCampaignDao {
         return Optional.empty();
     }
 
+    // TODO: insert campaign creator into database as well
     public Campaign createCampaign(@NotNull NewCampaignDto newCampaignDto) {
         Campaign createdCampaign;
         String sql = "INSERT INTO campaign (campaign_name, description, funding_goal, start_date, end_date, public) " +
@@ -83,6 +82,31 @@ public class JdbcCampaignDao {
         return createdCampaign;
     }
 
+    public Optional<Campaign> updateCampaign(Campaign updatedCampaign) {
+        String sql = "UPDATE campaign SET " +
+                "campaign_name = ?, " +
+                "description = ?, " +
+                "funding_goal = ?, " +
+                "start_date = ?, " +
+                "end_date = ?, " +
+                "public = ?, " +
+                "locked = ? WHERE campaign_id = ?";
+        try {
+            jdbcTemplate.update(sql, updatedCampaign.getName(), updatedCampaign.getDescription(),
+                    updatedCampaign.getFundingGoal(),
+                    updatedCampaign.getStartDate(),
+                    updatedCampaign.getEndDate(),
+                    updatedCampaign.isPublic(),
+                    updatedCampaign.isLocked(),
+                    updatedCampaign.getId());
+            return getCampaignById(updatedCampaign.getId());
+        } catch (CannotGetJdbcConnectionException e) {
+            throw new DaoException("Unable to connect to server or database", e);
+        } catch (DataIntegrityViolationException e) {
+            throw new DaoException("Data integrity violation", e);
+        }
+    }
+
     public void deleteCampaignById(int campaignId) {
 
 //TODO do we want managers to be able to delete campaigns entirely, or should they remain in the database
@@ -91,7 +115,7 @@ public class JdbcCampaignDao {
 
     private int linkCampaignManager(int campaignId, int managerId, boolean isCreator) {
         String sql = "INSERT INTO campaign_manager (campaign_id, manager_id, creator) " +
-                     "VALUES (?,?,?)";
+                "VALUES (?,?,?)";
         try {
             return jdbcTemplate.update(sql, campaignId, managerId, isCreator);
         } catch (CannotGetJdbcConnectionException e) {
@@ -111,6 +135,7 @@ public class JdbcCampaignDao {
         campaign.setPublic(rowSet.getBoolean("public"));
         campaign.setDonations(jdbcDonationDao.getDonationsByCampaignId(rowSet.getInt("campaign_id")));
         campaign.setManagers(userDao.getManagersByCampaignId(rowSet.getInt("campaign_id")));
+        campaign.setCreator(userDao.getCreatorByCampaignId(rowSet.getInt("campaign_id")).orElseThrow());
         return campaign;
     }
 }

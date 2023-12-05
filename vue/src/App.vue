@@ -24,7 +24,7 @@ export default {
   --user-is-manager-private: teal;
 }
 
-body {
+#app {
   background-color: var(--app-background)
 }
 
@@ -37,5 +37,4 @@ body {
 h1 {
   margin-top: 0.5em;
 }
-
 </style>

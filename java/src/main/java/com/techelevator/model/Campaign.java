@@ -1,12 +1,12 @@
 package com.techelevator.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
-import org.hibernate.validator.constraints.UniqueElements;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,13 +14,13 @@ import java.util.Objects;
 
 public class Campaign {
 
-    @NotNull
+    @Min(1)
     private int id;
-    @NotNull
+    @NotBlank
     private String name;
-    @NotNull
+    @NotBlank
     private String description;
-    @Positive
+    @Min(100)
     private int fundingGoal;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime startDate;
@@ -30,10 +30,12 @@ public class Campaign {
     private boolean locked;
     @NotNull
     private boolean isPublic;
-
+    @NotNull
     private List<Donation> donations = new ArrayList<>();
     @NotEmpty
-    private List<User> managers = new ArrayList<>();
+    private List<User> managers = new ArrayList<>(); // contains creator
+    @NotNull
+    private User creator;
 
     @AssertTrue
     private boolean doesManagersListContainAtLeastOneManager() {
@@ -49,7 +51,9 @@ public class Campaign {
     public Campaign() {
     }
 
-    public Campaign(int id, String name, String description, int fundingGoal, LocalDateTime startDate, LocalDateTime endDate, boolean locked, boolean isPublic) {
+    public Campaign(int id, String name, String description, int fundingGoal,
+                    LocalDateTime startDate, LocalDateTime endDate,
+                    boolean locked, boolean isPublic, User creator) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -58,6 +62,8 @@ public class Campaign {
         this.endDate = endDate;
         this.locked = locked;
         this.isPublic = isPublic;
+        this.creator = creator;
+        this.managers.add(creator);
     }
 
     public int getId() {
@@ -140,17 +146,34 @@ public class Campaign {
         this.managers = managers;
     }
 
+    public int getDonationTotal() {
+        int total = 0;
+        for (Donation donation : donations) {
+            total += donation.getAmount();
+        }
+        return total;
+    }
+
+    public User getCreator() {
+        return creator;
+    }
+
+    public void setCreator(User creator) {
+        this.creator = creator;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Campaign campaign = (Campaign) o;
-        return id == campaign.id && fundingGoal == campaign.fundingGoal && locked == campaign.locked && isPublic == campaign.isPublic && Objects.equals(name, campaign.name) && Objects.equals(description, campaign.description) && Objects.equals(startDate, campaign.startDate) && Objects.equals(endDate, campaign.endDate) && Objects.equals(donations, campaign.donations) && Objects.equals(managers, campaign.managers);
+        return id == campaign.id && fundingGoal == campaign.fundingGoal && locked == campaign.locked && isPublic == campaign.isPublic && Objects.equals(name, campaign.name) && Objects.equals(description, campaign.description) && Objects.equals(startDate, campaign.startDate) && Objects.equals(endDate, campaign.endDate) && Objects.equals(donations, campaign.donations) && Objects.equals(managers, campaign.managers) && Objects.equals(creator, campaign.creator);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description, fundingGoal, startDate, endDate, locked, isPublic, donations, managers);
+        return Objects.hash(id, name, description, fundingGoal, startDate,
+                endDate, locked, isPublic, donations, managers, creator);
     }
 
     @Override
@@ -166,6 +189,7 @@ public class Campaign {
                 ", isPublic=" + isPublic +
                 ", donations=" + donations +
                 ", managers=" + managers +
+                ", creator=" + creator +
                 '}';
     }
 }

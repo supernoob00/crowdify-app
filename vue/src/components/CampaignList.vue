@@ -2,7 +2,10 @@
   <div class="campaigns block">
     <router-link v-for="campaign in campaigns" :key="campaign.id"
       :to="{ name: 'CampaignView', params: { id: campaign.id } }">
-      <div class="campaign" :class="campaignClass(campaign)">{{ campaign.name }}</div>
+      <div class="campaign" :class="campaignClass(campaign)">
+        <p>{{ campaign.name }}</p>
+        <p>{{ `${campaignPercentage(campaign)}% funded` }}</p>
+      </div>
     </router-link>
   </div>
 </template>
@@ -24,8 +27,11 @@ export default {
         return { 'managed-private': true }
       }
       return {}
-    }
-
+    },
+    campaignPercentage(c) {
+      const totalDonated = c.donations.reduce((sum, currDonation) => sum += currDonation.amount, 0);
+      return Math.trunc(totalDonated / c.fundingGoal * 100);
+    },
   }
 }
 </script>
@@ -44,7 +50,7 @@ export default {
 .campaign {
   min-width: 150px;
   border-radius: 10px;
-  padding: 40px;
+  padding: 20px;
   text-align: center;
   background-color: grey;
 }
