@@ -10,6 +10,7 @@
       <!-- Uncomment section below when presenting/releasing to production for better design -->
       <!-- </div> -->
       <!-- <div class="navbar-end"> -->
+      <dark-mode-toggle class="navbar-item"></dark-mode-toggle>
       <router-link class="navbar-item" to="" v-if="$store.state.token != ''">My Account</router-link>
       <div class="buttons">
         <div class="navbar-item">
@@ -25,5 +26,19 @@
   </nav>
 </template>
 <script>
+import DarkModeToggle from './DarkModeToggle.vue';
+export default {
+  components: {
+    DarkModeToggle
+  }
+}
 </script>
-<style scoped></style>
+<style scoped>
+/* .navbar {
+  background-color: var(--navbar-background);
+}
+
+.navbar .navbar-item {
+  color: white;
+} */
+</style>

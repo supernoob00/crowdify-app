@@ -72,7 +72,7 @@ const routes = [
     }
   },
   {
-    path: "/campaigns/:id/createDonation",
+    path: "/campaigns/:id/donate",
     name: 'CreateDonationView',
     component: CreateDonationView,
     meta: {
