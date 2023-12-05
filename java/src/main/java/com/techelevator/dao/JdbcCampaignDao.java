@@ -3,6 +3,7 @@ package com.techelevator.dao;
 import com.techelevator.exception.DaoException;
 import com.techelevator.model.Campaign;
 import com.techelevator.model.NewCampaignDto;
+import com.techelevator.model.UpdateCampaignDto;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.CannotGetJdbcConnectionException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -82,7 +83,7 @@ public class JdbcCampaignDao {
         return createdCampaign;
     }
 
-    public Optional<Campaign> updateCampaign(Campaign updatedCampaign) {
+    public Optional<Campaign> updateCampaign(UpdateCampaignDto updateCampaignDto) {
         String sql = "UPDATE campaign SET " +
                 "campaign_name = ?, " +
                 "description = ?, " +
@@ -92,14 +93,18 @@ public class JdbcCampaignDao {
                 "public = ?, " +
                 "locked = ? WHERE campaign_id = ?";
         try {
-            jdbcTemplate.update(sql, updatedCampaign.getName(), updatedCampaign.getDescription(),
-                    updatedCampaign.getFundingGoal(),
-                    updatedCampaign.getStartDate(),
-                    updatedCampaign.getEndDate(),
-                    updatedCampaign.isPublic(),
-                    updatedCampaign.isLocked(),
-                    updatedCampaign.getId());
-            return getCampaignById(updatedCampaign.getId());
+            jdbcTemplate.update(sql,
+                    updateCampaignDto.getName(),
+                    updateCampaignDto.getDescription(),
+                    updateCampaignDto.getFundingGoal(),
+                    updateCampaignDto.getStartDate(),
+                    updateCampaignDto.getEndDate(),
+                    updateCampaignDto.isPublic(),
+                    updateCampaignDto.isLocked(),
+                    updateCampaignDto.getId());
+
+            return getCampaignById(updateCampaignDto.getId());
+
         } catch (CannotGetJdbcConnectionException e) {
             throw new DaoException("Unable to connect to server or database", e);
         } catch (DataIntegrityViolationException e) {
