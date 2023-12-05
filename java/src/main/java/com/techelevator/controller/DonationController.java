@@ -12,6 +12,8 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -27,6 +29,20 @@ public class DonationController {
     }
 
     //TODO: Get donations by username controller endpoint/DAO method
+    @GetMapping("/users/{id}/donations")
+    @ResponseStatus(HttpStatus.OK)
+    public List<Donation> getDonationsByUserId(Principal principal, @PathVariable int id) {
+        Optional<User> loggedInUser;
+        loggedInUser = userDao.getUserByUsername(principal.getName());
+
+        List<Donation> userDonations = new ArrayList<>();
+        for (Donation donation : jdbcDonationDao.getDonationsByUserId(id)) {
+            if (loggedInUser.isPresent() && loggedInUser.get().getUsername().equals(principal.getName())) {
+                userDonations.add(donation);
+            }
+        }
+        return userDonations;
+    }
 
     @PostMapping("/donations")
     @ResponseStatus(HttpStatus.CREATED)
