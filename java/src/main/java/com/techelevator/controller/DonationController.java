@@ -26,6 +26,8 @@ public class DonationController {
         this.userDao = userDao;
     }
 
+    //TODO: Get donations by username controller endpoint/DAO method
+
     @PostMapping("/donations")
     @ResponseStatus(HttpStatus.CREATED)
     public Donation createDonation(Principal principal, @Valid @RequestBody NewDonationDto newDonationDto) {
@@ -35,6 +37,7 @@ public class DonationController {
         return jdbcDonationDao.createDonation(newDonationDto);
     }
 
+    //TODO: Update donation (comment only)
 
     public boolean isCorrectUser(Principal principal, NewDonationDto newDonationDto) {
         String username = principal.getName();

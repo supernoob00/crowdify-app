@@ -2,7 +2,8 @@
   <div class="content">
     <div class="header">
       <h1 id="campaign-name">{{ campaign.name }}</h1>
-      <router-link class="button is-link" to="">Edit Campaign</router-link>
+      <router-link class="button is-link" :to="{ name: 'EditCampaignView', params: { id: campaign.id } }">
+        Edit Campaign</router-link>
     </div>
     <hr>
     <div id="campaign-description" class="block">{{ campaign.description }}</div>

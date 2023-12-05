@@ -15,7 +15,7 @@ CREATE TABLE users (
 
 CREATE TABLE campaign (
     campaign_id SERIAL,
-    campaign_name varchar(50) NOT NULL UNIQUE,
+    campaign_name varchar(50) NOT NULL,
     description varchar(500) NOT NULL,
     funding_goal integer NOT NULL,
     start_date timestamp NOT NULL,

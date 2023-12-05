@@ -1,15 +1,15 @@
 import { createRouter as createRouter, createWebHistory } from 'vue-router'
 import { useStore } from 'vuex'
 
-// Import components
 import HomeView from '../views/HomeView.vue';
 import LoginView from '../views/LoginView.vue';
 import LogoutView from '../views/LogoutView.vue';
 import RegisterView from '../views/RegisterView.vue';
 import CampaignView from '../views/CampaignView.vue';
 import CreateCampaignView from '../views/CreateCampaignView.vue';
+import EditCampaignView from '../views/EditCampaignView.vue';
 import CreateDonationView from '../views/CreateDonationView.vue';
-/**
+/*
  * The Vue Router is used to "direct" the browser to render a specific view component
  * inside of App.vue depending on the URL.
  *
@@ -59,6 +59,14 @@ const routes = [
     path: "/campaigns/create",
     name: 'CreateCampaignView',
     component: CreateCampaignView,
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: "/campaigns/:id/edit",
+    name: 'EditCampaignView',
+    component: EditCampaignView,
     meta: {
       requiresAuth: true
     }

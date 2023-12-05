@@ -1,56 +1,54 @@
 <template>
-  <div class="content">
-    <form @submit.prevent="">
-      <div class="field">
-        <label class="label">Campaign Name</label>
-        <div class="control">
-          <input type="text" class="input" placeholder="e.g Solving World Hunger!" v-model="editCampaign.name">
-        </div>
+  <form @submit.prevent="">
+    <div class="field">
+      <label class="label">Campaign Name</label>
+      <div class="control">
+        <input type="text" class="input" placeholder="e.g Solving World Hunger!" v-model="editCampaign.name">
       </div>
-      <div class="field">
-        <label class="label">Description</label>
-        <div class="control">
-          <textarea class="textarea" placeholder="e.g Super easy way to save the world!"
-            v-model="editCampaign.description"></textarea>
-        </div>
+    </div>
+    <div class="field">
+      <label class="label">Description</label>
+      <div class="control">
+        <textarea class="textarea" placeholder="e.g Super easy way to save the world!"
+          v-model="editCampaign.description"></textarea>
       </div>
-      <div class="field">
-        <label class="label">Funding Goal ($)</label>
-        <div class="control">
-          <input type="Number" class="input" placeholder="$1 Minimum" v-model="editCampaign.fundingGoal">
-        </div>
+    </div>
+    <div class="field">
+      <label class="label">Funding Goal ($)</label>
+      <div class="control">
+        <input type="Number" class="input" placeholder="$1 Minimum" v-model="editCampaign.fundingGoal">
       </div>
-      <div class="field">
-        <label class="label">Start Date</label>
-        <div class="control">
-          <input type="date" class="input" :min="minStartDate" placeholder="Start Date" v-model="editCampaign.startDate">
-        </div>
+    </div>
+    <div class="field">
+      <label class="label">Start Date</label>
+      <div class="control">
+        <input type="date" class="input" :min="minStartDate" placeholder="Start Date" v-model="editCampaign.startDate">
       </div>
-      <div class="field">
-        <label class="label">End Date</label>
-        <div class="control">
-          <input type="date" class="input" :min="minEndDate" placeholder="End Date" v-model="editCampaign.endDate">
-        </div>
+    </div>
+    <div class="field">
+      <label class="label">End Date</label>
+      <div class="control">
+        <input type="date" class="input" :min="minEndDate" placeholder="End Date" v-model="editCampaign.endDate">
       </div>
-      <div class="field">
-        <div class="control">
-          <label class="checkbox">
-            <input type="checkbox" v-model="editCampaign.public">Make Public</label>
-        </div>
+    </div>
+    <div class="field">
+      <div class="control">
+        <label class="checkbox">
+          <input type="checkbox" v-model="editCampaign.public">Make Public</label>
       </div>
-      <div class="field is-grouped">
-        <div class="control">
-          <button class="button is-link" @click="submitForm">Save</button>
-        </div>
-        <div class="control">
-          <button class="button is-light" @click="resetAddForm">Reset Form</button>
-        </div>
-        <div class="control">
-          <button class="button is-danger" @click="$router.push({ name: 'home' })">Cancel</button>
-        </div>
+    </div>
+    <div class="field is-grouped">
+      <div class="control">
+        <button class="button is-link" @click="submitForm">Save</button>
       </div>
-    </form>
-  </div>
+      <div class="control">
+        <button class="button is-light" @click="resetAddForm">Reset Form</button>
+      </div>
+      <div class="control">
+        <button class="button is-danger" @click="$router.push({ name: 'home' })">Cancel</button>
+      </div>
+    </div>
+  </form>
 </template>
 
 <script>
@@ -75,6 +73,7 @@ export default {
       if (!this.validateAddForm()) {
         return;
       }
+      const rawUserInput = { ...this.editCampaign };
       this.editCampaign.endDate = `${this.editCampaign.endDate} 00:00:00`;
       this.editCampaign.startDate = `${this.editCampaign.startDate} 00:00:00`;
       this.editCampaign.fundingGoal *= 100;
@@ -90,6 +89,7 @@ export default {
             this.$router.push({ name: 'CampaignView', params: { id: createdCampaign.id } })
           }
         } catch (error) {
+          this.editCampaign = rawUserInput;
           campaignService.handleErrorResponse(this.$store, error, 'creating', 'campaign');
         }
       } else {
@@ -109,13 +109,13 @@ export default {
     validateAddForm() {
       let msg = '';
       if (this.editCampaign.name.length === 0) {
-        msg += 'The new campaign must have a name. ';
+        msg += 'The campaign must have a name. ';
       }
       if (this.editCampaign.fundingGoal < 1 || this.editCampaign.fundingGoal == null) {
-        msg += 'The new campaign must have a fundingGoal of at least $1. ';
+        msg += 'The campaign must have a fundingGoal of at least $1. ';
       }
       if (!this.editCampaign.endDate) {
-        msg += 'The new campaign must have an End Date. '
+        msg += 'The campaign must have an End Date. '
       }
       if (msg.length > 0) {
         this.$store.commit('SET_NOTIFICATION', msg);
