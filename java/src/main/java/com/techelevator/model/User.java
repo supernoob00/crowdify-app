@@ -22,7 +22,8 @@ public class User {
    @NotNull
    private Set<Authority> authorities = new HashSet<>();
 
-   public User() { }
+   public User() {
+   }
 
    public User(int id, String username, String password, String authorities) {
       this.id = id;

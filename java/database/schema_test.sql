@@ -46,7 +46,7 @@ CREATE TABLE donation (
     donation_amount integer NOT NULL,
     donation_date timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
     donation_comment varchar(200),
-    donation_status varchar(20), --TODO: pending, approved, rejected statuses? Add constraint that only be these statuses Also what happens if campaign is locked/made private
+    refunded boolean, --TODO: pending, approved, rejected statuses? Add constraint that only be these statuses Also what happens if campaign is locked/made private
 
     CONSTRAINT pk_donation_id PRIMARY KEY (donation_id),
     CONSTRAINT fk_campaign_id FOREIGN KEY (campaign_id) REFERENCES campaign (campaign_id),
