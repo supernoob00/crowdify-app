@@ -106,8 +106,7 @@ public class JdbcDonationDao {
         donation.setAmount(results.getInt("donation_amount"));
         donation.setDate(results.getTimestamp("donation_date").toLocalDateTime());
         donation.setComment(results.getString("donation_comment"));
-        donation.setStatus(results.getString("donation_status"));
-
+        donation.setRefunded(results.getBoolean("refunded"));
         return donation;
     }
 }

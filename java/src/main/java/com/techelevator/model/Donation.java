@@ -19,20 +19,20 @@ public class Donation {
     private LocalDateTime date;
     @NotBlank
     private String comment;
-    // default status?
-    private String status;
+    private boolean refunded;
 
     public Donation() {
     }
 
-    public Donation(int donationId, User donor, int campaignId, int amount, LocalDateTime date, String comment, String status) {
+    public Donation(int donationId, User donor, int campaignId, int amount,
+                    LocalDateTime date, String comment, boolean refunded) {
         this.donationId = donationId;
         this.donor = donor;
         this.campaignId = campaignId;
         this.amount = amount;
         this.date = date;
         this.comment = comment;
-        this.status = status;
+        this.refunded = refunded;
     }
 
     public int getDonationId() {
@@ -75,12 +75,12 @@ public class Donation {
         this.comment = comment;
     }
 
-    public String getStatus() {
-        return status;
+    public boolean isRefunded() {
+        return refunded;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setRefunded(boolean refunded) {
+        this.refunded = refunded;
     }
 
     public User getDonor() {
@@ -96,11 +96,12 @@ public class Donation {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Donation donation = (Donation) o;
-        return donationId == donation.donationId && campaignId == donation.campaignId && amount == donation.amount && Objects.equals(donor, donation.donor) && Objects.equals(date, donation.date) && Objects.equals(comment, donation.comment) && Objects.equals(status, donation.status);
+        return donationId == donation.donationId && campaignId == donation.campaignId && amount == donation.amount && Objects.equals(donor, donation.donor) && Objects.equals(date, donation.date) && Objects.equals(comment, donation.comment) && Objects.equals(refunded, donation.refunded);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(donationId, donor, campaignId, amount, date, comment, status);
+        return Objects.hash(donationId, donor, campaignId, amount, date,
+                comment, refunded);
     }
 }

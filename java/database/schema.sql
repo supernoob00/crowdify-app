@@ -48,7 +48,7 @@ CREATE TABLE donation (
     donation_amount integer NOT NULL,
     donation_date timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
     donation_comment varchar(200),
-    donation_status varchar(20), --TODO: pending, approved, rejected statuses? Add constraint that only be these statuses Also what happens if campaign is locked/made private
+    refunded boolean, --TODO: pending, approved, rejected statuses? Add constraint that only be these statuses Also what happens if campaign is locked/made private
 
     CONSTRAINT pk_donation_id PRIMARY KEY (donation_id),
     CONSTRAINT fk_campaign_id FOREIGN KEY (campaign_id) REFERENCES campaign (campaign_id),
@@ -179,6 +179,8 @@ CREATE FUNCTION only_non_manager_donors_vote_spend_request() RETURNS trigger AS 
     END;
 $check_voters$ LANGUAGE plpgsql;
 
+--TODO: ADD TRIGGER TO CAMPAIGN; CAN ONLY BE DELETED WHEN ALL ASSOCIATED DONATIONS ARE RETURNED
+--TODO: ADD TRIGGER TO DONATION; CAN ONLY BE DELETED WHEN ASSOCIATED CAMPAIGN IS LOCKED
 --TODO: ADD TRIGGER TO CAMPAIGN; CAN ONLY BE DELETED WHEN ITS LOCKED
 
 CREATE TRIGGER check_campaign_single_creator BEFORE INSERT OR UPDATE OR DELETE ON campaign_manager
