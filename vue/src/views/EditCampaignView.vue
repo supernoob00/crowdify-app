@@ -1,12 +1,15 @@
 <template>
   <div class="content">
     <h1>Edit Campaign</h1>
-    <campaign-form :campaign="campaign"></campaign-form>
+    <div class="loading" v-if="isLoading">
+      <img src="../assets/ping_pong_loader.gif">
+    </div>
+    <campaign-form v-else :campaign="campaign"></campaign-form>
   </div>
 </template>
 
 <script>
-import CampaignForm from '@/components/CampaignForm.vue';
+import CampaignForm from '../components/CampaignForm.vue';
 import campaignService from '../services/CampaignService';
 export default {
   components: {
@@ -15,16 +18,21 @@ export default {
   data() {
     return {
       isLoading: true,
-      campaign: {},
+      campaign: {
+        name: '',
+        description: ''
+      },
     }
   },
   methods: {
     async retrieveCampaign() {
       try {
-        let campaignId = parseInt(this.$route.params.id)
+        const campaignId = parseInt(this.$route.params.id)
         const response = await campaignService.getCampaign(campaignId);
-        console.log(this.campaign)
         this.campaign = response.data;
+        this.campaign.startDate = this.campaign.startDate.slice(0, 10);
+        this.campaign.endDate = this.campaign.endDate.slice(0, 10);
+        this.campaign.fundingGoal /= 100;
       } catch (error) {
         campaignService.handleErrorResponse(this.$store, error, 'getting', 'campaign');
         this.$router.push({ name: 'CampaignView', params: { id: this.$route.params.id } })

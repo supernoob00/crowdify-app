@@ -1,7 +1,6 @@
 import axios from "axios";
 
 export default {
-
   getCampaign(id) {
     return axios.get(`/campaigns/${id}`);
   },
@@ -12,6 +11,10 @@ export default {
 
   addCampaign(newCampaign) {
     return axios.post('/campaigns', newCampaign);
+  },
+
+  updateCampaign(updatedCampaign) {
+    return axios.put('/campaigns', updatedCampaign);
   },
 
   createDonation(newDonation) {

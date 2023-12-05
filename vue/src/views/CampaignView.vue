@@ -10,8 +10,8 @@
 </template>
 
 <script>
-import CampaignDetails from '@/components/CampaignDetails.vue';
-import campaignService from '@/services/CampaignService';
+import CampaignDetails from '../components/CampaignDetails.vue';
+import campaignService from '../services/CampaignService';
 export default {
   components: {
     CampaignDetails
