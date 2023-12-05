@@ -3,10 +3,7 @@ package com.techelevator.model;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.boot.context.properties.bind.DefaultValue;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,11 +39,6 @@ public class Campaign {
         return managers.size() > 0;
     }
 
-//    @AssertTrue
-//    private boolean doesManagersListContainOnlyOneCreator() {
-//        Campaign campaign;
-//        return campaign.
-//    }
 
     public Campaign() {
     }
@@ -192,4 +184,6 @@ public class Campaign {
                 ", creator=" + creator +
                 '}';
     }
+
+
 }

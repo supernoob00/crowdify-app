@@ -26,6 +26,8 @@ public abstract class BaseDaoTests {
             LocalDateTime.of(2024, 1, 12, 0, 0), "Go Robots!", null);
     protected static final Donation DONATION_3 = new Donation(3, USER_3, 3, 3000,
             LocalDateTime.of(2024, 1, 13, 0, 0), "What the frick does Quantum mean??", null);
+    protected static final Donation DONATION_4 = new Donation(4, USER_1, 2, 2000,
+            LocalDateTime.of(2024, 1, 11, 0, 1), "Not bad!", null);
     protected static final Campaign CAMPAIGN_1 = new Campaign(1, "Fancy New Tech", "We are making some cool new stuff using technology",
             1000000, LocalDateTime.of(2024, 1, 1, 0, 0),
             LocalDateTime.of(2024, 1, 21, 0, 0), false, false, USER_1);
