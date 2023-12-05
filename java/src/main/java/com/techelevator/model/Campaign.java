@@ -26,6 +26,7 @@ public class Campaign {
     private LocalDateTime startDate;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime endDate;
+
     private boolean locked;
     @NotNull
     private boolean isPublic;
@@ -35,6 +36,17 @@ public class Campaign {
     private List<User> managers = new ArrayList<>(); // contains creator
     @NotNull
     private User creator;
+
+    @AssertTrue
+    private boolean doesManagersListContainAtLeastOneManager() {
+        return managers.size() > 0;
+    }
+
+//    @AssertTrue
+//    private boolean doesManagersListContainOnlyOneCreator() {
+//        Campaign campaign;
+//        return campaign.
+//    }
 
     public Campaign() {
     }
