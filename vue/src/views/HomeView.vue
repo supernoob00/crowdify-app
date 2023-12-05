@@ -12,8 +12,8 @@
 </template>
 
 <script>
-import CampaignList from '@/components/CampaignList.vue';
-import campaignService from '@/services/CampaignService'
+import CampaignList from '../components/CampaignList.vue';
+import campaignService from '../services/CampaignService'
 export default {
   components: {
     CampaignList

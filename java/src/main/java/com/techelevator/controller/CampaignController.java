@@ -67,11 +67,12 @@ public class CampaignController {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(path = "/campaigns", method = RequestMethod.PUT)
     public Campaign updateCampaign(@Valid @RequestBody Campaign updatedCampaign) {
-        return null;
-        //TODO: Update campaign object with method here
+        return jdbcCampaignDao.updateCampaign(updatedCampaign).orElseThrow(() -> {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        });
     }
 
     @PreAuthorize("isAuthenticated()")

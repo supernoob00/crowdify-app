@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import CampaignForm from '@/components/CampaignForm.vue';
+import CampaignForm from '../components/CampaignForm.vue';
 export default {
   components: {
     CampaignForm

@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import DonationDisplay from '@/components/DonationDisplay.vue';
+import DonationDisplay from './DonationDisplay.vue';
 export default {
   components: {
     DonationDisplay
