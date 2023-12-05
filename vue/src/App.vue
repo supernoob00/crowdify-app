@@ -1,8 +1,10 @@
 <template>
-  <div id="capstone-app" class="container">
-    <notification-text></notification-text>
+  <div>
     <nav-bar></nav-bar>
-    <router-view></router-view>
+    <notification-text></notification-text>
+    <div id="capstone-app" class="container">
+      <router-view></router-view>
+    </div>
   </div>
 </template>
 
@@ -20,12 +22,17 @@ export default {
 <style>
 :root {
   --app-background: white;
+  --navbar-background: #fb8500;
   --user-is-manager-public: green;
   --user-is-manager-private: teal;
 }
 
-#app {
-  background-color: var(--app-background)
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background-color: var(--app-background);
 }
 
 .container {

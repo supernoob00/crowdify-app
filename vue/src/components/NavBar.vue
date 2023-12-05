@@ -26,4 +26,12 @@
 </template>
 <script>
 </script>
-<style scoped></style>
+<style scoped>
+/* .navbar {
+  background-color: var(--navbar-background);
+}
+
+.navbar .navbar-item {
+  color: white;
+} */
+</style>
