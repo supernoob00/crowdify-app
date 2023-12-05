@@ -38,7 +38,7 @@ export default {
   data() {
     return {
       newDonationDto: {
-        comment: '',
+        comment: 'Test Comment',
         amount: 2
       },
       campaign: {},
@@ -68,18 +68,19 @@ export default {
       if (!this.validateAddForm()) {
         return;
       }
+      const rawUserInput = { ...this.newDonationDto };
+      this.newDonationDto.campaignId = this.campaignId;
+      this.newDonationDto.donorId = this.currentUser.id;
+      this.newDonationDto.amount *= 100;
       try {
-        this.newDonationDto.campaignId = this.campaignId;
-        this.newDonationDto.donorId = this.currentUser.id;
-        this.newDonationDto.amount *= 100;
         const response = await campaignService.createDonation(this.newDonationDto);
         if (response.status === 201) {
           this.$store.commit('SET_NOTIFICATION', { message: 'Created Donation!', type: 'success' })
-          this.isLoading = true;
           this.resetAddForm();
           this.$router.push({ name: 'CampaignView', params: { id: this.campaignId } })
         }
       } catch (error) {
+        this.newDonationDto = rawUserInput;
         campaignService.handleErrorResponse(this.$store, error, 'creating', 'donation');
       }
     },
@@ -96,7 +97,8 @@ export default {
     },
     resetAddForm() {
       this.newDonationDto = {
-        comment: ''
+        comment: '',
+        amount: null,
       }
     },
   },

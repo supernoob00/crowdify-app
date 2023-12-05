@@ -5,7 +5,7 @@
     </div>
     <div v-else class="content">
       <h1>Campaigns</h1>
-      <campaign-list :campaigns="displayCampaigns"></campaign-list>
+      <campaign-list :campaigns="campaigns"></campaign-list>
       <router-link :to="{ name: 'CreateCampaignView' }" class="button is-link">Create Campaign</router-link>
     </div>
   </div>
@@ -20,7 +20,6 @@ export default {
   },
   data() {
     return {
-      // campaigns has junk default data while backend isn't ready
       campaigns: [{
         name: 'Poop',
         id: 1,
@@ -31,25 +30,6 @@ export default {
           }]
       }],
       isLoading: true
-    }
-  },
-  computed: {
-    currentUser() {
-      return this.$store.state.user;
-    },
-    publicCampaigns() {
-      return this.campaigns.filter(c => c.public)
-    },
-    publicAndUserOwnedCampaigns() {
-      return this.campaigns.filter(c => c.public ||
-        c.managers.filter(m => m.username === this.currentUser.username).length > 0)
-    },
-    displayCampaigns() {
-      if (this.$store.state.token === '') {
-        return this.publicCampaigns;
-      } else {
-        return this.publicAndUserOwnedCampaigns;
-      }
     }
   },
   methods: {
@@ -65,8 +45,6 @@ export default {
     },
   },
   async created() {
-    // this.isLoading = false;
-    // for testing purposes, commented out api call while backend not ready
     await this.retrieveCampaigns();
   }
 }

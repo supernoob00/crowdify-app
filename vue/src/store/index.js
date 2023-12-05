@@ -31,7 +31,6 @@ export function createStore(currentToken, currentUser) {
         if (state.notification) {
           this.commit('CLEAR_NOTIFICATION');
         }
-
         if (typeof notification === 'string') {
           // If only a string was sent, create a notification object with defaults
           notification = {
@@ -44,7 +43,6 @@ export function createStore(currentToken, currentUser) {
           notification.type = notification.type || 'error';
           notification.timeout = notification.timeout || NOTIFICATION_TIMEOUT;
         }
-
         // Set the notification in state
         state.notification = notification;
 

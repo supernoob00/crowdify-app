@@ -43,7 +43,7 @@ public class CampaignController {
         for (Campaign campaign : jdbcCampaignDao.getCampaignList()) {
             if (campaign.isPublic()
                     || (loggedInUser.isPresent()
-                        && loggedInUser.get().getUsername().equals(principal.getName()))) {
+                    && loggedInUser.get().getUsername().equals(principal.getName()))) {
                 campaigns.add(campaign);
             }
         }
@@ -68,9 +68,17 @@ public class CampaignController {
 
     @PreAuthorize("isAuthenticated()")
     @ResponseStatus(HttpStatus.OK)
+    @RequestMapping(path = "/campaigns", method = RequestMethod.PUT)
+    public Campaign updateCampaign(@Valid @RequestBody Campaign updatedCampaign) {
+        return null;
+        //TODO: Update campaign object with method here
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @ResponseStatus(HttpStatus.OK)
     @RequestMapping(path = "/campaigns/{id}", method = RequestMethod.DELETE)
     public void deleteCampaign(@PathVariable int id) {
 
-        //TODO call DAO delete method here.
+        //TODO call DAO delete method here. Can only delete when campaign is locked and has 0 zero donations
     }
 }

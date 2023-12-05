@@ -1,6 +1,10 @@
 <template>
   <div class="content">
-    <h1 id="campaign-name">{{ campaign.name }}</h1>
+    <div class="header">
+      <h1 id="campaign-name">{{ campaign.name }}</h1>
+      <router-link class="button is-link" :to="{ name: 'EditCampaignView', params: { id: campaign.id } }">
+        Edit Campaign</router-link>
+    </div>
     <hr>
     <div id="campaign-description" class="block">{{ campaign.description }}</div>
     <div class="progress-container">
@@ -49,6 +53,16 @@ export default {
 <style scoped>
 .content {
   max-width: 75%;
+  margin: 10px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.header a {
+  margin-top: 1em;
 }
 
 hr {
@@ -56,7 +70,7 @@ hr {
 }
 
 .progress-container {
-  max-width: 50%;
+  max-width: 500px;
 }
 
 .progress-container .goal-text,
