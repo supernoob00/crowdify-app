@@ -5,6 +5,7 @@ import com.techelevator.dao.JdbcUserDao;
 import com.techelevator.dao.UserDao;
 import com.techelevator.model.Campaign;
 import com.techelevator.model.NewCampaignDto;
+import com.techelevator.model.UpdateCampaignDto;
 import com.techelevator.model.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -67,10 +68,10 @@ public class CampaignController {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @ResponseStatus(HttpStatus.CREATED)
-    @RequestMapping(path = "/campaigns", method = RequestMethod.PUT)
-    public Campaign updateCampaign(@Valid @RequestBody Campaign updatedCampaign) {
-        return jdbcCampaignDao.updateCampaign(updatedCampaign).orElseThrow(() -> {
+    @ResponseStatus(HttpStatus.OK)
+    @RequestMapping(path = "/campaigns/{id}", method = RequestMethod.PUT)
+    public Campaign updateCampaign(@Valid @RequestBody UpdateCampaignDto updateCampaignDto) {
+        return jdbcCampaignDao.updateCampaign(updateCampaignDto).orElseThrow(() -> {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         });
     }
