@@ -114,8 +114,8 @@ export default {
         }
       } else {
         try {
-          const response = await campaignService.updateCampaign(this.updateCampaignDto);
-          if (response.status === 201) {
+          const response = await campaignService.updateCampaign(this.updateCampaignDto, this.editCampaign.id);
+          if (response.status === 200) {
             this.$store.commit('SET_NOTIFICATION', { message: 'Updated Campaign!', type: 'success' });
             this.resetAddForm();
             this.$router.push({ name: 'CampaignView', params: { id: this.editCampaign.id } });

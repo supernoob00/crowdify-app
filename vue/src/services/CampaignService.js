@@ -13,8 +13,8 @@ export default {
     return axios.post('/campaigns', newCampaignDto);
   },
 
-  updateCampaign(updateCampaignDto) {
-    return axios.put('/campaigns', updateCampaignDto);
+  updateCampaign(updateCampaignDto, id) {
+    return axios.put(`/campaigns/${id}`, updateCampaignDto);
   },
 
   createDonation(newDonationDto) {

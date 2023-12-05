@@ -21,18 +21,30 @@ export default {
 
 <style>
 :root {
-  --app-background: white;
   --navbar-background: #fb8500;
-  --user-is-manager-public: green;
-  --user-is-manager-private: teal;
+  --user-is-manager-public: pink;
+  --user-is-manager-private: lightcoral;
+  --font-color: #000;
+  --link-color: #1C75B9;
+  --link-white-color: #fff;
+  --bg-color: white;
+}
+
+[data-theme="dark"] {
+  --font-color: #bdbab8;
+  --link-color: #0a86da;
+  --link-white-color: #bdbab8;
+  --bg-color: #333;
 }
 
 html,
 body {
+  color: #000;
+  color: var(--font-color);
+  background: var(--bg-color);
   margin: 0;
   padding: 0;
   height: 100%;
-  background-color: var(--app-background);
 }
 
 .container {

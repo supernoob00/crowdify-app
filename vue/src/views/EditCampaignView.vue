@@ -26,8 +26,8 @@ export default {
   },
   methods: {
     async retrieveCampaign() {
+      const campaignId = parseInt(this.$route.params.id)
       try {
-        const campaignId = parseInt(this.$route.params.id)
         const response = await campaignService.getCampaign(campaignId);
         this.campaign = response.data;
         this.campaign.startDate = this.campaign.startDate.slice(0, 10);
@@ -35,7 +35,7 @@ export default {
         this.campaign.fundingGoal /= 100;
       } catch (error) {
         campaignService.handleErrorResponse(this.$store, error, 'getting', 'campaign');
-        this.$router.push({ name: 'CampaignView', params: { id: this.$route.params.id } })
+        this.$router.push({ name: 'CampaignView', params: { id: campaignId } })
       } finally {
         this.isLoading = false;
       }

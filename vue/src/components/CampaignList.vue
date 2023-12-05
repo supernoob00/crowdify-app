@@ -4,7 +4,7 @@
       :to="{ name: 'CampaignView', params: { id: campaign.id } }">
       <div class="campaign" :class="campaignClass(campaign)">
         <p>{{ campaign.name }}</p>
-        <p>{{ `${campaignPercentage(campaign)}% funded` }}</p>
+        <p class="fund-percent">{{ `${campaignPercentage(campaign)}% funded` }}</p>
       </div>
     </router-link>
   </div>
@@ -52,20 +52,28 @@ export default {
   border-radius: 10px;
   padding: 20px;
   text-align: center;
-  background-color: grey;
+  background-color: lightgray;
 }
 
 .managed-private {
   background-color: var(--user-is-manager-private);
+  color: black;
+  border: none;
 }
 
 .managed-public {
   background-color: var(--user-is-manager-public);
+  color: black;
+  border: none;
 }
 
 a:link,
 a:visited {
-  color: rgb(243, 243, 243);
+  color: black;
   text-decoration: none;
 }
+
+/* .fund-percent {
+  color: green;
+} */
 </style>
