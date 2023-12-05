@@ -48,7 +48,7 @@ public class JdbcDonationDaoTests extends BaseDaoTests {
 
     @Test
     public void createDonation_creates_a_donation() {
-        NewDonationDto donation = new NewDonationDto(1, 1, 5000, "test", "approved");
+        NewDonationDto donation = new NewDonationDto(1, 1, 5000, "test", false);
         Donation createdDonation = sut.createDonation(donation);
 
         Donation retrievedDonation =

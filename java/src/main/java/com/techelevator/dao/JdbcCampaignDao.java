@@ -2,6 +2,7 @@ package com.techelevator.dao;
 
 import com.techelevator.exception.DaoException;
 import com.techelevator.model.Campaign;
+import com.techelevator.model.Donation;
 import com.techelevator.model.NewCampaignDto;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.CannotGetJdbcConnectionException;
@@ -107,11 +108,27 @@ public class JdbcCampaignDao {
         }
     }
 
-    public void deleteCampaignById(int campaignId) {
-        //TODO do we want managers to be able to delete campaigns entirely, or should they remain in the database
-        // as deleted but hidden from the front end?
+    public int markedCampaignDeletedById(int campaignId) {
+        String sql = "DELETE FROM campaign WHERE campaign_id = ?;";
 
+        Campaign toDelete = getCampaignById(campaignId).orElse(null);
+        if (toDelete == null) {
+            return 0;
+        }
 
+        try {
+            List<Donation> donations = toDelete.getDonations();
+            if (!toDelete.isLocked() || !donations.isEmpty()) {
+                throw new DataIntegrityViolationException("Donation cannot be " +
+                        "deleted because it is not locked or has unreturned " +
+                        "donations.");
+            }
+            return jdbcTemplate.update(sql, campaignId);
+        } catch (CannotGetJdbcConnectionException e) {
+            throw new DaoException("Unable to connect to server or database", e);
+        } catch (DataIntegrityViolationException e) {
+            throw new DaoException("Data integrity violation", e);
+        }
     }
 
     private int linkCampaignManager(int campaignId, int managerId, boolean isCreator) {

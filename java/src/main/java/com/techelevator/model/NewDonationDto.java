@@ -18,18 +18,18 @@ public class NewDonationDto {
     @NotBlank
     private String comment;
     // TODO: might want default
-    private String donationStatus;
+    private boolean refunded;
 
     public NewDonationDto() {
     }
 
-    public NewDonationDto(int donorId, int campaignId, int amount, String comment, String donationStatus) {
+    public NewDonationDto(int donorId, int campaignId, int amount,
+                          String comment, boolean refunded) {
         this.donorId = donorId;
         this.campaignId = campaignId;
         this.amount = amount;
         this.comment = comment;
-        this.donationStatus = donationStatus;
-
+        this.refunded = refunded;
     }
 
     public int getDonorId() {
@@ -64,11 +64,11 @@ public class NewDonationDto {
         this.comment = comment;
     }
 
-    public String getDonationStatus() {
-        return donationStatus;
+    public boolean isRefunded() {
+        return refunded;
     }
 
-    public void setDonationStatus(String donationStatus) {
-        this.donationStatus = donationStatus;
+    public void setRefunded(boolean refunded) {
+        this.refunded = refunded;
     }
 }
