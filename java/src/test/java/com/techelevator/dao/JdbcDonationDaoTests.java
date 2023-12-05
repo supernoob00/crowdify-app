@@ -10,6 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import javax.validation.constraints.AssertTrue;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -54,5 +55,21 @@ public class JdbcDonationDaoTests extends BaseDaoTests {
         Donation retrievedDonation =
                 sut.getDonationById(createdDonation.getDonationId()).orElseThrow();
         Assert.assertEquals(retrievedDonation, createdDonation);
+    }
+
+    @Test
+    public void getDonationsByUserId_returns_empty_list_with_invalid_id() {
+        List<Donation> donations = sut.getDonationsByUserId(-1);
+
+        Assert.assertTrue(donations.isEmpty());
+    }
+
+    @Test
+    public void getDonationsByUserId_returns_correct_donations() {
+        List<Donation> donations = sut.getDonationsByUserId(1);
+
+        Assert.assertEquals(2, donations.size());
+        Assert.assertEquals(DONATION_1, donations.get(0));
+        Assert.assertEquals(DONATION_4, donations.get(1));
     }
 }
