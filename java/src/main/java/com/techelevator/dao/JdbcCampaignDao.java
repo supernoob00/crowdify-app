@@ -108,9 +108,10 @@ public class JdbcCampaignDao {
     }
 
     public void deleteCampaignById(int campaignId) {
+        //TODO do we want managers to be able to delete campaigns entirely, or should they remain in the database
+        // as deleted but hidden from the front end?
 
-//TODO do we want managers to be able to delete campaigns entirely, or should they remain in the database
-// as deleted but hidden from the front end?
+
     }
 
     private int linkCampaignManager(int campaignId, int managerId, boolean isCreator) {

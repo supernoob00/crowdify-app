@@ -73,4 +73,7 @@ public class JdbcCampaignDaoTests extends BaseDaoTests {
         Assert.assertTrue(retrievedCampaign.isPresent());
         Assert.assertEquals(retrievedCampaign.orElseThrow(), createdCampaign);
     }
+
+    @Test
+    public void
 }
