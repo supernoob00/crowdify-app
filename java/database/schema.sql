@@ -179,6 +179,8 @@ CREATE FUNCTION only_non_manager_donors_vote_spend_request() RETURNS trigger AS 
     END;
 $check_voters$ LANGUAGE plpgsql;
 
+--TODO: ADD TRIGGER TO CAMPAIGN; CAN ONLY BE DELETED WHEN ITS LOCKED
+
 CREATE TRIGGER check_campaign_single_creator BEFORE INSERT OR UPDATE OR DELETE ON campaign_manager
     EXECUTE PROCEDURE check_campaign_single_creator();
 

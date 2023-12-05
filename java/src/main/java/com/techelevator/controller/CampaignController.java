@@ -43,7 +43,7 @@ public class CampaignController {
         for (Campaign campaign : jdbcCampaignDao.getCampaignList()) {
             if (campaign.isPublic()
                     || (loggedInUser.isPresent()
-                    && loggedInUser.get().getUsername().equals(principal.getName()))) {
+                        && loggedInUser.get().getUsername().equals(principal.getName()))) {
                 campaigns.add(campaign);
             }
         }
@@ -79,7 +79,6 @@ public class CampaignController {
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(path = "/campaigns/{id}", method = RequestMethod.DELETE)
     public void deleteCampaign(@PathVariable int id) {
-
         //TODO call DAO delete method here. Can only delete when campaign is locked and has 0 zero donations
     }
 }
