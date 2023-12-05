@@ -3,10 +3,7 @@ package com.techelevator.model;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.boot.context.properties.bind.DefaultValue;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +23,7 @@ public class Campaign {
     private LocalDateTime startDate;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime endDate;
+
     private boolean locked;
     @NotNull
     private boolean isPublic;
@@ -35,6 +33,12 @@ public class Campaign {
     private List<User> managers = new ArrayList<>(); // contains creator
     @NotNull
     private User creator;
+
+    @AssertTrue
+    private boolean doesManagersListContainAtLeastOneManager() {
+        return managers.size() > 0;
+    }
+
 
     public Campaign() {
     }
@@ -180,4 +184,6 @@ public class Campaign {
                 ", creator=" + creator +
                 '}';
     }
+
+
 }

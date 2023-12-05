@@ -16,6 +16,7 @@ public class SpendRequest {
     private int amount;
     @NotBlank
     private String description;
+    @NotNull
     private boolean approved;
     @NotNull
     private LocalDateTime endDate;
