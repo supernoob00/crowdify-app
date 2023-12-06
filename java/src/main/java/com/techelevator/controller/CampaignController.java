@@ -84,7 +84,7 @@ public class CampaignController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @RequestMapping(path = "/campaigns/{id}", method = RequestMethod.DELETE)
     public void deleteCampaign(@PathVariable int id) {
-        int deletedCount = jdbcCampaignDao.markedCampaignDeletedById(id);
+        int deletedCount = jdbcCampaignDao.markCampaignDeletedById(id);
         if (deletedCount == 0) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }

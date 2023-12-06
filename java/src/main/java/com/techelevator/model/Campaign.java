@@ -33,6 +33,7 @@ public class Campaign {
     private List<User> managers = new ArrayList<>(); // contains creator
     @NotNull
     private User creator;
+    private boolean deleted;
 
     @AssertTrue
     private boolean doesManagersListContainAtLeastOneManager() {
@@ -144,6 +145,14 @@ public class Campaign {
             total += donation.getAmount();
         }
         return total;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 
     public User getCreator() {
