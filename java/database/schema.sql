@@ -29,7 +29,9 @@ CREATE TABLE campaign (
     --TODO: maybe modify this constraint
     --end date must be at least 24 hours after start date
     CONSTRAINT valid_dates_end_after_start
-        CHECK (EXTRACT (EPOCH FROM end_date) - EXTRACT (EPOCH FROM start_date) >= 86400)
+        CHECK (EXTRACT (EPOCH FROM end_date) - EXTRACT (EPOCH FROM start_date) >= 86400),
+    CONSTRAINT locked_if_deleted
+        CHECK (NOT deleted OR locked)
 );
 
 CREATE TABLE campaign_manager (
@@ -118,11 +120,11 @@ CREATE FUNCTION donation_date_between_start_end_dates() RETURNS trigger AS $chec
         IF (NOT (NEW.donation_date > start_end_dates.start_date AND NEW.donation_date < start_end_dates.end_date)) THEN
             RAISE EXCEPTION 'Donation date must be between start and end dates of campaign.';
         END IF;
-        RETURN NEW;
+        RETURN NULL;
     END;
 $check_donation_date$ LANGUAGE plpgsql;
 
---TODO: needs to be tested
+--TODO: NOT CORRECT - only gets people who voted
 CREATE FUNCTION spend_request_approved_only_with_majority_vote() RETURNS trigger AS $check_request_approved$
 	DECLARE
     		approve_votes integer;
@@ -141,7 +143,7 @@ CREATE FUNCTION spend_request_approved_only_with_majority_vote() RETURNS trigger
         IF (NEW.request_approved AND (2 * approve_votes <= total_votes)) THEN
             RAISE EXCEPTION 'A spend request cannot be approved if not a majority vote';
         END IF;
-        RETURN NEW;
+        RETURN NULL;
     END;
 $check_request_approved$ LANGUAGE plpgsql;
 
@@ -176,22 +178,58 @@ CREATE FUNCTION only_non_manager_donors_vote_spend_request() RETURNS trigger AS 
         IF non_donor_voter_count > 0 THEN
             RAISE EXCEPTION 'Only donors to a campaign can vote for that campaign spend requests.';
         END IF;
-        RETURN NEW;
+        RETURN NULL;
     END;
 $check_voters$ LANGUAGE plpgsql;
 
---TODO: ADD TRIGGER TO CAMPAIGN; CAN ONLY BE DELETED WHEN ALL ASSOCIATED DONATIONS ARE RETURNED
---TODO: ADD TRIGGER TO DONATION; CAN ONLY BE DELETED WHEN ASSOCIATED CAMPAIGN IS LOCKED
---TODO: ADD TRIGGER TO CAMPAIGN; CAN ONLY BE DELETED WHEN ITS LOCKED
+CREATE FUNCTION campaign_only_marked_deleted_if_all_donations_refunded() RETURNS trigger AS $valid_delete_state$
+    DECLARE
+        non_refunded_donation_count integer;
+    BEGIN
+        SELECT COUNT (donation_id)
+        FROM campaign
+        INTO non_refunded_donation_count
+        INNER JOIN donation
+        USING (campaign_id)
+        WHERE (refunded = false) AND (deleted = true);
 
-CREATE TRIGGER check_campaign_single_creator BEFORE INSERT OR UPDATE OR DELETE ON campaign_manager
+        IF (non_refunded_donation_count > 0) THEN
+            RAISE EXCEPTION 'Cannot mark campaign as deleted; there are still donations that need to be refunded';
+        END IF;
+        RETURN NULL;
+    END;
+$valid_delete_state$ LANGUAGE plpgsql;
+
+CREATE FUNCTION donation_only_refunded_when_campaign_locked() RETURNS trigger AS $valid_donation_refund$
+    DECLARE
+        campaign_locked boolean;
+    BEGIN
+        SELECT locked
+        FROM campaign
+        INTO campaign_locked
+        WHERE (campaign.campaign_id = NEW.campaign_id);
+
+        IF (NOT campaign_locked AND NEW.refunded) THEN
+            RAISE EXCEPTION 'Cannot refund donation; campaign still unlocked.';
+        END IF;
+        RETURN NEW;
+    END;
+$valid_donation_refund$ LANGUAGE plpgsql;
+
+CREATE TRIGGER check_campaign_single_creator AFTER INSERT OR UPDATE OR DELETE ON campaign_manager
     EXECUTE PROCEDURE check_campaign_single_creator();
 
 CREATE TRIGGER donation_date_between_start_end_dates BEFORE INSERT OR UPDATE ON donation
     EXECUTE PROCEDURE donation_date_between_start_end_dates();
 
-CREATE TRIGGER spend_request_approved_only_with_majority_vote BEFORE INSERT OR UPDATE on spend_request
+CREATE TRIGGER spend_request_approved_only_with_majority_vote BEFORE INSERT OR UPDATE ON spend_request
     EXECUTE PROCEDURE spend_request_approved_only_with_majority_vote();
 
-CREATE TRIGGER only_non_manager_donors_vote_spend_request BEFORE INSERT OR UPDATE on vote
+CREATE TRIGGER only_non_manager_donors_vote_spend_request AFTER INSERT OR UPDATE ON vote
     EXECUTE PROCEDURE only_non_manager_donors_vote_spend_request();
+
+CREATE TRIGGER campaign_only_marked_deleted_if_all_donations_refunded AFTER INSERT OR UPDATE ON campaign
+    EXECUTE PROCEDURE campaign_only_marked_deleted_if_all_donations_refunded();
+
+CREATE TRIGGER donation_only_refunded_when_campaign_locked BEFORE INSERT OR UPDATE ON donation
+    EXECUTE PROCEDURE donation_only_refunded_when_campaign_locked();

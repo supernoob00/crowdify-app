@@ -176,7 +176,7 @@ CREATE FUNCTION only_non_manager_donors_vote_spend_request() RETURNS trigger AS 
         RETURN NEW;
     END;' LANGUAGE plpgsql;
 
-CREATE TRIGGER check_campaign_single_creator BEFORE INSERT OR UPDATE OR DELETE ON campaign_manager
+CREATE TRIGGER check_campaign_single_creator AFTER INSERT OR UPDATE OR DELETE ON campaign_manager
     EXECUTE PROCEDURE check_campaign_single_creator();
 
 CREATE TRIGGER donation_date_between_start_end_dates BEFORE INSERT OR UPDATE ON donation
@@ -185,7 +185,7 @@ CREATE TRIGGER donation_date_between_start_end_dates BEFORE INSERT OR UPDATE ON 
 CREATE TRIGGER spend_request_approved_only_with_majority_vote BEFORE INSERT OR UPDATE on spend_request
     EXECUTE PROCEDURE spend_request_approved_only_with_majority_vote();
 
-CREATE TRIGGER only_non_manager_donors_vote_spend_request BEFORE INSERT OR UPDATE on vote
+CREATE TRIGGER only_non_manager_donors_vote_spend_request AFTER INSERT OR UPDATE on vote
     EXECUTE PROCEDURE only_non_manager_donors_vote_spend_request();
 
 

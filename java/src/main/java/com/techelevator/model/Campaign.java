@@ -168,13 +168,12 @@ public class Campaign {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Campaign campaign = (Campaign) o;
-        return id == campaign.id && fundingGoal == campaign.fundingGoal && locked == campaign.locked && isPublic == campaign.isPublic && Objects.equals(name, campaign.name) && Objects.equals(description, campaign.description) && Objects.equals(startDate, campaign.startDate) && Objects.equals(endDate, campaign.endDate) && Objects.equals(donations, campaign.donations) && Objects.equals(managers, campaign.managers) && Objects.equals(creator, campaign.creator);
+        return id == campaign.id && fundingGoal == campaign.fundingGoal && locked == campaign.locked && isPublic == campaign.isPublic && deleted == campaign.deleted && name.equals(campaign.name) && description.equals(campaign.description) && startDate.equals(campaign.startDate) && endDate.equals(campaign.endDate) && donations.equals(campaign.donations) && managers.equals(campaign.managers) && creator.equals(campaign.creator);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description, fundingGoal, startDate,
-                endDate, locked, isPublic, donations, managers, creator);
+        return Objects.hash(id, name, description, fundingGoal, startDate, endDate, locked, isPublic, donations, managers, creator, deleted);
     }
 
     @Override

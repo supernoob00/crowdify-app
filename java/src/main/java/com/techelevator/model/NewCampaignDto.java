@@ -6,6 +6,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 public class NewCampaignDto {
     @NotBlank
@@ -89,5 +90,18 @@ public class NewCampaignDto {
 
     public void setPublic(boolean aPublic) {
         isPublic = aPublic;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        NewCampaignDto that = (NewCampaignDto) o;
+        return fundingGoal == that.fundingGoal && creatorId == that.creatorId && isPublic == that.isPublic && name.equals(that.name) && description.equals(that.description) && startDate.equals(that.startDate) && endDate.equals(that.endDate);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, description, fundingGoal, creatorId, startDate, endDate, isPublic);
     }
 }

@@ -42,14 +42,14 @@ INSERT INTO donation (donor_id, campaign_id, donation_amount, donation_date, don
 (4, 2, 5000, '2024-06-22 20:00:00','It''s cool to be able to support in a real way with my money in this fashion!',false);
 
 INSERT INTO spend_request (campaign_id, request_amount, request_description, request_approved) VALUES
-(1, 100, 'some monies', false),
-(1, 50, 'more money', false),
-(2, 50, 'cash', false);
+(1, 100, 'some monies', false), --id 1
+(1, 50, 'more money', false), --id 2
+(2, 50, 'cash', false); --id 3
 
 INSERT INTO vote (donor_id, request_id, vote_approved) VALUES
 --invalid vote, because this is a manager (1, 1, true),
-(1, 2, true),
-(2, 1, true);
+(3, 1, true),
+(4, 3, true);
 --invalid vote, because this is not a donor to the campaign (4, 1, true)
 
 COMMIT TRANSACTION;
