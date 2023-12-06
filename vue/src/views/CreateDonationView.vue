@@ -1,9 +1,7 @@
 <template>
   <main class="content">
     <h1>Donate to {{ campaign.name }}</h1>
-    <div v-if="isLoading" class="loading">
-      <img src="../assets/ping_pong_loader.gif">
-    </div>
+    <loading-screen v-if="isLoading"></loading-screen>
     <div v-else class="body">
       <form @submit.prevent="">
         <div class="field">
@@ -37,12 +35,17 @@
 
 <script>
 import campaignService from '../services/CampaignService';
+import LoadingScreen from '../components/LoadingScreen.vue';
 export default {
+  components: {
+    LoadingScreen
+  },
   data() {
     return {
       newDonationDto: {
-        comment: 'Test Comment',
-        amount: 2
+        comment: ''
+        // comment: 'Test Comment',
+        // amount: 2
       },
       campaign: {},
       isLoading: true,

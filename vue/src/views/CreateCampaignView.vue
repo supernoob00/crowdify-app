@@ -16,12 +16,12 @@ export default {
       isLoading: true,
       newCampaign: {
         id: -1,
-        name: 'Creation Test',
-        description: 'test',
-        public: false,
-        endDate: '2023-12-10',
-        startDate: '2023-12-07',
-        fundingGoal: 2
+        // name: 'Creation Test',
+        // description: 'test',
+        // public: false,
+        // endDate: '2023-12-10',
+        // startDate: '2023-12-07',
+        // fundingGoal: 2
       },
     }
   },
