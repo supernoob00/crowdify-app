@@ -44,7 +44,7 @@ export default {
     return {
       newDonationDto: {
         comment: 'Test Comment',
-        amount: 2
+        amount: 3293892
       },
       campaign: {},
       isLoading: true,
