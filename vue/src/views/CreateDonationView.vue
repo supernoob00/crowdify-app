@@ -3,7 +3,7 @@
     <h1>Donate to {{ campaign.name }}</h1>
     <loading-screen v-if="isLoading"></loading-screen>
     <div v-else class="body">
-      <form @submit.prevent="">
+      <form @submit.prevent="submitForm">
         <div class="field">
           <label class="label">Comment</label>
           <div class="control">
@@ -18,7 +18,7 @@
         </div>
         <div class="field is-grouped">
           <div class="control">
-            <button class="button is-link" @click="submitForm">Save</button>
+            <button class="button is-link" type="submit">Save</button>
           </div>
           <div class="control">
             <button class="button is-light" @click="resetAddForm">Reset Form</button>
@@ -44,7 +44,7 @@ export default {
     return {
       newDonationDto: {
         comment: 'Test Comment',
-        amount: 2
+        amount: 10
       },
       campaign: {},
       isLoading: true,
