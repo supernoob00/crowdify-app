@@ -48,7 +48,7 @@ public class CampaignController {
         for (Campaign campaign : jdbcCampaignDao.getCampaignList()) {
             if (campaign.isPublic()
                     || (loggedInUser.isPresent()
-                        && loggedInUser.get().getUsername().equals(principal.getName()))) {
+                        && campaign.getManagers().contains(loggedInUser.get()))) {
                 campaigns.add(campaign);
             }
         }
