@@ -15,9 +15,7 @@ public class NewDonationDto {
     private int campaignId;
     @Min(1)
     private int amount;
-    @NotBlank
     private String comment;
-    // TODO: might want default
     private boolean refunded;
 
     public NewDonationDto() {
