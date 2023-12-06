@@ -2,6 +2,7 @@ package com.techelevator.dao;
 
 import com.techelevator.exception.DaoException;
 import com.techelevator.model.Campaign;
+import com.techelevator.model.Donation;
 import com.techelevator.model.NewCampaignDto;
 import com.techelevator.model.UpdateCampaignDto;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -29,7 +30,7 @@ public class JdbcCampaignDao {
 
     public List<Campaign> getCampaignList() {
         List<Campaign> campaignList = new ArrayList<>();
-        String sql = "SELECT * FROM campaign;";
+        String sql = "SELECT * FROM campaign WHERE deleted = false;";
 
         try {
             SqlRowSet results = jdbcTemplate.queryForRowSet(sql);
@@ -117,11 +118,28 @@ public class JdbcCampaignDao {
         }
     }
 
-    public void deleteCampaignById(int campaignId) {
-        //TODO do we want managers to be able to delete campaigns entirely, or should they remain in the database
-        // as deleted but hidden from the front end?
+    public int markCampaignDeletedById(int campaignId) {
+        Campaign markedCampaign = getCampaignById(campaignId).orElse(null);
+        if (markedCampaign == null) {
+            return 0;
+        }
 
+        String sql = "UPDATE campaign SET deleted = true WHERE campaign_id = " +
+                "?;";
 
+        try {
+            List<Donation> donations = markedCampaign.getDonations();
+            if (!markedCampaign.isLocked() || !donations.isEmpty()) {
+                throw new DataIntegrityViolationException("Donation cannot be " +
+                        "deleted because it is not locked or has unreturned " +
+                        "donations.");
+            }
+            return jdbcTemplate.update(sql, campaignId);
+        } catch (CannotGetJdbcConnectionException e) {
+            throw new DaoException("Unable to connect to server or database", e);
+        } catch (DataIntegrityViolationException e) {
+            throw new DaoException("Data integrity violation", e);
+        }
     }
 
     private int linkCampaignManager(int campaignId, int managerId, boolean isCreator) {
@@ -147,6 +165,7 @@ public class JdbcCampaignDao {
         campaign.setDonations(jdbcDonationDao.getDonationsByCampaignId(rowSet.getInt("campaign_id")));
         campaign.setManagers(userDao.getManagersByCampaignId(rowSet.getInt("campaign_id")));
         campaign.setCreator(userDao.getCreatorByCampaignId(rowSet.getInt("campaign_id")).orElseThrow());
+        campaign.setDeleted(rowSet.getBoolean("deleted"));
         return campaign;
     }
 }

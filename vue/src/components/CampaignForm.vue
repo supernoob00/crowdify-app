@@ -68,6 +68,29 @@ export default {
   computed: {
     currentUser() {
       return this.$store.state.user;
+    },
+    newCampaignDto() {
+      const dto = {};
+      dto.name = this.editCampaign.name;
+      dto.description = this.editCampaign.description;
+      dto.fundingGoal = this.editCampaign.fundingGoal * 100;
+      dto.creatorId = this.currentUser.id;
+      dto.startDate = `${this.editCampaign.startDate} 00:00:00`;
+      dto.endDate = `${this.editCampaign.endDate} 00:00:00`;
+      dto.public = this.editCampaign.public;
+      return dto;
+    },
+    updateCampaignDto() {
+      const dto = {};
+      dto.id = this.editCampaign.id;
+      dto.name = this.editCampaign.name;
+      dto.description = this.editCampaign.description;
+      dto.fundingGoal = this.editCampaign.fundingGoal * 100;
+      dto.startDate = `${this.editCampaign.startDate} 00:00:00`;
+      dto.endDate = `${this.editCampaign.endDate} 00:00:00`;
+      dto.public = this.editCampaign.public;
+      dto.locked = this.editCampaign.locked;
+      return dto;
     }
   },
   methods: {
@@ -75,39 +98,32 @@ export default {
       if (!this.validateAddForm()) {
         return;
       }
-      const rawUserInput = { ...this.editCampaign };
-      this.editCampaign.endDate = `${this.editCampaign.endDate} 00:00:00`;
-      this.editCampaign.startDate = `${this.editCampaign.startDate} 00:00:00`;
-      this.editCampaign.fundingGoal *= 100;
       if (this.editCampaign.id === -1) {
         try {
-          // need this here since creation passes unique DTO
-          this.editCampaign.creatorId = this.currentUser.id;
-          const response = await campaignService.addCampaign(this.editCampaign);
+          const response = await campaignService.addCampaign(this.newCampaignDto);
           if (response.status === 201) {
             const createdCampaign = response.data;
             this.$store.commit('SET_NOTIFICATION', { message: 'Created Campaign!', type: 'success' })
-            this.isLoading = true;
             this.resetAddForm();
             this.$router.push({ name: 'CampaignView', params: { id: createdCampaign.id } })
           }
         } catch (error) {
-          this.editCampaign = rawUserInput;
           campaignService.handleErrorResponse(this.$store, error, 'creating', 'campaign');
+        } finally {
+          this.isLoading = false;
         }
       } else {
         try {
-          console.log(this.editCampaign)
-          const response = await campaignService.updateCampaign(this.editCampaign);
-          if (response.status === 201) {
-            this.$store.commit('SET_NOTIFICATION', { message: 'Updated Campaign!', type: 'success' })
-            this.isLoading = true;
+          const response = await campaignService.updateCampaign(this.updateCampaignDto, this.editCampaign.id);
+          if (response.status === 200) {
+            this.$store.commit('SET_NOTIFICATION', { message: 'Updated Campaign!', type: 'success' });
             this.resetAddForm();
-            this.$router.push({ name: 'CampaignView', params: { id: this.editCampaign.id } })
+            this.$router.push({ name: 'CampaignView', params: { id: this.editCampaign.id } });
           }
         } catch (error) {
-          this.editCampaign = rawUserInput;
           campaignService.handleErrorResponse(this.$store, error, 'updating', 'campaign');
+        } finally {
+          this.isLoading = false;
         }
       }
     },
@@ -133,6 +149,8 @@ export default {
         name: '',
         description: '',
         fundingGoal: null,
+        startDate: this.minStartDate,
+        endDate: this.minEndDate,
         public: false,
       }
     },

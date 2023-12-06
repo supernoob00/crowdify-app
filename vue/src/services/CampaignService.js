@@ -9,16 +9,20 @@ export default {
     return axios.get('/campaigns');
   },
 
-  addCampaign(newCampaign) {
-    return axios.post('/campaigns', newCampaign);
+  addCampaign(newCampaignDto) {
+    return axios.post('/campaigns', newCampaignDto);
   },
 
-  updateCampaign(updatedCampaign) {
-    return axios.put('/campaigns', updatedCampaign);
+  updateCampaign(updateCampaignDto, id) {
+    return axios.put(`/campaigns/${id}`, updateCampaignDto);
   },
 
-  createDonation(newDonation) {
-    return axios.post('/donations', newDonation);
+  createDonation(newDonationDto) {
+    return axios.post('/donations', newDonationDto);
+  },
+
+  getDonationsByUser(userId) {
+    return axios.get(`/users/${userId}/donations`);
   },
 
   handleErrorResponse(store, error, verb, object) {

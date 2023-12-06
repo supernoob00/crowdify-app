@@ -49,7 +49,7 @@ public class JdbcDonationDaoTests extends BaseDaoTests {
 
     @Test
     public void createDonation_creates_a_donation() {
-        NewDonationDto donation = new NewDonationDto(1, 1, 5000, "test", "approved");
+        NewDonationDto donation = new NewDonationDto(1, 1, 5000, "test", false);
         Donation createdDonation = sut.createDonation(donation);
 
         Donation retrievedDonation =
@@ -69,7 +69,6 @@ public class JdbcDonationDaoTests extends BaseDaoTests {
         List<Donation> donations = sut.getDonationsByUserId(1);
 
         Assert.assertEquals(2, donations.size());
-        Assert.assertEquals(DONATION_1, donations.get(0));
-        Assert.assertEquals(DONATION_4, donations.get(1));
+        Assert.assertEquals(List.of(DONATION_1, DONATION_4), donations);
     }
 }

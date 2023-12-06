@@ -10,7 +10,9 @@
       <!-- Uncomment section below when presenting/releasing to production for better design -->
       <!-- </div> -->
       <!-- <div class="navbar-end"> -->
-      <router-link class="navbar-item" to="" v-if="$store.state.token != ''">My Account</router-link>
+      <dark-mode-toggle class="navbar-item"></dark-mode-toggle>
+      <router-link class="navbar-item" :to="{ name: 'MyAccountView', params: { id: $store.state.user.id } }"
+        v-if="$store.state.token != ''">My Account</router-link>
       <div class="buttons">
         <div class="navbar-item">
           <router-link class="button is-primary" v-bind:to="{ name: 'register' }" v-if="$store.state.token === ''">Sign
@@ -25,5 +27,19 @@
   </nav>
 </template>
 <script>
+import DarkModeToggle from './DarkModeToggle.vue';
+export default {
+  components: {
+    DarkModeToggle
+  }
+}
 </script>
-<style scoped></style>
+<style scoped>
+/* .navbar {
+  background-color: var(--navbar-background);
+}
+
+.navbar .navbar-item {
+  color: white;
+} */
+</style>

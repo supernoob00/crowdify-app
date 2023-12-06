@@ -4,7 +4,9 @@ import com.techelevator.dao.JdbcDonationDao;
 import com.techelevator.dao.UserDao;
 import com.techelevator.model.Donation;
 import com.techelevator.model.NewDonationDto;
+import com.techelevator.model.UpdateDonationDto;
 import com.techelevator.model.User;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -32,16 +34,12 @@ public class DonationController {
     @GetMapping("/users/{id}/donations")
     @ResponseStatus(HttpStatus.OK)
     public List<Donation> getDonationsByUserId(Principal principal, @PathVariable int id) {
-        Optional<User> loggedInUser;
-        loggedInUser = userDao.getUserByUsername(principal.getName());
-
-        List<Donation> userDonations = new ArrayList<>();
-        for (Donation donation : jdbcDonationDao.getDonationsByUserId(id)) {
-            if (loggedInUser.isPresent() && loggedInUser.get().getUsername().equals(principal.getName())) {
-                userDonations.add(donation);
-            }
+        //Reformatted method a bit. If id and logged in user don't match, we throw exception
+        Optional<User> loggedInUser = userDao.getUserById(id);
+        if (loggedInUser.isPresent() && !loggedInUser.get().getUsername().equals(principal.getName())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not authorized to get these donations.");
         }
-        return userDonations;
+        return new ArrayList<>(jdbcDonationDao.getDonationsByUserId(id));
     }
 
 
@@ -54,7 +52,12 @@ public class DonationController {
         return jdbcDonationDao.createDonation(newDonationDto);
     }
 
-    //TODO: Update donation (comment only)
+    @PutMapping("/donations/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public Donation updateDonation(Principal principal, @Valid @RequestBody UpdateDonationDto updateDonationDto) {
+        //TODO: Update donation controller method (comment and refunded status as well?)
+        return null;
+    }
 
     public boolean isCorrectUser(Principal principal, NewDonationDto newDonationDto) {
         String username = principal.getName();

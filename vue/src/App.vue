@@ -1,8 +1,10 @@
 <template>
-  <div id="capstone-app" class="container">
-    <notification-text></notification-text>
+  <div>
     <nav-bar></nav-bar>
-    <router-view></router-view>
+    <notification-text></notification-text>
+    <div id="capstone-app" class="container">
+      <router-view></router-view>
+    </div>
   </div>
 </template>
 
@@ -19,13 +21,30 @@ export default {
 
 <style>
 :root {
-  --app-background: white;
-  --user-is-manager-public: green;
-  --user-is-manager-private: teal;
+  --navbar-background: #fb8500;
+  --user-is-manager-public: pink;
+  --user-is-manager-private: lightcoral;
+  --font-color: #000;
+  --link-color: #1C75B9;
+  --link-white-color: #fff;
+  --bg-color: white;
 }
 
-#app {
-  background-color: var(--app-background)
+[data-theme="dark"] {
+  --font-color: #bdbab8;
+  --link-color: #0a86da;
+  --link-white-color: #bdbab8;
+  --bg-color: #333;
+}
+
+html,
+body {
+  color: #000;
+  color: var(--font-color);
+  background: var(--bg-color);
+  margin: 0;
+  padding: 0;
+  height: 100%;
 }
 
 .container {

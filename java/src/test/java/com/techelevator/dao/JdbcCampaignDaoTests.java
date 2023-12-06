@@ -3,8 +3,6 @@ package com.techelevator.dao;
 import com.techelevator.exception.DaoException;
 import com.techelevator.model.Campaign;
 import com.techelevator.model.NewCampaignDto;
-import com.techelevator.model.RegisterUserDto;
-import com.techelevator.model.User;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -74,6 +72,17 @@ public class JdbcCampaignDaoTests extends BaseDaoTests {
         Assert.assertEquals(retrievedCampaign.orElseThrow(), createdCampaign);
     }
 
-//    @Test
-//    public void
+    @Test(expected = DaoException.class)
+    public void delete_unlocked_campaign_fails() {
+        sut.markCampaignDeletedById(1);
+    }
+
+    @Test
+    public void delete_campaign_removes_campaign() {
+        int affected = sut.markCampaignDeletedById(4);
+        Assert.assertEquals(1, affected);
+
+        Campaign markedAsDeleted = sut.getCampaignById(4).orElseThrow();
+        Assert.assertTrue(markedAsDeleted.isDeleted());
+    }
 }

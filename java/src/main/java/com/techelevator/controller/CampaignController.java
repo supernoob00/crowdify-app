@@ -1,8 +1,8 @@
 package com.techelevator.controller;
 
 import com.techelevator.dao.JdbcCampaignDao;
+import com.techelevator.dao.JdbcDonationDao;
 import com.techelevator.dao.JdbcUserDao;
-import com.techelevator.dao.UserDao;
 import com.techelevator.model.Campaign;
 import com.techelevator.model.NewCampaignDto;
 import com.techelevator.model.UpdateCampaignDto;
@@ -23,12 +23,14 @@ import java.util.Optional;
 public class CampaignController {
     private final JdbcCampaignDao jdbcCampaignDao;
     private final JdbcUserDao jdbcUserDao;
-    private final UserDao userDao;
+    private final JdbcDonationDao jdbcDonationDao;
 
-    public CampaignController(JdbcCampaignDao jdbcCampaignDao, JdbcUserDao jdbcUserDao, UserDao userDao) {
+    public CampaignController(JdbcCampaignDao jdbcCampaignDao,
+                              JdbcUserDao jdbcUserDao,
+                              JdbcDonationDao jdbcDonationDao) {
         this.jdbcCampaignDao = jdbcCampaignDao;
         this.jdbcUserDao = jdbcUserDao;
-        this.userDao = userDao;
+        this.jdbcDonationDao = jdbcDonationDao;
     }
 
     // show all public campaigns and campaigns you own
@@ -79,10 +81,24 @@ public class CampaignController {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @RequestMapping(path = "/campaigns/{id}", method = RequestMethod.DELETE)
     public void deleteCampaign(@PathVariable int id) {
-        //TODO call DAO delete method here. Can only delete when campaign is locked and has 0 zero donations
+        int deletedCount = jdbcCampaignDao.markCampaignDeletedById(id);
+        if (deletedCount == 0) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PreAuthorize("isAuthenticated")
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/users/{id}/campaigns")
+    public List<Campaign> getListOfMyCampaigns(Principal principal, @PathVariable int id) {
+        Optional<User> loggedInUser;
+        loggedInUser = userDao.getUserByUsername(principal.getName());
+
+        List<Campaign> myCampaigns = new ArrayList<>();
+        for (Campaign campaign : jdbcCampaignDao.getCampaignById())
     }
 
     @PreAuthorize("isAuthenticated")

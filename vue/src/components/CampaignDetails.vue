@@ -2,7 +2,8 @@
   <div class="content">
     <div class="header">
       <h1 id="campaign-name">{{ campaign.name }}</h1>
-      <router-link class="button is-link" :to="{ name: 'EditCampaignView', params: { id: campaign.id } }">
+      <router-link v-if="isManager" class="button is-link"
+        :to="{ name: 'EditCampaignView', params: { id: campaign.id } }">
         Edit Campaign</router-link>
     </div>
     <hr>
@@ -44,6 +45,9 @@ export default {
     donationsSortedByAmount() {
       const donationsCopy = [...this.campaign.donations]
       return donationsCopy.sort((d1, d2) => d2.amount - d1.amount);
+    },
+    isManager() {
+      return this.campaign.managers.filter(m => m.username === this.$store.state.user.username).length > 0;
     }
   }
 
