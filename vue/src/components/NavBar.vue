@@ -35,11 +35,19 @@ export default {
 }
 </script>
 <style scoped>
-/* .navbar {
-  background-color: var(--navbar-background);
+.navbar {
+  /* background-color: var(--navbar-background); */
+  position: sticky;
+  left: 0;
+  /* top left corner should start at leftmost spot */
+  top: 0;
+  /* top left corner should start at topmost spot */
+  width: 100vw;
+  /* take up the full browser width */
+  z-index: 200;
+  /* high /z index so other content scrolls underneath */
 }
 
-.navbar .navbar-item {
+/* .navbar .navbar-item {
   color: white;
-} */
-</style>
+} */</style>
