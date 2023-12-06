@@ -50,4 +50,5 @@ export default {
 
 /* .navbar .navbar-item {
   color: white;
-} */</style>
+} */
+</style>

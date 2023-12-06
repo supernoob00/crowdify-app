@@ -2,7 +2,7 @@
   <div class="content">
     <h1>Edit Campaign</h1>
     <loading-screen v-if="isLoading"></loading-screen>
-    <campaign-form class="form" v-else :campaign="campaign"></campaign-form>
+    <campaign-form v-else :campaign="campaign" class="form"></campaign-form>
   </div>
 </template>
 

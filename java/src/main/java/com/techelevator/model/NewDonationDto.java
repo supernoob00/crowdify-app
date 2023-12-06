@@ -10,7 +10,7 @@ import javax.validation.constraints.Positive;
 public class NewDonationDto {
 
     @Min(1)
-    private int donorId;
+    private Integer donorId;
     @Min(1)
     private int campaignId;
     @Min(1)
@@ -21,7 +21,7 @@ public class NewDonationDto {
     public NewDonationDto() {
     }
 
-    public NewDonationDto(int donorId, int campaignId, int amount,
+    public NewDonationDto(Integer donorId, int campaignId, int amount,
                           String comment, boolean refunded) {
         this.donorId = donorId;
         this.campaignId = campaignId;
@@ -30,11 +30,11 @@ public class NewDonationDto {
         this.refunded = refunded;
     }
 
-    public int getDonorId() {
+    public Integer getDonorId() {
         return donorId;
     }
 
-    public void setDonorId(int donorId) {
+    public void setDonorId(Integer donorId) {
         this.donorId = donorId;
     }
 

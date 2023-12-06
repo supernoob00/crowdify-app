@@ -30,7 +30,7 @@ export default {
   --bg-color: white;
 }
 
-[data-theme="dark"] {
+[theme="custom-dark"] {
   --font-color: #bdbab8;
   --link-color: #0a86da;
   --link-white-color: #bdbab8;

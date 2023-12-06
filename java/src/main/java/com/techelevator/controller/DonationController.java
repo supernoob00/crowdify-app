@@ -19,7 +19,6 @@ import java.util.Optional;
 
 @RestController
 @CrossOrigin
-@PreAuthorize("isAuthenticated()")
 public class DonationController {
     private final JdbcDonationDao jdbcDonationDao;
     private final UserDao userDao;
@@ -32,6 +31,7 @@ public class DonationController {
     }
 
     //TODO: Get donations by username controller endpoint/DAO method
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/users/{id}/donations")
     @ResponseStatus(HttpStatus.OK)
     public List<Donation> getDonationsByUserId(Principal principal, @PathVariable int id) {
@@ -47,12 +47,16 @@ public class DonationController {
     @PostMapping("/donations")
     @ResponseStatus(HttpStatus.CREATED)
     public Donation createDonation(Principal principal, @Valid @RequestBody NewDonationDto newDonationDto) {
+        if (principal == null) {
+            return jdbcDonationDao.createDonation(newDonationDto);
+        }
         if (!isCorrectUser(principal, newDonationDto)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not authorized create this donation.");
         }
         return jdbcDonationDao.createDonation(newDonationDto);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PutMapping("/donations/{id}")
     @ResponseStatus(HttpStatus.OK)
     public Donation updateDonation(Principal principal, @Valid @RequestBody UpdateDonationDto updateDonationDto) {
@@ -68,5 +72,4 @@ public class DonationController {
         int loggedInUserID = user.getId();
         return loggedInUserID == newDonationDto.getDonorId();
     }
-
 }
