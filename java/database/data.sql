@@ -34,12 +34,12 @@ INSERT INTO campaign_manager (campaign_id, manager_id, creator) VALUES
 (2, 3, true),
 (3, 1, true);
 
-INSERT INTO donation (donor_id, campaign_id, donation_amount, donation_date, refunded) VALUES
-(1, 1, 5000, '2020-06-22 20:00:00', false),
-(1, 2, 500, '2024-06-22 20:00:00', false),
-(2, 1, 5000, '2020-06-22 20:00:00', false),
-(3, 1, 5000, '2020-06-22 20:00:00', false),
-(4, 2, 5000, '2024-06-22 20:00:00', false);
+INSERT INTO donation (donor_id, campaign_id, donation_amount, donation_date, donation_comment, refunded) VALUES
+(1, 1, 5000, '2020-06-22 20:00:00','Happy to help!', false),
+(1, 2, 500, '2024-06-22 20:00:00','Might be interesting...',false),
+(2, 1, 5000, '2020-06-22 20:00:00','Going all in!', false),
+(3, 1, 5000, '2020-06-22 20:00:00','Love it!',false),
+(4, 2, 5000, '2024-06-22 20:00:00','It''s cool to be able to support in a real way with my money in this fashion!',false);
 
 INSERT INTO spend_request (campaign_id, request_amount, request_description, request_approved) VALUES
 (1, 100, 'some monies', false),

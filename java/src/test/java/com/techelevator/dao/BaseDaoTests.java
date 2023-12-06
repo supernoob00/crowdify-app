@@ -28,6 +28,8 @@ public abstract class BaseDaoTests {
     protected static final Donation DONATION_3 = new Donation(3, USER_3, 3, 3000,
             LocalDateTime.of(2024, 1, 13, 0, 0), "What the frick does Quantum" +
             " mean??", false);
+    protected static final Donation DONATION_4 = new Donation(4, USER_1, 2, 2000,
+            LocalDateTime.of(2024, 1, 11, 0, 0), "Not bad!", false);
     protected static final Campaign CAMPAIGN_1 = new Campaign(1, "Fancy New Tech", "We are making some cool new stuff using technology",
             1000000, LocalDateTime.of(2024, 1, 1, 0, 0),
             LocalDateTime.of(2024, 1, 21, 0, 0), false, false, USER_1);
@@ -37,13 +39,16 @@ public abstract class BaseDaoTests {
     protected static final Campaign CAMPAIGN_3 = new Campaign(3, "Fancy New Computer", "We are making some cool new stuff using a quantum computer",
             3000000, LocalDateTime.of(2024, 1, 3, 0, 0),
             LocalDateTime.of(2024, 1, 23, 0, 0), true, false, USER_3);
+    protected static final Campaign CAMPAIGN_4 = new Campaign(4, "Doomed to " +
+            "Fail", "Why do I even try", 100, LocalDateTime.of(2024, 1, 3, 0, 0),
+            LocalDateTime.of(2024, 1, 23, 0, 0), true, false, USER_1);
 
     static {
         CAMPAIGN_1.setManagers(List.of(USER_1));
         CAMPAIGN_2.setManagers(List.of(USER_2));
         CAMPAIGN_3.setManagers(List.of(USER_3));
         CAMPAIGN_1.setDonations(List.of(DONATION_1));
-        CAMPAIGN_2.setDonations(List.of(DONATION_2));
+        CAMPAIGN_2.setDonations(List.of(DONATION_2, DONATION_4));
         CAMPAIGN_3.setDonations(List.of(DONATION_3));
     }
 
