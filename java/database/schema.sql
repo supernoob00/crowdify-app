@@ -62,8 +62,8 @@ CREATE TABLE spend_request (
     campaign_id integer NOT NULL,
     request_amount integer NOT NULL, --TODO: constraint less than current funds - all donations minus all spend requests (should use trigger)
     request_description varchar(500) NOT NULL,
-    request_approved boolean DEFAULT false NOT NULL, --TODO: ask Jennifer if manager needs to manually approved spend requests, also add constraint cannot be true if majority has not approved
-    end_date timestamp, --TODO: Ask Jennifer is end date needed
+    request_approved boolean DEFAULT false NOT NULL, --TODO: Jennifer says manager needs to manually approved spend requests, also add constraint cannot be true if majority has not approved
+    end_date timestamp, --TODO: Jennifer says end date is needed
 
     CONSTRAINT pk_request_id PRIMARY KEY (request_id),
     CONSTRAINT fk_campaign_id FOREIGN KEY (campaign_id) REFERENCES campaign,
@@ -73,7 +73,7 @@ CREATE TABLE spend_request (
 CREATE TABLE vote (
     donor_id integer NOT NULL, --TODO: add constraint only donors for campaign and not a manager
     request_id integer NOT NULL,
-    vote_approved boolean, --TODO: ask jennifer is users can reject spend requests, also default null
+    vote_approved boolean, --TODO: Jennifer says all votes equal, also default null
 
     CONSTRAINT pk_donor_request_id PRIMARY KEY (donor_id, request_id),
     CONSTRAINT fk_donor_user_id FOREIGN KEY (donor_id) REFERENCES users (user_id),
