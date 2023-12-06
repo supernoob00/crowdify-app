@@ -1,2 +1,4 @@
-package com.techelevator.model;public class UpdateDonationDto {
+package com.techelevator.model;
+
+public class UpdateDonationDto {
 }
