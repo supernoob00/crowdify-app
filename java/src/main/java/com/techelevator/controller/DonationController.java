@@ -1,6 +1,7 @@
 package com.techelevator.controller;
 
 import com.techelevator.dao.JdbcDonationDao;
+import com.techelevator.dao.JdbcSpendRequestDao;
 import com.techelevator.dao.JdbcVoteDao;
 import com.techelevator.dao.UserDao;
 import com.techelevator.model.*;
@@ -58,6 +59,19 @@ public class DonationController {
         return null;
     }
 
+    // *******************************
+
+    /*@GetMapping("/campaigns/{campaignId}/spend-req")
+    @ResponseStatus(HttpStatus.OK)
+
+    public List<SpendRequest> getSpendReqByCampaignId (Principal principal, @PathVariable int userId, @PathVariable int campaignId) {
+        Optional<User> loggedInUser = userDao.getUserById(userId);
+        if (loggedInUser.isPresent() && !loggedInUser.get().getUsername().equals(principal.getName())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not authorized to view these spend requests.");
+        }
+        return new ArrayList<>(JdbcSpendRequestDao.);
+    }*/
+
     @GetMapping("/campaigns/{campId}/spendreq/{spendreqid}/votes")
     @ResponseStatus(HttpStatus.OK)
     public List<Vote> getVotesBySpendReq(Principal principal, @PathVariable int userId, @PathVariable int campId, @PathVariable int spendReqId) {
@@ -69,6 +83,8 @@ public class DonationController {
         }
         return new ArrayList<>(jdbcVoteDao.getVoteListBySpendReqId(spendReqId));
     }
+
+    // **********************************
 
 
 
