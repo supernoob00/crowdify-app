@@ -43,9 +43,19 @@ public class JdbcCampaignDao {
         return campaignList;
     }
 
-    public List<Campaign> getManagersCampaignList() {
-        List<Campaign> managersCampaigns = new ArrayList<>();
-        String sql = "SELECT * FROM campaign where"
+    public List<Optional> getManagersCampaignList(int userId) {
+        List<Optional> managersCampaigns = new ArrayList<>();
+        String sql = "SELECT campaign_id FROM campaign_manager " +
+                "WHERE manager_id = ?;";
+        try {
+            SqlRowSet results = jdbcTemplate.queryForRowSet(sql, userId);
+            if (results.next()) {
+                managersCampaigns.add(getCampaignById(results.getRow()));
+            }
+        } catch (CannotGetJdbcConnectionException e) {
+            throw new DaoException("Unable to connect to server or database", e);
+        }
+        return managersCampaigns;
     }
 
     public Optional<Campaign> getCampaignById(int CampaignId) {
