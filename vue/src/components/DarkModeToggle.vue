@@ -2,8 +2,8 @@
   <div class="toggle">
     <input @change="switchTheme" :v-model="isLight" type="checkbox" id="toggle-checkbox">
     <label for="toggle-checkbox" class="toggle-label">
-      <i v-if="isLight" class="far fa-moon"></i>
-      <i v-else class="far fa-sun"></i>
+      <i v-if="isLight" class="fa-regular fa-moon"></i>
+      <i v-else class="fa-regular fa-sun"></i>
     </label>
   </div>
 </template>
