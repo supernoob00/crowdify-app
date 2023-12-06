@@ -43,9 +43,8 @@ export default {
   data() {
     return {
       newDonationDto: {
-        comment: ''
-        // comment: 'Test Comment',
-        // amount: 2
+        comment: 'Test Comment',
+        amount: 2
       },
       campaign: {},
       isLoading: true,
