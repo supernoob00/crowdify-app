@@ -1,7 +1,11 @@
 <template>
   <div class="content">
     <div class="header">
-      <h1 id="campaign-name">{{ campaign.name }}</h1>
+      <div>
+        <h1 id="campaign-name">{{ campaign.name }}</h1>
+        <span>Created by </span>
+        <span class="campaign-creator">{{ campaign.creator.username }}</span>
+      </div>
       <router-link v-if="isManager" class="button is-link"
         :to="{ name: 'EditCampaignView', params: { id: campaign.id } }">
         Edit Campaign</router-link>
@@ -88,5 +92,9 @@ hr {
 
 .progress-container progress {
   margin-bottom: 0.5rem;
+}
+
+.campaign-creator {
+  font-weight: 600;
 }
 </style>

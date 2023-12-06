@@ -8,7 +8,6 @@ import java.util.Objects;
 public class Donation {
     @Min(1)
     private int donationId;
-    @NotNull
     private User donor;
     @Min(1)
     private int campaignId;
