@@ -2,11 +2,9 @@ package com.techelevator.controller;
 
 import com.techelevator.dao.JdbcCampaignDao;
 import com.techelevator.dao.JdbcDonationDao;
+import com.techelevator.dao.JdbcSpendRequestDao;
 import com.techelevator.dao.JdbcUserDao;
-import com.techelevator.model.Campaign;
-import com.techelevator.model.NewCampaignDto;
-import com.techelevator.model.UpdateCampaignDto;
-import com.techelevator.model.User;
+import com.techelevator.model.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
