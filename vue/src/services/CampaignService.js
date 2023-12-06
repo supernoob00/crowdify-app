@@ -21,6 +21,10 @@ export default {
     return axios.post('/donations', newDonationDto);
   },
 
+  getDonationsByUser(userId) {
+    return axios.get(`/users/${userId}/donations`);
+  },
+
   handleErrorResponse(store, error, verb, object) {
     if (error.response) {
       store.commit('SET_NOTIFICATION',

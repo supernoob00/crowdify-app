@@ -9,6 +9,7 @@ import CampaignView from '../views/CampaignView.vue';
 import CreateCampaignView from '../views/CreateCampaignView.vue';
 import EditCampaignView from '../views/EditCampaignView.vue';
 import CreateDonationView from '../views/CreateDonationView.vue';
+import MyAccountView from '../views/MyAccountView.vue';
 /*
  * The Vue Router is used to "direct" the browser to render a specific view component
  * inside of App.vue depending on the URL.
@@ -75,6 +76,14 @@ const routes = [
     path: "/campaigns/:id/donate",
     name: 'CreateDonationView',
     component: CreateDonationView,
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: "/users/:id",
+    name: 'MyAccountView',
+    component: MyAccountView,
     meta: {
       requiresAuth: true
     }

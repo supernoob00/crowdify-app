@@ -20,7 +20,7 @@ public class Donation {
     @NotBlank
     private String comment;
     private boolean refunded;
-
+    //TODO: add campaign name to object and update everything for donations as a result
     public Donation() {
     }
 
