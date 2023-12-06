@@ -27,11 +27,11 @@ export default {
   methods: {
     switchTheme(e: Event) {
       if ((<HTMLInputElement>e.target).checked) {
-        // localStorage.setItem('theme', 'dark');
+        localStorage.setItem('theme', 'dark');
         document.documentElement.setAttribute('data-theme', 'dark');
         this.isLight = false;
       } else {
-        // localStorage.setItem('theme', 'light');
+        localStorage.setItem('theme', 'light');
         document.documentElement.setAttribute('data-theme', 'light');
         this.isLight = true;
       }
