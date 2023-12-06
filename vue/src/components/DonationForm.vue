@@ -1,39 +1,47 @@
 <template>
-  <form class="form-section" @submit.prevent="submitForm">
-    <div class="field">
-      <label class="label">Comment</label>
-      <div class="control">
-        <textarea class="textarea" placeholder="Optional" v-model="editDonation.comment"></textarea>
+  <div>
+    <loading-screen v-if="isLoading"></loading-screen>
+    <form v-else class="form-section" @submit.prevent="submitForm">
+      <div class="field">
+        <label class="label">Comment</label>
+        <div class="control">
+          <textarea class="textarea" placeholder="Optional" v-model="editDonation.comment"></textarea>
+        </div>
       </div>
-    </div>
-    <div class="field">
-      <label class="label">Amount ($)</label>
-      <div class="control">
-        <input type="Number" class="input" placeholder="$1 Minimum" v-model="editDonation.amount">
+      <div class="field">
+        <label class="label">Amount ($)</label>
+        <div class="control">
+          <input type="Number" class="input" placeholder="$1 Minimum" v-model="editDonation.amount">
+        </div>
       </div>
-    </div>
-    <div class="field is-grouped">
-      <div class="control">
-        <button class="button is-link" type="submit">Save</button>
+      <div class="field is-grouped">
+        <div class="control">
+          <button class="button is-link" type="submit">Save</button>
+        </div>
+        <div class="control">
+          <button class="button is-light" @click="resetAddForm">Reset Form</button>
+        </div>
+        <div class="control">
+          <button class="button is-danger"
+            @click="$router.push({ name: 'CampaignView', params: { id: campaignId } })">Cancel</button>
+        </div>
       </div>
-      <div class="control">
-        <button class="button is-light" @click="resetAddForm">Reset Form</button>
-      </div>
-      <div class="control">
-        <button class="button is-danger"
-          @click="$router.push({ name: 'CampaignView', params: { id: campaignId } })">Cancel</button>
-      </div>
-    </div>
-  </form>
+    </form>
+  </div>
 </template>
 
 <script>
 import campaignService from '../services/CampaignService';
+import LoadingScreen from './LoadingScreen.vue';
 export default {
+  components: {
+    LoadingScreen
+  },
   props: ['donation'],
   data() {
     return {
-      editDonation: { ...this.donation }
+      editDonation: { ...this.donation },
+      isLoading: false
     }
   },
   computed: {
@@ -57,8 +65,8 @@ export default {
       if (!this.validateAddForm()) {
         return;
       }
+      this.isLoading = true;
       try {
-        this.isLoading = true;
         const response = await campaignService.createDonation(this.newDonationDto);
         if (response.status === 201) {
           this.$store.commit('SET_NOTIFICATION', { message: 'Created Donation!', type: 'success' })
@@ -83,7 +91,7 @@ export default {
       return true;
     },
     resetAddForm() {
-      this.newDonationDto = {
+      this.editDonation = {
         comment: '',
         amount: null,
       }
