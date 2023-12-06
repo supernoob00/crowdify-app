@@ -98,8 +98,7 @@ public class JdbcDonationDao {
 
     public Donation mapRowToDonation(SqlRowSet results) {
         Donation donation = new Donation();
-        User donor = userDao.getUserById(results.getInt("donor_id")).orElseThrow();
-
+        User donor = userDao.getUserById(results.getInt("donor_id")).orElse(null);
         donation.setDonationId(results.getInt("donation_id"));
         donation.setDonor(donor);
         donation.setCampaignId(results.getInt("campaign_id"));

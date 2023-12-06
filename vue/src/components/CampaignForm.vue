@@ -1,5 +1,5 @@
 <template>
-  <form @submit.prevent="">
+  <form @submit.prevent="submitForm">
     <div class="field">
       <label class="label">Campaign Name</label>
       <div class="control">
@@ -41,7 +41,7 @@
     </div>
     <div class="field is-grouped">
       <div class="control">
-        <button class="button is-link" @click="submitForm">Save</button>
+        <button class="button is-link" type="submit">Save</button>
       </div>
       <div class="control">
         <button class="button is-light" @click="resetAddForm">Reset Form</button>

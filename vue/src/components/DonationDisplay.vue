@@ -1,7 +1,7 @@
 <template>
   <article class="message">
     <div class="message-header">
-      <p id="donor-name">{{ donation.donor.username }} </p>
+      <p id="donor-name">{{ username }} </p>
     </div>
     <div class="message-body">
       <span id="amount">${{ donation.amount / 100 }}</span>
@@ -12,7 +12,12 @@
 
 <script>
 export default {
-  props: ['donation']
+  props: ['donation'],
+  computed: {
+    username() {
+      return this.donation.donor === null ? 'Anonymous Donor' : this.donation.donor.username;
+    }
+  }
 }
 </script>
 
