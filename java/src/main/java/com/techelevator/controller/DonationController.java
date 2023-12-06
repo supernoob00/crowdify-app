@@ -1,11 +1,10 @@
 package com.techelevator.controller;
 
 import com.techelevator.dao.JdbcDonationDao;
+import com.techelevator.dao.JdbcSpendRequestDao;
+import com.techelevator.dao.JdbcVoteDao;
 import com.techelevator.dao.UserDao;
-import com.techelevator.model.Donation;
-import com.techelevator.model.NewDonationDto;
-import com.techelevator.model.UpdateDonationDto;
-import com.techelevator.model.User;
+import com.techelevator.model.*;
 import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,10 +23,12 @@ import java.util.Optional;
 public class DonationController {
     private final JdbcDonationDao jdbcDonationDao;
     private final UserDao userDao;
+    private final JdbcVoteDao jdbcVoteDao;
 
-    public DonationController(JdbcDonationDao jdbcDonationDao, UserDao userDao) {
+    public DonationController(JdbcDonationDao jdbcDonationDao, UserDao userDao, JdbcVoteDao jdbcVoteDao) {
         this.jdbcDonationDao = jdbcDonationDao;
         this.userDao = userDao;
+        this.jdbcVoteDao = jdbcVoteDao;
     }
 
     //TODO: Get donations by username controller endpoint/DAO method
@@ -41,6 +42,7 @@ public class DonationController {
         }
         return new ArrayList<>(jdbcDonationDao.getDonationsByUserId(id));
     }
+
 
     @PostMapping("/donations")
     @ResponseStatus(HttpStatus.CREATED)
@@ -57,6 +59,7 @@ public class DonationController {
         //TODO: Update donation controller method (comment and refunded status as well?)
         return null;
     }
+
 
     public boolean isCorrectUser(Principal principal, NewDonationDto newDonationDto) {
         String username = principal.getName();
