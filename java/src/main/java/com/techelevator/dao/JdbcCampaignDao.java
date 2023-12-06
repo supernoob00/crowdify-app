@@ -30,7 +30,7 @@ public class JdbcCampaignDao {
 
     public List<Campaign> getCampaignList() {
         List<Campaign> campaignList = new ArrayList<>();
-        String sql = "SELECT * FROM campaign;";
+        String sql = "SELECT * FROM campaign WHERE deleted = false;";
 
         try {
             SqlRowSet results = jdbcTemplate.queryForRowSet(sql);
@@ -113,17 +113,18 @@ public class JdbcCampaignDao {
         }
     }
 
-    public int markedCampaignDeletedById(int campaignId) {
-        String sql = "DELETE FROM campaign WHERE campaign_id = ?;";
-
-        Campaign toDelete = getCampaignById(campaignId).orElse(null);
-        if (toDelete == null) {
+    public int markCampaignDeletedById(int campaignId) {
+        Campaign markedCampaign = getCampaignById(campaignId).orElse(null);
+        if (markedCampaign == null) {
             return 0;
         }
 
+        String sql = "UPDATE campaign SET deleted = true WHERE campaign_id = " +
+                "?;";
+
         try {
-            List<Donation> donations = toDelete.getDonations();
-            if (!toDelete.isLocked() || !donations.isEmpty()) {
+            List<Donation> donations = markedCampaign.getDonations();
+            if (!markedCampaign.isLocked() || !donations.isEmpty()) {
                 throw new DataIntegrityViolationException("Donation cannot be " +
                         "deleted because it is not locked or has unreturned " +
                         "donations.");
@@ -159,6 +160,7 @@ public class JdbcCampaignDao {
         campaign.setDonations(jdbcDonationDao.getDonationsByCampaignId(rowSet.getInt("campaign_id")));
         campaign.setManagers(userDao.getManagersByCampaignId(rowSet.getInt("campaign_id")));
         campaign.setCreator(userDao.getCreatorByCampaignId(rowSet.getInt("campaign_id")).orElseThrow());
+        campaign.setDeleted(rowSet.getBoolean("deleted"));
         return campaign;
     }
 }

@@ -74,14 +74,15 @@ public class JdbcCampaignDaoTests extends BaseDaoTests {
 
     @Test(expected = DaoException.class)
     public void delete_unlocked_campaign_fails() {
-        sut.markedCampaignDeletedById(1);
+        sut.markCampaignDeletedById(1);
     }
 
     @Test
     public void delete_campaign_removes_campaign() {
-        int affected = sut.markedCampaignDeletedById(4);
+        int affected = sut.markCampaignDeletedById(4);
         Assert.assertEquals(1, affected);
-        Optional<Campaign> deleted = sut.getCampaignById(1);
-        Assert.assertTrue(deleted.isEmpty());
+
+        Campaign markedAsDeleted = sut.getCampaignById(4).orElseThrow();
+        Assert.assertTrue(markedAsDeleted.isDeleted());
     }
 }
