@@ -43,6 +43,7 @@ public class DonationController {
         return new ArrayList<>(jdbcDonationDao.getDonationsByUserId(id));
     }
 
+
     @PostMapping("/donations")
     @ResponseStatus(HttpStatus.CREATED)
     public Donation createDonation(Principal principal, @Valid @RequestBody NewDonationDto newDonationDto) {
