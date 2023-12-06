@@ -12,6 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.swing.text.html.Option;
 import javax.validation.Valid;
 import java.security.Principal;
 import java.util.ArrayList;
@@ -93,13 +94,14 @@ public class CampaignController {
     @PreAuthorize("isAuthenticated")
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/users/{id}/campaigns")
-    public List<Campaign> getListOfMyCampaigns(Principal principal, @PathVariable int id) {
+    public List<Optional> getListOfMyCampaigns(Principal principal, @PathVariable int id) {
         Optional<User> loggedInUser;
         loggedInUser = jdbcUserDao.getUserByUsername(principal.getName());
 
         List<Optional> myCampaigns = new ArrayList<>();
-        for (Optional campaign : jdbcCampaignDao.getManagersCampaignList(loggedInUser.get().getId())) {
+        for (Optional campaign : jdbcCampaignDao.getManagersCampaignList(id)) {
             myCampaigns.add(campaign);
         }
+        return myCampaigns;
     }
 }
