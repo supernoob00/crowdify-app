@@ -44,6 +44,7 @@ public class DonationController {
         return userDonations;
     }
 
+
     @PostMapping("/donations")
     @ResponseStatus(HttpStatus.CREATED)
     public Donation createDonation(Principal principal, @Valid @RequestBody NewDonationDto newDonationDto) {

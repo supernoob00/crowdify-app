@@ -42,6 +42,11 @@ public class JdbcCampaignDao {
         return campaignList;
     }
 
+    public List<Campaign> getManagersCampaignList() {
+        List<Campaign> managersCampaigns = new ArrayList<>();
+        String sql = "SELECT * FROM campaign where"
+    }
+
     public Optional<Campaign> getCampaignById(int CampaignId) {
         String sql = "SELECT * FROM campaign WHERE campaign_id = ?;";
 

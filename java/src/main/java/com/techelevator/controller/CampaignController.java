@@ -23,10 +23,12 @@ import java.util.Optional;
 public class CampaignController {
     private final JdbcCampaignDao jdbcCampaignDao;
     private final JdbcUserDao jdbcUserDao;
+    private final UserDao userDao;
 
-    public CampaignController(JdbcCampaignDao jdbcCampaignDao, JdbcUserDao jdbcUserDao) {
+    public CampaignController(JdbcCampaignDao jdbcCampaignDao, JdbcUserDao jdbcUserDao, UserDao userDao) {
         this.jdbcCampaignDao = jdbcCampaignDao;
         this.jdbcUserDao = jdbcUserDao;
+        this.userDao = userDao;
     }
 
     // show all public campaigns and campaigns you own
@@ -81,5 +83,16 @@ public class CampaignController {
     @RequestMapping(path = "/campaigns/{id}", method = RequestMethod.DELETE)
     public void deleteCampaign(@PathVariable int id) {
         //TODO call DAO delete method here. Can only delete when campaign is locked and has 0 zero donations
+    }
+
+    @PreAuthorize("isAuthenticated")
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/users/{id}/campaigns")
+    public List<Campaign> getListOfMyCampaigns(Principal principal, @PathVariable int id) {
+        Optional<User> loggedInUser;
+        loggedInUser = userDao.getUserByUsername(principal.getName());
+
+        List<Campaign> myCampaigns = new ArrayList<>();
+        for (Campaign campaign : jdbcCampaignDao.getCampaignById())
     }
 }
