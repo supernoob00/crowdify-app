@@ -60,8 +60,7 @@ public class JdbcSpendRequestDao {
 
     public SpendRequest createSpendRequest(@NotNull NewSpendRequestDto newSpendRequestDto) {
         String sql = "INSERT into spend_request " +
-                "(campaign_id, request_amount, request_description, " +
-                "request_approved, end_date) " +
+                "(campaign_id, request_amount, request_description, end_date) " +
                 "values (?,?,?,?,?) returning request_id;";
         try {
             // TODO: date needs to be converted to SQL compatible format
@@ -69,7 +68,6 @@ public class JdbcSpendRequestDao {
                     newSpendRequestDto.getCampaign_id(),
                     newSpendRequestDto.getAmount(),
                     newSpendRequestDto.getDescription(),
-                    newSpendRequestDto.isApproved(),
                     newSpendRequestDto.getEndDate());
             return getSpendRequestById(requestId).orElseThrow();
         } catch (CannotGetJdbcConnectionException e) {
