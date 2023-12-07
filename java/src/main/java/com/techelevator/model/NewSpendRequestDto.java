@@ -11,7 +11,7 @@ import java.util.Objects;
 
 public class NewSpendRequestDto {
     @Min(1)
-    private int campaign_id;
+    private int campaignId;
     @Positive
     private int amount;
     @NotBlank
@@ -20,8 +20,8 @@ public class NewSpendRequestDto {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime endDate;
 
-    public NewSpendRequestDto(int campaign_id, int amount, String description, LocalDateTime endDate) {
-        this.campaign_id = campaign_id;
+    public NewSpendRequestDto(int campaignId, int amount, String description, LocalDateTime endDate) {
+        this.campaignId = campaignId;
         this.amount = amount;
         this.description = description;
         this.endDate = endDate;
@@ -30,12 +30,12 @@ public class NewSpendRequestDto {
     public NewSpendRequestDto() {
     }
 
-    public int getCampaign_id() {
-        return campaign_id;
+    public int getCampaignId() {
+        return campaignId;
     }
 
-    public void setCampaign_id(int campaign_id) {
-        this.campaign_id = campaign_id;
+    public void setCampaignId(int campaignId) {
+        this.campaignId = campaignId;
     }
 
     public int getAmount() {
@@ -67,12 +67,12 @@ public class NewSpendRequestDto {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         NewSpendRequestDto that = (NewSpendRequestDto) o;
-        return campaign_id == that.campaign_id && amount == that.amount && description.equals(that.description) && endDate.equals(that.endDate);
+        return campaignId == that.campaignId && amount == that.amount && description.equals(that.description) && endDate.equals(that.endDate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(campaign_id, amount, description, endDate);
+        return Objects.hash(campaignId, amount, description, endDate);
     }
 }
 
