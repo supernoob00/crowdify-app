@@ -23,9 +23,7 @@ public class Campaign {
     private LocalDateTime startDate;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime endDate;
-
     private boolean locked;
-    @NotNull
     private boolean isPublic;
     @NotNull
     private List<Donation> donations = new ArrayList<>();
@@ -175,23 +173,4 @@ public class Campaign {
     public int hashCode() {
         return Objects.hash(id, name, description, fundingGoal, startDate, endDate, locked, isPublic, donations, managers, creator, deleted);
     }
-
-    @Override
-    public String toString() {
-        return "Campaign{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", fundingGoal=" + fundingGoal +
-                ", startDate=" + startDate +
-                ", endDate=" + endDate +
-                ", locked=" + locked +
-                ", isPublic=" + isPublic +
-                ", donations=" + donations +
-                ", managers=" + managers +
-                ", creator=" + creator +
-                '}';
-    }
-
-
 }

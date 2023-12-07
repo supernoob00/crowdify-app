@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.Objects;
 
 /*
     The acronym DTO is being used for "data transfer object". It means that this type of class is specifically
@@ -13,8 +14,10 @@ import javax.validation.constraints.NotNull;
  */
 public class LoginResponseDto {
     @NotBlank
+    @JsonProperty("token")
     private String token;
     @NotNull
+    @JsonProperty("user")
     private User user;
 
     public LoginResponseDto(String token, User user) {
@@ -22,7 +25,6 @@ public class LoginResponseDto {
         this.user = user;
     }
 
-    @JsonProperty("token")
     String getToken() {
         return token;
     }
@@ -31,12 +33,24 @@ public class LoginResponseDto {
         this.token = token;
     }
 
-    @JsonProperty("user")
     public User getUser() {
         return user;
     }
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        LoginResponseDto that = (LoginResponseDto) o;
+        return token.equals(that.token) && user.equals(that.user);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(token, user);
     }
 }

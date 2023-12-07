@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.context.annotation.Conditional;
 
 import javax.validation.constraints.*;
+import java.util.Objects;
 
 public class NewDonationDto {
 
@@ -84,5 +85,18 @@ public class NewDonationDto {
                     "must be anonymous.");
         }
         this.anonymous = anonymous;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        NewDonationDto that = (NewDonationDto) o;
+        return campaignId == that.campaignId && amount == that.amount && refunded == that.refunded && anonymous == that.anonymous && donorId.equals(that.donorId) && comment.equals(that.comment);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(donorId, campaignId, amount, comment, refunded, anonymous);
     }
 }

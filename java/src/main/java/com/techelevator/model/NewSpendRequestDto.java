@@ -7,9 +7,9 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 public class NewSpendRequestDto {
-
     @Min(1)
     private int campaign_id;
     @Positive
@@ -71,6 +71,19 @@ public class NewSpendRequestDto {
 
     public void setEndDate(LocalDateTime endDate) {
         this.endDate = endDate;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        NewSpendRequestDto that = (NewSpendRequestDto) o;
+        return campaign_id == that.campaign_id && amount == that.amount && approved == that.approved && description.equals(that.description) && endDate.equals(that.endDate);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(campaign_id, amount, description, approved, endDate);
     }
 }
 
