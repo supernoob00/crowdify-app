@@ -69,7 +69,6 @@ export default {
       dto.amount = this.editSpendRequest.amount * 100;
       dto.campaignId = this.editSpendRequest.campaignId;
       dto.endDate = `${this.editSpendRequest.endDate} 00:00:00`;
-      dto.public = this.editSpendRequest.public;
       return dto;
     },
     updateSpendRequestDto() {
@@ -80,8 +79,6 @@ export default {
       dto.amount = this.editSpendRequest.amount * 100;
       dto.campaignId = this.editSpendRequest.campaignId;
       dto.endDate = `${this.editSpendRequest.endDate} 00:00:00`;
-      dto.public = this.editSpendRequest.public;
-      dto.locked = this.editSpendRequest.locked;
       return dto;
     }
   },
@@ -93,12 +90,12 @@ export default {
       this.isLoading = true;
       if (this.editSpendRequest.id === -1) {
         try {
-          const response = await campaignService.addCampaign(this.newSpendRequestDto);
+          const response = await campaignService.createSpendRequest(this.newSpendRequestDto);
           if (response.status === 201) {
-            const createdCampaign = response.data;
+            const createdSpendRequest = response.data;
             this.$store.commit('SET_NOTIFICATION', { message: 'Created Campaign!', type: 'success' })
             this.resetAddForm();
-            this.$router.push({ name: 'CampaignView', params: { id: createdCampaign.id } })
+            this.$router.push({ name: 'SpendRequestView', params: { id: createdSpendRequest.id } })
           }
         } catch (error) {
           campaignService.handleErrorResponse(this.$store, error, 'creating', 'campaign');
@@ -107,7 +104,7 @@ export default {
         }
       } else {
         try {
-          const response = await campaignService.updateCampaign(this.updateSpendRequestDto, this.editSpendRequest.id);
+          const response = await campaignService.putSpendRequest(this.updateSpendRequestDto, this.editSpendRequest.id);
           if (response.status === 200) {
             this.$store.commit('SET_NOTIFICATION', { message: 'Updated Campaign!', type: 'success' });
             this.resetAddForm();
