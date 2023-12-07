@@ -30,7 +30,9 @@ CREATE TABLE campaign (
     CONSTRAINT valid_dates_end_after_start
         CHECK (EXTRACT (EPOCH FROM end_date) - EXTRACT (EPOCH FROM start_date) >= 86400),
     CONSTRAINT locked_if_deleted
-        CHECK (NOT deleted OR locked)
+        CHECK (NOT deleted OR locked),
+    CONSTRAINT private_if_deleted
+            CHECK (NOT public AND deleted)
 );
 
 CREATE TABLE campaign_manager (
