@@ -21,7 +21,7 @@ CREATE TABLE campaign (
     funding_goal integer NOT NULL,
     start_date timestamp NOT NULL,
     end_date timestamp NOT NULL,
-    locked boolean DEFAULT false NOT NULL, --TODO: what default?
+    locked boolean DEFAULT false NOT NULL, --TODO: must be locked if there's outstanding spend requests
     public boolean DEFAULT false NOT NULL,
     deleted boolean DEFAULT false NOT NULL,
 
@@ -34,7 +34,7 @@ CREATE TABLE campaign (
     CONSTRAINT locked_if_deleted
         CHECK (NOT deleted OR locked),
     CONSTRAINT private_if_deleted
-        CHECK (NOT public AND deleted)
+        CHECK (NOT (public AND deleted))
 );
 
 CREATE TABLE campaign_manager (
