@@ -34,7 +34,7 @@ public class SpendRequestController {
         this.jdbcUserDao = jdbcUserDao;
     }
 
-    @GetMapping("/spend-request/{id}")
+    @GetMapping("/spend-requests/{id}")
     @ResponseStatus(HttpStatus.OK)
     public SpendRequest getSpendRequestById (@PathVariable int id, Principal principal) {
         // TODO need to restrict non-donors from access to spend request.
@@ -44,7 +44,7 @@ public class SpendRequestController {
         });
     }
 
-    @GetMapping("/campaigns/{campaignId}/spend-request")
+    @GetMapping("/campaigns/{campaignId}/spend-requests")
     @ResponseStatus(HttpStatus.OK)
     public List<SpendRequest> getSpendReqByCampaignId (Principal principal, @PathVariable int campaignId) {
 
@@ -70,7 +70,7 @@ public class SpendRequestController {
         return new ArrayList<>(jdbcVoteDao.getVotesBySpendRequestId(spendReqId));
     }
 
-    @PostMapping("/campaigns/{campaignId}/spend-request")
+    @PostMapping("/campaigns/{campaignId}/spend-requests")
     @ResponseStatus(HttpStatus.CREATED)
     public SpendRequest newRequest (@Valid @RequestBody NewSpendRequestDto newSpendRequestDto, @PathVariable int campaignId) {
         return jdbcSpendRequestDao.createSpendRequest(newSpendRequestDto);
