@@ -61,7 +61,7 @@ public class JdbcSpendRequestDao {
     public SpendRequest createSpendRequest(@NotNull NewSpendRequestDto newSpendRequestDto) {
         String sql = "INSERT into spend_request " +
                 "(campaign_id, request_amount, request_description, end_date) " +
-                "values (?,?,?,?,?) returning request_id;";
+                "values (?,?,?,?) returning request_id;";
         try {
             // TODO: date needs to be converted to SQL compatible format
             int requestId = jdbcTemplate.queryForObject(sql, Integer.class,
