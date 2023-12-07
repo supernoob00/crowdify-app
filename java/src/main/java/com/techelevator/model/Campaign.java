@@ -44,7 +44,7 @@ public class Campaign {
 
     public Campaign(int id, String name, String description, int fundingGoal,
                     LocalDateTime startDate, LocalDateTime endDate,
-                    boolean locked, boolean isPublic, User creator) {
+                    boolean locked, boolean isPublic, User creator, boolean deleted) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -55,6 +55,7 @@ public class Campaign {
         this.isPublic = isPublic;
         this.creator = creator;
         this.managers.add(creator);
+        this.deleted = deleted; // TODO: cannot be marked deleted if public
     }
 
     public int getId() {
@@ -172,5 +173,23 @@ public class Campaign {
     @Override
     public int hashCode() {
         return Objects.hash(id, name, description, fundingGoal, startDate, endDate, locked, isPublic, donations, managers, creator, deleted);
+    }
+
+    @Override
+    public String toString() {
+        return "Campaign{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", fundingGoal=" + fundingGoal +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                ", locked=" + locked +
+                ", isPublic=" + isPublic +
+                ", donations=" + donations +
+                ", managers=" + managers +
+                ", creator=" + creator +
+                ", deleted=" + deleted +
+                '}';
     }
 }
