@@ -92,12 +92,12 @@ public class CampaignController {
     @PreAuthorize("isAuthenticated")
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/users/{id}/campaigns")
-    public List<Optional> getListOfMyCampaigns(Principal principal, @PathVariable int id) {
+    public List<Campaign> getListOfMyCampaigns(Principal principal, @PathVariable int id) {
         Optional<User> loggedInUser;
         loggedInUser = jdbcUserDao.getUserByUsername(principal.getName());
 
-        List<Optional> myCampaigns = new ArrayList<>();
-        for (Optional campaign : jdbcCampaignDao.getManagersCampaignList(id)) {
+        List<Campaign> myCampaigns = new ArrayList<>();
+        for (Campaign campaign : jdbcCampaignDao.getManagersCampaignsList(id)) {
             myCampaigns.add(campaign);
         }
         return myCampaigns;
