@@ -40,7 +40,6 @@ public class SpendRequestController {
     @ResponseStatus(HttpStatus.OK)
     public SpendRequest getSpendRequestById(@PathVariable int id, Principal principal) {
 
-        // TODO need to restrict non-donors from access to spend request.
         SpendRequest spendRequest = jdbcSpendRequestDao.getSpendRequestById(id).orElseThrow(() -> {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Spend request not found.");
         });
@@ -69,6 +68,14 @@ public class SpendRequestController {
 
         //TODO Works, but also needs security so that only donors can view.
         // Optional<User> loggedInUser = userDao.getUserById(userId);
+        // get list of campaigns by user id / is this id in that list?
+
+        int donorId = AuthenticationController.getUserIdFromPrincipal(principal, userDao);
+        List<Campaign> donorCampaigns = jdbcCampaignDao.getCampaignsByDonorId(donorId);
+
+        
+
+
        /* Optional<User> loggedInUser = userDao.getUserById(userId);
         if (loggedInUser.isPresent() && !loggedInUser.get().getUsername().equals(principal.getName())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not authorized to view these spend requests.");

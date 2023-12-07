@@ -94,8 +94,8 @@ public class JdbcCampaignDao {
         List campaignList = new ArrayList<>();
         String sql = "SELECT * from " +
                 "campaign " +
-                "JOIN donation using (campaign_id)" +
-                "JOIN users on donor_id = user_id" +
+                "JOIN donation using (campaign_id) " +
+                "JOIN users on donor_id = user_id " +
                 "WHERE user_id = ?;";
 
         try {
