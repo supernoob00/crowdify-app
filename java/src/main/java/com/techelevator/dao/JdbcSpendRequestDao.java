@@ -83,7 +83,7 @@ public class JdbcSpendRequestDao {
         SpendRequest request = new SpendRequest();
 
         request.setId(rowSet.getInt("request_id"));
-        request.setCampaign_id(rowSet.getInt("campaign_id"));
+        request.setCampaignId(rowSet.getInt("campaign_id"));
         request.setAmount(rowSet.getInt("request_amount"));
         request.setDescription(rowSet.getString("request_description"));
         request.setApproved(rowSet.getBoolean("request_approved"));

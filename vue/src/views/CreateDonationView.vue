@@ -39,14 +39,14 @@ export default {
           this.campaign = response.data;
         }
       } catch (error) {
-        campaignService.handleErrorResponse(this.$store, error, 'retrieving', 'campaign');
+        campaignService.handleErrorResponse(this.$store, error, 'getting', 'campaign');
       } finally {
         this.isLoading = false;
       }
     },
   },
-  created() {
-    this.getCampaign();
+  async created() {
+    await this.getCampaign();
   }
 }
 </script>

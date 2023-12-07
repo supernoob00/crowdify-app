@@ -29,12 +29,12 @@ export default {
     return axios.get(`/spend-requests/${id}`);
   },
 
-  createSpendRequest(campaignId, newSpendRequestDto) {
-    return axios.get(`/campaigns/${campaignId}/spend-requests/create`, newSpendRequestDto);
+  createSpendRequest(newSpendRequestDto) {
+    return axios.post(`/campaigns/${newSpendRequestDto.campaignId}/spend-requests`, newSpendRequestDto);
   },
 
-  putSpendRequest(id, updateSpendRequestDto) {
-    return axios.get(`/spend-requests/${id}/edit`, updateSpendRequestDto);
+  putSpendRequest(updateSpendRequestDto) {
+    return axios.put(`/spend-requests/${updateSpendRequestDto.id}`, updateSpendRequestDto);
   },
 
   handleErrorResponse(store, error, verb, object) {

@@ -9,7 +9,7 @@
 import SpendRequestForm from '../components/SpendRequestForm.vue';
 export default {
   components: {
-    SpendRequestForm
+    SpendRequestForm,
   },
   data() {
     return {
@@ -18,10 +18,11 @@ export default {
         name: 'Creation Test name',
         description: 'Creation Test desc',
         endDate: "2024-01-19",
-        amount: 10
+        amount: 10,
+        campaignId: parseInt(this.$route.params.id)
       }
     }
-  }
+  },
 }
 </script>
 
