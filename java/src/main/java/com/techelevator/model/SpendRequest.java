@@ -11,7 +11,7 @@ public class SpendRequest {
     @Min(1)
     private int id;
     @Min(1)
-    private int campaign_id;
+    private int campaignId;
     @Positive
     private int amount;
     @NotBlank
@@ -24,9 +24,9 @@ public class SpendRequest {
     public SpendRequest() {
     }
 
-    public SpendRequest(int id, int campaign_id, int amount, String description, boolean approved, LocalDateTime endDate) {
+    public SpendRequest(int id, int campaignId, int amount, String description, boolean approved, LocalDateTime endDate) {
         this.id = id;
-        this.campaign_id = campaign_id;
+        this.campaignId = campaignId;
         this.amount = amount;
         this.description = description;
         this.approved = approved;
@@ -41,12 +41,12 @@ public class SpendRequest {
         this.id = id;
     }
 
-    public int getCampaign_id() {
-        return campaign_id;
+    public int getCampaignId() {
+        return campaignId;
     }
 
-    public void setCampaign_id(int campaign_id) {
-        this.campaign_id = campaign_id;
+    public void setCampaignId(int campaignId) {
+        this.campaignId = campaignId;
     }
 
     public int getAmount() {
@@ -86,11 +86,11 @@ public class SpendRequest {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         SpendRequest that = (SpendRequest) o;
-        return id == that.id && campaign_id == that.campaign_id && amount == that.amount && approved == that.approved && Objects.equals(description, that.description) && Objects.equals(endDate, that.endDate);
+        return id == that.id && campaignId == that.campaignId && amount == that.amount && approved == that.approved && Objects.equals(description, that.description) && Objects.equals(endDate, that.endDate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, campaign_id, amount, description, approved, endDate);
+        return Objects.hash(id, campaignId, amount, description, approved, endDate);
     }
 }

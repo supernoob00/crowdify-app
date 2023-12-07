@@ -10,6 +10,9 @@ import CreateCampaignView from '../views/CreateCampaignView.vue';
 import EditCampaignView from '../views/EditCampaignView.vue';
 import CreateDonationView from '../views/CreateDonationView.vue';
 import MyAccountView from '../views/MyAccountView.vue';
+import SpendRequestView from '../views/SpendRequestView.vue';
+import CreateSpendRequestView from '../views/CreateSpendRequestView.vue'
+import EditSpendRequestView from '../views/EditSpendRequestView.vue';
 /*
  * The Vue Router is used to "direct" the browser to render a specific view component
  * inside of App.vue depending on the URL.
@@ -81,13 +84,38 @@ const routes = [
     }
   },
   {
+    path: "/campaigns/:id/spend-requests/create",
+    name: 'CreateSpendRequestView',
+    component: CreateSpendRequestView,
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: "/spend-requests/:id",
+    name: "SpendRequestView",
+    component: SpendRequestView,
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: "/spend-requests/:id/edit",
+    name: 'EditSpendRequestView',
+    component: EditSpendRequestView,
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
     path: "/users/:id",
     name: 'MyAccountView',
     component: MyAccountView,
     meta: {
       requiresAuth: true
     }
-  }
+  },
+
   // if forbidden, create this view
   // {
   //   component: Forbbiden

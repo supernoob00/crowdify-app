@@ -25,6 +25,18 @@ export default {
     return axios.get(`/users/${userId}/donations`);
   },
 
+  getSpendRequestById(id) {
+    return axios.get(`/spend-requests/${id}`);
+  },
+
+  createSpendRequest(newSpendRequestDto) {
+    return axios.post(`/campaigns/${newSpendRequestDto.campaignId}/spend-requests`, newSpendRequestDto);
+  },
+
+  putSpendRequest(updateSpendRequestDto) {
+    return axios.put(`/spend-requests/${updateSpendRequestDto.id}`, updateSpendRequestDto);
+  },
+
   handleErrorResponse(store, error, verb, object) {
     if (error.response) {
       store.commit('SET_NOTIFICATION',

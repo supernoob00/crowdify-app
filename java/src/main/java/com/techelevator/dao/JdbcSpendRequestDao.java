@@ -1,7 +1,7 @@
 package com.techelevator.dao;
 
 import com.techelevator.exception.DaoException;
-import com.techelevator.model.Donation;
+import com.techelevator.model.Campaign;
 import com.techelevator.model.NewSpendRequestDto;
 import com.techelevator.model.SpendRequest;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -11,7 +11,6 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -19,9 +18,11 @@ import java.util.Optional;
 @Component
 public class JdbcSpendRequestDao {
     private final JdbcTemplate jdbcTemplate;
+    private final JdbcCampaignDao jdbcCampaignDao;
 
-    public JdbcSpendRequestDao(JdbcTemplate jdbcTemplate) {
+    public JdbcSpendRequestDao(JdbcTemplate jdbcTemplate, JdbcCampaignDao jdbcCampaignDao) {
         this.jdbcTemplate = jdbcTemplate;
+        this.jdbcCampaignDao = jdbcCampaignDao;
     }
 
     public Optional<SpendRequest> getSpendRequestById(int id) {
@@ -60,16 +61,14 @@ public class JdbcSpendRequestDao {
 
     public SpendRequest createSpendRequest(@NotNull NewSpendRequestDto newSpendRequestDto) {
         String sql = "INSERT into spend_request " +
-                "(campaign_id, request_amount, request_description, " +
-                "request_approved, end_date) " +
-                "values (?,?,?,?,?) returning request_id;";
+                "(campaign_id, request_amount, request_description, end_date) " +
+                "values (?,?,?,?) returning request_id;";
         try {
             // TODO: date needs to be converted to SQL compatible format
             int requestId = jdbcTemplate.queryForObject(sql, Integer.class,
-                    newSpendRequestDto.getCampaign_id(),
+                    newSpendRequestDto.getCampaignId(),
                     newSpendRequestDto.getAmount(),
                     newSpendRequestDto.getDescription(),
-                    newSpendRequestDto.isApproved(),
                     newSpendRequestDto.getEndDate());
             return getSpendRequestById(requestId).orElseThrow();
         } catch (CannotGetJdbcConnectionException e) {
@@ -85,7 +84,7 @@ public class JdbcSpendRequestDao {
         SpendRequest request = new SpendRequest();
 
         request.setId(rowSet.getInt("request_id"));
-        request.setCampaign_id(rowSet.getInt("campaign_id"));
+        request.setCampaignId(rowSet.getInt("campaign_id"));
         request.setAmount(rowSet.getInt("request_amount"));
         request.setDescription(rowSet.getString("request_description"));
         request.setApproved(rowSet.getBoolean("request_approved"));
