@@ -77,7 +77,7 @@ public class CampaignController {
         int userId = AuthenticationController.getUserIdFromPrincipal(principal, jdbcUserDao);
         List<User> managers = campaign.getManagers();
         for (User manager : managers) {
-            if (manager.getId() == id) {
+            if (manager.getId() == userId) {
                 return campaign;
             }
         }
