@@ -20,7 +20,8 @@ public class JdbcDonationDaoTests extends BaseDaoTests {
     @Before
     public void setup() {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-        sut = new JdbcDonationDao(jdbcTemplate, new JdbcUserDao(jdbcTemplate));
+        JdbcUserDao userDao = new JdbcUserDao(jdbcTemplate);
+        sut = new JdbcDonationDao(jdbcTemplate, userDao);
     }
 
     @Test
@@ -49,7 +50,8 @@ public class JdbcDonationDaoTests extends BaseDaoTests {
 
     @Test
     public void createDonation_creates_a_donation() {
-        NewDonationDto donation = new NewDonationDto(1, 1, 5000, "test", false);
+        NewDonationDto donation = new NewDonationDto(1, 1, 5000, "test",
+                false, false);
         Donation createdDonation = sut.createDonation(donation);
 
         Donation retrievedDonation =

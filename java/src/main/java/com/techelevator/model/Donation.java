@@ -11,6 +11,8 @@ public class Donation {
     private User donor;
     @Min(1)
     private int campaignId;
+    @NotNull
+    private String campaignName;
     @Min(1)
     @Max(50000000)
     private int amount;
@@ -19,19 +21,28 @@ public class Donation {
     @NotBlank
     private String comment;
     private boolean refunded;
-    //TODO: add campaign name to object and update everything for donations as a result
+    private boolean anonymous;
+
     public Donation() {
     }
 
-    public Donation(int donationId, User donor, int campaignId, int amount,
-                    LocalDateTime date, String comment, boolean refunded) {
+    public Donation(int donationId, User donor, int campaignId,
+                    String campaignName, int amount,
+                    LocalDateTime date, String comment, boolean refunded,
+                    boolean anonymous) {
         this.donationId = donationId;
         this.donor = donor;
         this.campaignId = campaignId;
+        this.campaignName = campaignName;
         this.amount = amount;
         this.date = date;
         this.comment = comment;
         this.refunded = refunded;
+        if (donor == null && !anonymous) {
+            throw new IllegalArgumentException("A donation with no donor id " +
+                    "must be anonymous.");
+        }
+        this.anonymous = anonymous;
     }
 
     public int getDonationId() {
@@ -48,6 +59,14 @@ public class Donation {
 
     public void setCampaignId(int campaignId) {
         this.campaignId = campaignId;
+    }
+
+    public String getCampaignName() {
+        return campaignName;
+    }
+
+    public void setCampaignName(String campaignName) {
+        this.campaignName = campaignName;
     }
 
     public int getAmount() {
@@ -88,6 +107,18 @@ public class Donation {
 
     public void setDonor(User donor) {
         this.donor = donor;
+    }
+
+    public boolean isAnonymous() {
+        return anonymous;
+    }
+
+    public void setAnonymous(boolean anonymous) {
+        if (donor == null && !anonymous) {
+            throw new IllegalArgumentException("A donation with no donor id " +
+                    "must be anonymous.");
+        }
+        this.anonymous = anonymous;
     }
 
     @Override

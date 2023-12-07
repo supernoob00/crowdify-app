@@ -72,6 +72,20 @@ public class JdbcCampaignDao {
         return Optional.empty();
     }
 
+    public Optional<String> getCampaignNameById(int CampaignId) {
+        String sql = "SELECT campaign_name FROM campaign WHERE campaign_id = " +
+                "?;";
+        try {
+            SqlRowSet results = jdbcTemplate.queryForRowSet(sql, CampaignId);
+            if (results.next()) {
+                return Optional.of(results.getString("campaign_name"));
+            }
+        } catch (CannotGetJdbcConnectionException e) {
+            throw new DaoException("Unable to connect to server or database", e);
+        }
+        return Optional.empty();
+    }
+
     // TODO: insert campaign creator into database as well
     public Campaign createCampaign(@NotNull NewCampaignDto newCampaignDto) {
         Campaign createdCampaign;
