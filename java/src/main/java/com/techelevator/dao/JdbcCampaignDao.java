@@ -86,6 +86,10 @@ public class JdbcCampaignDao {
         return Optional.empty();
     }
 
+    //  getCampaignsByDonorId
+
+
+
     // TODO: insert campaign creator into database as well
     public Campaign createCampaign(@NotNull NewCampaignDto newCampaignDto) {
         Campaign createdCampaign;

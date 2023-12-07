@@ -1,6 +1,7 @@
 package com.techelevator.dao;
 
 import com.techelevator.exception.DaoException;
+import com.techelevator.model.Campaign;
 import com.techelevator.model.Donation;
 import com.techelevator.model.NewSpendRequestDto;
 import com.techelevator.model.SpendRequest;
@@ -19,9 +20,11 @@ import java.util.Optional;
 @Component
 public class JdbcSpendRequestDao {
     private final JdbcTemplate jdbcTemplate;
+    private final JdbcCampaignDao jdbcCampaignDao;
 
-    public JdbcSpendRequestDao(JdbcTemplate jdbcTemplate) {
+    public JdbcSpendRequestDao(JdbcTemplate jdbcTemplate, JdbcCampaignDao jdbcCampaignDao) {
         this.jdbcTemplate = jdbcTemplate;
+        this.jdbcCampaignDao = jdbcCampaignDao;
     }
 
     public Optional<SpendRequest> getSpendRequestById(int id) {
@@ -92,5 +95,18 @@ public class JdbcSpendRequestDao {
             request.setEndDate(rowSet.getTimestamp("end_date").toLocalDateTime());
         }
         return request;
+    }
+
+    public boolean isValidUser (SpendRequest spendRequest, int userId) {
+       int campaignIdBySr = spendRequest.getCampaign_id();
+       Optional<Campaign> campaign = jdbcCampaignDao.getCampaignById(userId);
+
+       if (campaign.isEmpty()) {
+           return false;
+       }
+
+       int campaignIdByUser = jdbcCampaignDao.getCampaignById(userId);
+
+
     }
 }
