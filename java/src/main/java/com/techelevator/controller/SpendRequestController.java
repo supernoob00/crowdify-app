@@ -1,9 +1,6 @@
 package com.techelevator.controller;
 
-import com.techelevator.dao.JdbcSpendRequestDao;
-import com.techelevator.dao.JdbcUserDao;
-import com.techelevator.dao.JdbcVoteDao;
-import com.techelevator.dao.UserDao;
+import com.techelevator.dao.*;
 import com.techelevator.model.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -25,28 +22,46 @@ public class SpendRequestController {
     private final JdbcVoteDao jdbcVoteDao;
     private final JdbcUserDao jdbcUserDao;
 
+    private final JdbcCampaignDao jdbcCampaignDao;
+
     public SpendRequestController(UserDao userDao,
                                   JdbcSpendRequestDao jdbcSpendRequestDao,
                                   JdbcVoteDao jdbcVoteDao,
-                                  JdbcUserDao jdbcUserDao) {
+                                  JdbcUserDao jdbcUserDao,
+                                  JdbcCampaignDao jdbcCampaignDao) {
         this.userDao = userDao;
         this.jdbcSpendRequestDao = jdbcSpendRequestDao;
         this.jdbcVoteDao = jdbcVoteDao;
         this.jdbcUserDao = jdbcUserDao;
+        this.jdbcCampaignDao = jdbcCampaignDao;
     }
 
     @GetMapping("/spend-requests/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public SpendRequest getSpendRequestById (@PathVariable int id, Principal principal) {
+    public SpendRequest getSpendRequestById(@PathVariable int id, Principal principal) {
 
         // TODO need to restrict non-donors from access to spend request.
-
-
-        Optional<SpendRequest> spendRequest = jdbcSpendRequestDao.getSpendRequestById(id);
-        return spendRequest.orElseThrow(() -> {
+        SpendRequest spendRequest = jdbcSpendRequestDao.getSpendRequestById(id).orElseThrow(() -> {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Spend request not found.");
         });
-    }
+
+        if (principal == null) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are " +
+                    "not authorized to view this spend request.");
+        }
+
+        int requestCampaignId = spendRequest.getCampaignId();
+        int donorId = AuthenticationController.getUserIdFromPrincipal(principal, userDao);
+
+        List<Campaign> donorCampaigns = jdbcCampaignDao.getCampaignsByDonorId(donorId);
+
+        for (Campaign campaign : donorCampaigns) {
+            if (campaign.getId() != requestCampaignId) {
+                    throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are " +
+                            "not authorized to view this campaign.");
+                }
+            } return spendRequest;
+        }
 
     @GetMapping("/campaigns/{campaignId}/spend-requests")
     @ResponseStatus(HttpStatus.OK)

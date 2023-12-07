@@ -94,17 +94,4 @@ public class JdbcSpendRequestDao {
         }
         return request;
     }
-
-    public boolean isValidUser (SpendRequest spendRequest, int userId) {
-
-       int campaignIdBySr = spendRequest.getCampaignId();
-
-       List<Campaign> campaignList = jdbcCampaignDao.getCampaignsByDonorId(userId);
-
-       for (Campaign campaign : campaignList) {
-           if (campaign.getId() == campaignIdBySr){
-               return true;
-           }
-       } return false;
-    }
 }
