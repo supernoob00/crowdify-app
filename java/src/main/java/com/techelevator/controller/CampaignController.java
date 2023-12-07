@@ -112,7 +112,8 @@ public class CampaignController {
     @RequestMapping(path = "/campaigns/{id}", method = RequestMethod.DELETE)
     public void deleteCampaign(@PathVariable int id, Principal principal) {
         Campaign campaignToDelete = jdbcCampaignDao.getCampaignById(id).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Campaign not found.");
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "Campaign not found."));
 
         int userId = AuthenticationController.getUserIdFromPrincipal(principal, jdbcUserDao);
 
@@ -123,7 +124,7 @@ public class CampaignController {
                 "not authorized to delete this campaign.");
     }
 
-    /* Gets all campaigns logged */
+    /* Gets all campaigns user is a manager for */
     @PreAuthorize("isAuthenticated")
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/users/{id}/campaigns")
@@ -133,6 +134,6 @@ public class CampaignController {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are " +
                     "not authorized to view this user's campaigns.");
         }
-
+        return jdbcCampaignDao.getCampaignsByManagerId(loggedInUser.getId());
     }
 }
