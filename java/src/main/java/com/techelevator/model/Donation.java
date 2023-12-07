@@ -133,4 +133,19 @@ public class Donation {
     public int hashCode() {
         return Objects.hash(donationId, donor, campaignId, campaignName, amount, date, comment, refunded, anonymous);
     }
+
+    @Override
+    public String toString() {
+        return "Donation{" +
+                "donationId=" + donationId +
+                ", donor=" + donor +
+                ", campaignId=" + campaignId +
+                ", campaignName='" + campaignName + '\'' +
+                ", amount=" + amount +
+                ", date=" + date +
+                ", comment='" + comment + '\'' +
+                ", refunded=" + refunded +
+                ", anonymous=" + anonymous +
+                '}';
+    }
 }
