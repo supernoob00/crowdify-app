@@ -86,7 +86,13 @@ public class JdbcCampaignDao {
         return Optional.empty();
     }
 
-    //  getCampaignsByDonorId
+/*
+    public List<Campaign> getCampaignsByDonorId (int id) {
+        List campaignList = new ArrayList<>();
+        String sql = "";
+
+    }
+*/
 
 
 

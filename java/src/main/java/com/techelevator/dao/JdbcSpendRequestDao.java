@@ -97,7 +97,7 @@ public class JdbcSpendRequestDao {
         return request;
     }
 
-    public boolean isValidUser (SpendRequest spendRequest, int userId) {
+ /*   public boolean isValidUser (SpendRequest spendRequest, int userId) {
        int campaignIdBySr = spendRequest.getCampaign_id();
        Optional<Campaign> campaign = jdbcCampaignDao.getCampaignById(userId);
 
@@ -108,5 +108,5 @@ public class JdbcSpendRequestDao {
        int campaignIdByUser = jdbcCampaignDao.getCampaignById(userId);
 
 
-    }
+    }*/
 }
