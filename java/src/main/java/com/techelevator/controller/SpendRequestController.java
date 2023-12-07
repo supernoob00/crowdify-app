@@ -37,6 +37,7 @@ public class SpendRequestController {
     @GetMapping("/spend-requests/{id}")
     @ResponseStatus(HttpStatus.OK)
     public SpendRequest getSpendRequestById (@PathVariable int id, Principal principal) {
+
         // TODO need to restrict non-donors from access to spend request.
         Optional<SpendRequest> spendRequest = jdbcSpendRequestDao.getSpendRequestById(id);
         return spendRequest.orElseThrow(() -> {
