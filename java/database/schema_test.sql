@@ -32,7 +32,7 @@ CREATE TABLE campaign (
     CONSTRAINT locked_if_deleted
         CHECK (NOT deleted OR locked),
     CONSTRAINT private_if_deleted
-            CHECK (NOT public AND deleted)
+            CHECK (NOT (public AND deleted))
 );
 
 CREATE TABLE campaign_manager (
