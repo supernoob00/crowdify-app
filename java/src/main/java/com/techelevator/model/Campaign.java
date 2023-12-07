@@ -162,6 +162,24 @@ public class Campaign {
         this.creator = creator;
     }
 
+    public boolean containsManager(int userId) {
+        for (User manager : managers) {
+            if (userId == manager.getId()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean containsDonor(int userId) {
+        for (Donation donation : donations) {
+            if (donation.getDonor().getId() == userId) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -2,16 +2,13 @@ package com.techelevator.controller;
 
 import com.techelevator.dao.JdbcCampaignDao;
 import com.techelevator.dao.JdbcDonationDao;
-import com.techelevator.dao.JdbcSpendRequestDao;
 import com.techelevator.dao.JdbcUserDao;
 import com.techelevator.model.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import javax.swing.text.html.Option;
 import javax.validation.Valid;
 import java.security.Principal;
 import java.util.ArrayList;
@@ -55,6 +52,7 @@ public class CampaignController {
         return campaigns;
     }
 
+    // TODO: let donors see private campaigns that they've donated to
     /* show campaign if user has view permissions */
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(path = "/campaigns/{id}", method = RequestMethod.GET)
@@ -75,13 +73,9 @@ public class CampaignController {
 
         // check if id of logged in user matches any manager of campaign
         int userId = AuthenticationController.getUserIdFromPrincipal(principal, jdbcUserDao);
-        List<User> managers = campaign.getManagers();
-        for (User manager : managers) {
-            if (manager.getId() == userId) {
-                return campaign;
-            }
+        if (campaign.containsManager(userId)) {
+            return campaign;
         }
-
         // no match found
         throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are " +
                 "not authorized to view this campaign.");
@@ -99,32 +93,46 @@ public class CampaignController {
     @RequestMapping(path = "/campaigns/{id}", method = RequestMethod.PUT)
     public Campaign updateCampaign(@Valid @RequestBody UpdateCampaignDto updateCampaignDto,
                                    Principal principal) {
-        return jdbcCampaignDao.updateCampaign(updateCampaignDto).orElseThrow(() -> {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        });
+        Campaign campaignToUpdate = jdbcCampaignDao.getCampaignById(
+                updateCampaignDto.getId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "Campaign not found."));
+
+        int userId = AuthenticationController.getUserIdFromPrincipal(principal, jdbcUserDao);
+
+        if (campaignToUpdate.containsManager(userId)) {
+            return jdbcCampaignDao.updateCampaign(updateCampaignDto).orElseThrow();
+        }
+        throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are " +
+                "not authorized to update this campaign.");
     }
 
     @PreAuthorize("isAuthenticated()")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @RequestMapping(path = "/campaigns/{id}", method = RequestMethod.DELETE)
-    public void deleteCampaign(@PathVariable int id) {
-        int deletedCount = jdbcCampaignDao.markCampaignDeletedById(id);
-        if (deletedCount == 0) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+    public void deleteCampaign(@PathVariable int id, Principal principal) {
+        Campaign campaignToDelete = jdbcCampaignDao.getCampaignById(id).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Campaign not found.");
+
+        int userId = AuthenticationController.getUserIdFromPrincipal(principal, jdbcUserDao);
+
+        if (campaignToDelete.containsManager(userId)) {
+            jdbcCampaignDao.markCampaignDeletedById(id);
         }
+        throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are " +
+                "not authorized to delete this campaign.");
     }
 
+    /* Gets all campaigns logged */
     @PreAuthorize("isAuthenticated")
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/users/{id}/campaigns")
-    public List<Campaign> getListOfMyCampaigns(Principal principal, @PathVariable int id) {
-        Optional<User> loggedInUser;
-        loggedInUser = jdbcUserDao.getUserByUsername(principal.getName());
-
-        List<Campaign> myCampaigns = new ArrayList<>();
-        for (Campaign campaign : jdbcCampaignDao.getManagersCampaignsList(id)) {
-            myCampaigns.add(campaign);
+    public List<Campaign> getUserCampaigns(Principal principal, @PathVariable int id) {
+        User loggedInUser = jdbcUserDao.getUserByUsername(principal.getName()).orElseThrow();
+        if (loggedInUser.getId() != id) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are " +
+                    "not authorized to view this user's campaigns.");
         }
-        return myCampaigns;
+
     }
 }

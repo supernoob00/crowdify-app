@@ -9,7 +9,6 @@ import org.junit.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -89,16 +88,16 @@ public class JdbcCampaignDaoTests extends BaseDaoTests {
 
     @Test
     public void getManagersCampaignsList_returns_empty_list_with_invalid_id() {
-        List<Campaign> myCampaigns = sut.getManagersCampaignsList(-1);
+        List<Campaign> myCampaigns = sut.getCampaignsByManagerId(-1);
         Assert.assertTrue(myCampaigns.isEmpty());
     }
 
     @Test
     public void getManagersCampaignsList_returns_accurate_list() {
-        List<Campaign> myCampaigns = sut.getManagersCampaignsList(2);
+        List<Campaign> myCampaigns = sut.getCampaignsByManagerId(2);
         Assert.assertEquals(CAMPAIGN_2, myCampaigns.get(0));
 
-        List<Campaign> myCampaigns2 = sut.getManagersCampaignsList(1);
+        List<Campaign> myCampaigns2 = sut.getCampaignsByManagerId(1);
         Assert.assertEquals(CAMPAIGN_1, myCampaigns2.get(0));
         Assert.assertEquals(CAMPAIGN_4, myCampaigns2.get(1));
 
