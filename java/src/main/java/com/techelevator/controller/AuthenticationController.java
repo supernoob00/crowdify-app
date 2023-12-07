@@ -19,11 +19,17 @@ import com.techelevator.dao.UserDao;
 import com.techelevator.security.jwt.JWTFilter;
 import com.techelevator.security.jwt.TokenProvider;
 
+import java.security.Principal;
 import java.util.Optional;
 
 @RestController
 @CrossOrigin
 public class AuthenticationController {
+    public static int getUserIdFromPrincipal(Principal principal,
+                                             UserDao userDao) {
+        User user = userDao.getUserByUsername(principal.getName()).orElseThrow();
+        return user.getId();
+    }
 
     private final TokenProvider tokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
@@ -72,6 +78,5 @@ public class AuthenticationController {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "User registration failed.");
         }
     }
-
 }
 

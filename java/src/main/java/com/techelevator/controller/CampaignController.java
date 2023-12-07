@@ -7,6 +7,7 @@ import com.techelevator.dao.JdbcUserDao;
 import com.techelevator.model.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -32,7 +33,7 @@ public class CampaignController {
         this.jdbcDonationDao = jdbcDonationDao;
     }
 
-    // show all public campaigns and campaigns you own
+    /* show all public campaigns and campaigns you own */
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(path = "/campaigns", method = RequestMethod.GET)
     public List<Campaign> campaignList(Principal principal) {
@@ -54,13 +55,36 @@ public class CampaignController {
         return campaigns;
     }
 
+    /* show campaign if user has view permissions */
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(path = "/campaigns/{id}", method = RequestMethod.GET)
-    public Campaign getCampaign(@PathVariable int id) {
-        Optional<Campaign> campaign = jdbcCampaignDao.getCampaignById(id);
-        return campaign.orElseThrow(() -> {
+    public Campaign getCampaign(@PathVariable int id, Principal principal) {
+        Campaign campaign = jdbcCampaignDao.getCampaignById(id).orElseThrow(() -> {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Campaign not found.");
-        });
+        });;
+
+        if (campaign.isPublic()) {
+            return campaign;
+        }
+
+        // campaign is private, and no user is logged in
+        if (principal == null) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are " +
+                    "not authorized to view this campaign.");
+        }
+
+        // check if id of logged in user matches any manager of campaign
+        int userId = AuthenticationController.getUserIdFromPrincipal(principal, jdbcUserDao);
+        List<User> managers = campaign.getManagers();
+        for (User manager : managers) {
+            if (manager.getId() == userId) {
+                return campaign;
+            }
+        }
+
+        // no match found
+        throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are " +
+                "not authorized to view this campaign.");
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -73,7 +97,8 @@ public class CampaignController {
     @PreAuthorize("isAuthenticated()")
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(path = "/campaigns/{id}", method = RequestMethod.PUT)
-    public Campaign updateCampaign(@Valid @RequestBody UpdateCampaignDto updateCampaignDto) {
+    public Campaign updateCampaign(@Valid @RequestBody UpdateCampaignDto updateCampaignDto,
+                                   Principal principal) {
         return jdbcCampaignDao.updateCampaign(updateCampaignDto).orElseThrow(() -> {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         });
@@ -92,12 +117,12 @@ public class CampaignController {
     @PreAuthorize("isAuthenticated")
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/users/{id}/campaigns")
-    public List<Optional> getListOfMyCampaigns(Principal principal, @PathVariable int id) {
+    public List<Campaign> getListOfMyCampaigns(Principal principal, @PathVariable int id) {
         Optional<User> loggedInUser;
         loggedInUser = jdbcUserDao.getUserByUsername(principal.getName());
 
-        List<Optional> myCampaigns = new ArrayList<>();
-        for (Optional campaign : jdbcCampaignDao.getManagersCampaignList(id)) {
+        List<Campaign> myCampaigns = new ArrayList<>();
+        for (Campaign campaign : jdbcCampaignDao.getManagersCampaignsList(id)) {
             myCampaigns.add(campaign);
         }
         return myCampaigns;
