@@ -18,28 +18,7 @@ export default {
   },
   data() {
     return {
-      campaign: {
-        id: 1,
-        name: 'Poop',
-        description: 'Just dropping some poop off as is my usual way of doing thangs. Just need some money to help out with this',
-        fundingGoal: 1000,
-        donations: [
-          {
-            donor: {
-              name: 'Bob'
-            },
-            amount: 50,
-            comment: 'Gotta support the poop train!'
-          },
-          {
-            donor: {
-              name: 'Jimminy Billy Bob'
-            },
-            amount: 150,
-            comment: 'Not too sure about this but why not!'
-          }
-        ]
-      },
+      campaign: {},
       isLoading: true
     }
   },
