@@ -4,11 +4,7 @@ import com.techelevator.dao.JdbcSpendRequestDao;
 import com.techelevator.dao.JdbcUserDao;
 import com.techelevator.dao.JdbcVoteDao;
 import com.techelevator.dao.UserDao;
-import com.techelevator.model.NewSpendRequestDto;
-import com.techelevator.model.SpendRequest;
-import com.techelevator.model.User;
-import com.techelevator.model.Vote;
-import org.apache.coyote.Response;
+import com.techelevator.model.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -38,15 +34,10 @@ public class SpendRequestController {
         this.jdbcUserDao = jdbcUserDao;
     }
 
-
-
     @GetMapping("/spend-req/{id}")
     @ResponseStatus(HttpStatus.OK)
-
     public SpendRequest getSpendRequestById (@PathVariable int id, Principal principal) {
-
-// TODO need to restrict non-donors from access to spend request.
-
+        // TODO need to restrict non-donors from access to spend request.
         Optional<SpendRequest> spendRequest = jdbcSpendRequestDao.getSpendRequestById(id);
         return spendRequest.orElseThrow(() -> {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Spend request not found.");
@@ -55,10 +46,9 @@ public class SpendRequestController {
 
     @GetMapping("/campaigns/{campaignId}/spend-req")
     @ResponseStatus(HttpStatus.OK)
-
     public List<SpendRequest> getSpendReqByCampaignId (Principal principal, @PathVariable int campaignId) {
 
-//TODO Works, but also needs security so that only donors can view.
+        //TODO Works, but also needs security so that only donors can view.
         // Optional<User> loggedInUser = userDao.getUserById(userId);
        /* Optional<User> loggedInUser = userDao.getUserById(userId);
         if (loggedInUser.isPresent() && !loggedInUser.get().getUsername().equals(principal.getName())) {
@@ -77,7 +67,7 @@ public class SpendRequestController {
         if (loggedInUser.isPresent() && !loggedInUser.get().getUsername().equals(principal.getName())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not authorized to get these votes.");
         }
-        return new ArrayList<>(jdbcVoteDao.getVoteListBySpendReqId(spendReqId));
+        return new ArrayList<>(jdbcVoteDao.getVotesBySpendRequestId(spendReqId));
     }
 
     @PostMapping("/campaigns/{campaignId}/spend-req")
@@ -86,4 +76,11 @@ public class SpendRequestController {
         return jdbcSpendRequestDao.createSpendRequest(newSpendRequestDto);
     }
 
+    public boolean isCorrectUser(Principal principal, NewDonationDto newDonationDto) {
+        String username = principal.getName();
+        Optional<User> optionalUser = userDao.getUserByUsername(username);
+        User user = optionalUser.orElseThrow();
+        int loggedInUserID = user.getId();
+        return loggedInUserID == newDonationDto.getDonorId();
+    }
 }
