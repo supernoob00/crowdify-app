@@ -43,7 +43,7 @@ public class JdbcCampaignDao {
         return campaignList;
     }
 
-    public List<Campaign> getManagersCampaignsList(int userId) {
+    public List<Campaign> getCampaignsByManagerId(int userId) {
         List<Campaign> managersCampaigns = new ArrayList<>();
 
         String sql = "SELECT * FROM campaign_manager INNER JOIN campaign using (campaign_id)" +
