@@ -24,7 +24,7 @@ public class Campaign {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime endDate;
     private boolean locked;
-    private boolean isPublic;
+    private boolean isPublic; // TODO: CONSTRAINT: cannot be public and deleted
     @NotNull
     private List<Donation> donations = new ArrayList<>();
     @NotEmpty
