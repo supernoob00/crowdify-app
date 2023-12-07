@@ -1,7 +1,6 @@
 package com.techelevator.dao;
 
 import com.techelevator.exception.DaoException;
-import com.techelevator.model.Campaign;
 import com.techelevator.model.Vote;
 import org.springframework.jdbc.CannotGetJdbcConnectionException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -10,7 +9,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Component
 public class JdbcVoteDao {
@@ -22,19 +20,14 @@ public class JdbcVoteDao {
     }
 
     // get votes by spend request id
-    public List<Vote> getVoteListBySpendReqId (int spendReqId) {
-
+    public List<Vote> getVotesBySpendRequestId(int spendReqId) {
         List<Vote> voteList = new ArrayList<>();
-
         String sql = "SELECT vote.* " +
                 "from spend_request " +
                 "JOIN vote USING(request_id) " +
                 "WHERE request_id = ? ;";
-
         try {
-
             SqlRowSet results = jdbcTemplate.queryForRowSet(sql, spendReqId);
-
             while (results.next()) {
                 voteList.add(mapRowtoVote(results));
             }
@@ -44,7 +37,7 @@ public class JdbcVoteDao {
         return voteList;
     }
 
-    public List<Vote> getVotesById (int voterId) {
+    public List<Vote> getVotesById(int voterId) {
         List<Vote> voteList = new ArrayList<>();
 
         String sql = "SELECT vote.*, users.username " +
@@ -62,6 +55,20 @@ public class JdbcVoteDao {
         return voteList;
     }
 
+    // TODO: finish this
+    public List<Vote> getVotesByCampaignId(int campaignId) {
+        return null;
+    }
+
+    public Vote createVote(Vote vote) {
+        return null;
+    }
+
+    // TODO: finish this - also cannot change vote if associated spend
+    //  request is closed
+    public int changeVote(int voteId, boolean newValue) {
+        return 0;
+    }
 
     private Vote mapRowtoVote(SqlRowSet rowSet) {
         Vote vote = new Vote();

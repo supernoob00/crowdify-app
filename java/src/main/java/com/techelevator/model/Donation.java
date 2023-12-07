@@ -126,12 +126,11 @@ public class Donation {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Donation donation = (Donation) o;
-        return donationId == donation.donationId && campaignId == donation.campaignId && amount == donation.amount && Objects.equals(donor, donation.donor) && Objects.equals(date, donation.date) && Objects.equals(comment, donation.comment) && Objects.equals(refunded, donation.refunded);
+        return donationId == donation.donationId && campaignId == donation.campaignId && amount == donation.amount && refunded == donation.refunded && anonymous == donation.anonymous && donor.equals(donation.donor) && campaignName.equals(donation.campaignName) && date.equals(donation.date) && comment.equals(donation.comment);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(donationId, donor, campaignId, amount, date,
-                comment, refunded);
+        return Objects.hash(donationId, donor, campaignId, campaignName, amount, date, comment, refunded, anonymous);
     }
 }

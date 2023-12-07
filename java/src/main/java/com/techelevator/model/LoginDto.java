@@ -1,6 +1,7 @@
 package com.techelevator.model;
 
 import javax.validation.constraints.NotBlank;
+import java.util.Objects;
 
 /*
     The acronym DTO is being used for "data transfer object". It means that this type of class is specifically
@@ -36,5 +37,18 @@ public class LoginDto {
               "username='" + username + '\'' +
               ", password='" + password + '\'' +
               '}';
+   }
+
+   @Override
+   public boolean equals(Object o) {
+      if (this == o) return true;
+      if (o == null || getClass() != o.getClass()) return false;
+      LoginDto loginDto = (LoginDto) o;
+      return username.equals(loginDto.username) && password.equals(loginDto.password);
+   }
+
+   @Override
+   public int hashCode() {
+      return Objects.hash(username, password);
    }
 }
