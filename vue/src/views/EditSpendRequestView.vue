@@ -2,7 +2,7 @@
   <div class="content">
     <h1>Edit SpendRequest</h1>
     <loading-screen v-if="isLoading"></loading-screen>
-    <spend-request-form v-else :spend-request="newSpendRequest"></spend-request-form>
+    <spend-request-form v-else :spend-request="spendRequest"></spend-request-form>
   </div>
 </template>
 
@@ -18,16 +18,17 @@ export default {
   data() {
     return {
       isLoading: true,
-      newSpendRequest: {}
+      spendRequest: {}
     }
   },
   methods: {
     async getSpendRequest() {
       const spendRequestId = parseInt(this.$route.params.id)
       try {
-        const response = await campaignService.getCampaign(spendRequestId);
+        const response = await campaignService.getSpendRequestById(spendRequestId);
         this.newSpendRequest = response.data;
-        this.newSpendRequest.amount /= 100;
+        this.spendRequest.amount /= 100;
+        this.spendRequest.endDate = this.spendRequest.endDate.slice(0, 10);
       } catch (error) {
         campaignService.handleErrorResponse(this.$store, error, 'getting', 'spendRequest');
         this.$router.push({ name: 'SpendRequestView', params: { id: spendRequestId } })
