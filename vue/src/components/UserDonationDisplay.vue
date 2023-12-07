@@ -3,9 +3,8 @@
     <div class="message-body">
       <span class="amount">${{ donation.amount / 100 }}</span>
       <span> to </span>
-      <span class="campaign-name">"name"</span>
-      <!-- <span class="campaign-name">{{ donation.campaignName }}</span> -->
-      <!-- add campaign name and link to campaign on *name* -->
+      <router-link :to="{ name: 'CampaignView', params: { id: donation.campaignId } }" class="campaign-name">
+        {{ donation.campaignName }}</router-link>
       <p class="comment">{{ donation.comment }}</p>
     </div>
   </article>
@@ -26,8 +25,7 @@ article {
   padding: 1em;
 }
 
-.amount,
-.comment {
+.amount {
   color: grey;
 }
 

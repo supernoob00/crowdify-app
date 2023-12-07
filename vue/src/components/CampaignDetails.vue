@@ -6,9 +6,14 @@
         <span>Created by </span>
         <span class="campaign-creator">{{ campaign.creator.username }}</span>
       </div>
-      <router-link v-if="isManager" class="button is-link"
-        :to="{ name: 'EditCampaignView', params: { id: campaign.id } }">
-        Edit Campaign</router-link>
+      <div class="buttons">
+        <router-link v-if="isManager" class="button is-link"
+          :to="{ name: 'EditCampaignView', params: { id: campaign.id } }">
+          <i class="fa-solid fa-pen-to-square"></i></router-link>
+        <router-link v-if="isManager" class="button is-link"
+          :to="{ name: 'CreateSpendRequestView', params: { id: campaign.id } }">
+          <i class="fa-solid fa-plus"></i>SpendRequest</router-link>
+      </div>
     </div>
     <hr>
     <div id="campaign-description" class="block">{{ campaign.description }}</div>
@@ -71,6 +76,10 @@ export default {
 
 .header a {
   margin-top: 1em;
+}
+
+.header .buttons .fa-plus {
+  margin-right: 10px;
 }
 
 hr {

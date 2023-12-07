@@ -90,6 +90,27 @@ public class JdbcCampaignDao {
         return Optional.empty();
     }
 
+    public List<Campaign> getCampaignsByDonorId (int id) {
+        List campaignList = new ArrayList<>();
+        String sql = "SELECT * from " +
+                "campaign " +
+                "JOIN donation using (campaign_id)" +
+                "JOIN users on donor_id = user_id" +
+                "WHERE user_id = ?;";
+
+        try {
+            SqlRowSet results = jdbcTemplate.queryForRowSet(sql, id);
+            while (results.next()) {
+                campaignList.add(mapRowtoCampaign(results));
+            }
+        } catch (CannotGetJdbcConnectionException e) {
+            throw new DaoException("Unable to connect to server or database", e);
+        }
+        return campaignList;
+    }
+
+
+
     // TODO: insert campaign creator into database as well
     public Campaign createCampaign(@NotNull NewCampaignDto newCampaignDto) {
         Campaign createdCampaign;
