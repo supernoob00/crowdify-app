@@ -1,19 +1,19 @@
 <template>
   <div class="content">
     <h1>Edit Campaign</h1>
-    <div class="loading" v-if="isLoading">
-      <img src="../assets/ping_pong_loader.gif">
-    </div>
-    <campaign-form v-else :campaign="campaign"></campaign-form>
+    <loading-screen v-if="isLoading"></loading-screen>
+    <campaign-form v-else :campaign="campaign" class="form"></campaign-form>
   </div>
 </template>
 
 <script>
 import CampaignForm from '../components/CampaignForm.vue';
 import campaignService from '../services/CampaignService';
+import LoadingScreen from '../components/LoadingScreen.vue';
 export default {
   components: {
-    CampaignForm
+    CampaignForm,
+    LoadingScreen
   },
   data() {
     return {
@@ -48,7 +48,7 @@ export default {
 </script>
 
 <style scoped>
-.content {
+.form {
   max-width: 500px;
 }
 </style>

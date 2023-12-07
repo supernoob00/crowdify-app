@@ -1,8 +1,6 @@
 <template>
   <div class="home">
-    <div v-if="isLoading">
-      <img src="../assets/ping_pong_loader.gif" />
-    </div>
+    <loading-screen v-if="isLoading"></loading-screen>
     <div v-else class="content">
       <h1>Campaigns</h1>
       <campaign-list :campaigns="campaigns"></campaign-list>
@@ -14,9 +12,11 @@
 <script>
 import CampaignList from '../components/CampaignList.vue';
 import campaignService from '../services/CampaignService'
+import LoadingScreen from '../components/LoadingScreen.vue';
 export default {
   components: {
-    CampaignList
+    CampaignList,
+    LoadingScreen
   },
   data() {
     return {

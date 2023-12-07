@@ -77,7 +77,7 @@ const routes = [
     name: 'CreateDonationView',
     component: CreateDonationView,
     meta: {
-      requiresAuth: true
+      requiresAuth: false
     }
   },
   {

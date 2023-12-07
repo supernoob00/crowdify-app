@@ -4,6 +4,8 @@
       <span class="amount">${{ donation.amount / 100 }}</span>
       <span> to </span>
       <span class="campaign-name">"name"</span>
+      <!-- <span class="campaign-name">{{ donation.campaignName }}</span> -->
+      <!-- add campaign name and link to campaign on *name* -->
       <p class="comment">{{ donation.comment }}</p>
     </div>
   </article>
