@@ -6,12 +6,12 @@ ALTER SEQUENCE donation_donation_id_seq RESTART WITH 1;
 ALTER SEQUENCE spend_request_request_id_seq RESTART WITH 1;
 
 --username: "password"
-INSERT INTO users (username,password_hash,role) VALUES ('user','$2a$10$3i4qTmbIul5.SPOo.5oFHOQnSPBcC5ryKiOyekvEYXSuy5HqsYkre','ROLE_USER');
-INSERT INTO users (username,password_hash,role) VALUES ('sam','$2a$10$3i4qTmbIul5.SPOo.5oFHOQnSPBcC5ryKiOyekvEYXSuy5HqsYkre','ROLE_USER');
-INSERT INTO users (username,password_hash,role) VALUES ('adi','$2a$10$3i4qTmbIul5.SPOo.5oFHOQnSPBcC5ryKiOyekvEYXSuy5HqsYkre','ROLE_USER');
-INSERT INTO users (username,password_hash,role) VALUES ('chad','$2a$10$3i4qTmbIul5.SPOo.5oFHOQnSPBcC5ryKiOyekvEYXSuy5HqsYkre','ROLE_USER');
-INSERT INTO users (username,password_hash,role) VALUES ('josh','$2a$10$3i4qTmbIul5.SPOo.5oFHOQnSPBcC5ryKiOyekvEYXSuy5HqsYkre','ROLE_USER');
-INSERT INTO users (username,password_hash,role) VALUES ('admin','$2a$10$3i4qTmbIul5.SPOo.5oFHOQnSPBcC5ryKiOyekvEYXSuy5HqsYkre','ROLE_ADMIN');
+INSERT INTO users (username, email, password_hash,role) VALUES ('user', 'test@test.com', '$2a$10$3i4qTmbIul5.SPOo.5oFHOQnSPBcC5ryKiOyekvEYXSuy5HqsYkre','ROLE_USER');
+INSERT INTO users (username, email, password_hash,role) VALUES ('sam', 'sjsomerdin@gmail.com', '$2a$10$3i4qTmbIul5.SPOo.5oFHOQnSPBcC5ryKiOyekvEYXSuy5HqsYkre','ROLE_USER');
+INSERT INTO users (username, password_hash,role) VALUES ('adi','$2a$10$3i4qTmbIul5.SPOo.5oFHOQnSPBcC5ryKiOyekvEYXSuy5HqsYkre','ROLE_USER');
+INSERT INTO users (username, password_hash,role) VALUES ('chad','$2a$10$3i4qTmbIul5.SPOo.5oFHOQnSPBcC5ryKiOyekvEYXSuy5HqsYkre','ROLE_USER');
+INSERT INTO users (username, password_hash,role) VALUES ('josh','$2a$10$3i4qTmbIul5.SPOo.5oFHOQnSPBcC5ryKiOyekvEYXSuy5HqsYkre','ROLE_USER');
+INSERT INTO users (username, password_hash,role) VALUES ('admin','$2a$10$3i4qTmbIul5.SPOo.5oFHOQnSPBcC5ryKiOyekvEYXSuy5HqsYkre','ROLE_ADMIN');
 
 INSERT INTO campaign
 (
@@ -34,12 +34,12 @@ INSERT INTO campaign_manager (campaign_id, manager_id, creator) VALUES
 (2, 3, true),
 (3, 1, true);
 
-INSERT INTO donation (donor_id, campaign_id, donation_amount, donation_date, donation_comment, refunded) VALUES
-(1, 1, 5000, '2020-06-22 20:00:00','Happy to help!', false),
-(1, 2, 500, '2024-06-22 20:00:00','Might be interesting...',false),
-(2, 1, 5000, '2020-06-22 20:00:00','Going all in!', false),
-(3, 1, 5000, '2020-06-22 20:00:00','Love it!',false),
-(4, 2, 5000, '2024-06-22 20:00:00','It''s cool to be able to support in a real way with my money in this fashion!',false);
+INSERT INTO donation (donor_id, campaign_id, donation_amount, donation_date, donation_comment, refunded, anonymous) VALUES
+(1, 1, 5000, '2020-06-22 20:00:00','Happy to help!', false, false),
+(1, 2, 500, '2024-06-22 20:00:00','Might be interesting...', false, false),
+(2, 1, 5000, '2020-06-22 20:00:00','Going all in!', false, true),
+(3, 1, 5000, '2020-06-22 20:00:00','Love it!', false, false),
+(4, 2, 5000, '2024-06-22 20:00:00','It''s cool to be able to support in a real way with my money in this fashion!', false, true);
 
 INSERT INTO spend_request (campaign_id, request_amount, request_description, request_approved) VALUES
 (1, 100, 'some monies', false), --id 1

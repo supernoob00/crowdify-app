@@ -1,6 +1,7 @@
 package com.techelevator.dao;
 
 import com.techelevator.exception.DaoException;
+import com.techelevator.model.Campaign;
 import com.techelevator.model.Donation;
 import com.techelevator.model.NewDonationDto;
 import com.techelevator.model.User;
@@ -57,16 +58,20 @@ public class JdbcDonationDao {
 
     public Donation createDonation(@NotNull NewDonationDto newDonationDto) {
         String sql = "INSERT INTO donation " +
-                "(donor_id, campaign_id, donation_amount, donation_comment) " +
-                "VALUES (?,?,?,?) RETURNING donation_id;";
+                "(donor_id, campaign_id, donation_amount, donation_comment, " +
+                "anonymous) " +
+                "VALUES (?,?,?,?,?) RETURNING donation_id;";
         try {
             Integer donationId = jdbcTemplate.queryForObject(sql, Integer.class,
                     newDonationDto.getDonorId(),
                     newDonationDto.getCampaignId(),
                     newDonationDto.getAmount(),
-                    newDonationDto.getComment()
+                    newDonationDto.getComment(),
+                    newDonationDto.isAnonymous()
             );
-            if (donationId == null) {
+            // TODO: print statement for testing purposes
+            if (donationId == null || donationId == 0) {
+                System.out.println(donationId);
                 throw new DaoException("Failed to donate.");
             }
             return getDonationById(donationId).orElseThrow();
@@ -99,13 +104,22 @@ public class JdbcDonationDao {
     public Donation mapRowToDonation(SqlRowSet results) {
         Donation donation = new Donation();
         User donor = userDao.getUserById(results.getInt("donor_id")).orElse(null);
+
         donation.setDonationId(results.getInt("donation_id"));
         donation.setDonor(donor);
-        donation.setCampaignId(results.getInt("campaign_id"));
+
+        JdbcCampaignDao campaignDao = new JdbcCampaignDao(jdbcTemplate, this, userDao);
+        int campaignId = results.getInt("campaign_id");
+        String campaignName = campaignDao.getCampaignNameById(campaignId).orElseThrow();
+
+        donation.setCampaignId(campaignId);
+        donation.setCampaignName(campaignName);
+
         donation.setAmount(results.getInt("donation_amount"));
         donation.setDate(results.getTimestamp("donation_date").toLocalDateTime());
         donation.setComment(results.getString("donation_comment"));
-       // donation.setRefunded(results.getBoolean("refunded"));
+        donation.setRefunded(results.getBoolean("refunded"));
+        donation.setAnonymous(results.getBoolean("anonymous"));
         return donation;
     }
 }

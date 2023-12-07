@@ -18,13 +18,13 @@ INSERT INTO campaign_manager (campaign_id, manager_id, creator) VALUES (2, 2, tr
 INSERT INTO campaign_manager (campaign_id, manager_id, creator) VALUES (3, 3, true);
 INSERT INTO campaign_manager (campaign_id, manager_id, creator) VALUES (4, 1, true);
 
-INSERT INTO donation (donor_id, campaign_id, donation_amount, donation_date, donation_comment)
-VALUES (1, 1, 1000, '2024-1-11', 'Nice stuff with Tech!'); -- id 1
-INSERT INTO donation (donor_id, campaign_id, donation_amount, donation_date, donation_comment)
-VALUES (2, 2, 2000, '2024-1-12', 'Go Robots!'); -- id 2
-INSERT INTO donation (donor_id, campaign_id, donation_amount, donation_date, donation_comment)
-VALUES (3, 3, 3000, '2024-1-13', 'What the frick does Quantum mean??'); -- id 3
-INSERT INTO donation (donor_id, campaign_id, donation_amount, donation_date, donation_comment)
-VALUES (1, 2, 2000, '2024-1-11', 'Not bad!'); -- id 4
+INSERT INTO donation (donor_id, campaign_id, donation_amount, donation_date, donation_comment, anonymous)
+VALUES (1, 1, 1000, '2024-1-11', 'Nice stuff with Tech!', true); -- id 1
+INSERT INTO donation (donor_id, campaign_id, donation_amount, donation_date, donation_comment, anonymous)
+VALUES (2, 2, 2000, '2024-1-12', 'Go Robots!', true); -- id 2
+INSERT INTO donation (donor_id, campaign_id, donation_amount, donation_date, donation_comment, anonymous)
+VALUES (3, 3, 3000, '2024-1-13', 'What the frick does Quantum mean??', false); -- id 3
+INSERT INTO donation (donor_id, campaign_id, donation_amount, donation_date, donation_comment, anonymous)
+VALUES (1, 2, 2000, '2024-1-11', 'Not bad!', true); -- id 4
 
 COMMIT TRANSACTION;
