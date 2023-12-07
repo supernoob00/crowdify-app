@@ -1,6 +1,7 @@
 package com.techelevator.dao;
 
 import com.techelevator.exception.DaoException;
+import com.techelevator.model.Campaign;
 import com.techelevator.model.NewSpendRequestDto;
 import com.techelevator.model.SpendRequest;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -83,7 +84,7 @@ public class JdbcSpendRequestDao {
         SpendRequest request = new SpendRequest();
 
         request.setId(rowSet.getInt("request_id"));
-        request.setCampaign_id(rowSet.getInt("campaign_id"));
+        request.setCampaignId(rowSet.getInt("campaign_id"));
         request.setAmount(rowSet.getInt("request_amount"));
         request.setDescription(rowSet.getString("request_description"));
         request.setApproved(rowSet.getBoolean("request_approved"));
@@ -94,16 +95,16 @@ public class JdbcSpendRequestDao {
         return request;
     }
 
- /*   public boolean isValidUser (SpendRequest spendRequest, int userId) {
-       int campaignIdBySr = spendRequest.getCampaign_id();
-       Optional<Campaign> campaign = jdbcCampaignDao.getCampaignById(userId);
+    public boolean isValidUser (SpendRequest spendRequest, int userId) {
 
-       if (campaign.isEmpty()) {
-           return false;
-       }
+       int campaignIdBySr = spendRequest.getCampaignId();
 
-       int campaignIdByUser = jdbcCampaignDao.getCampaignById(userId);
+       List<Campaign> campaignList = jdbcCampaignDao.getCampaignsByDonorId(userId);
 
-
-    }*/
+       for (Campaign campaign : campaignList) {
+           if (campaign.getId() == campaignIdBySr){
+               return true;
+           }
+       } return false;
+    }
 }

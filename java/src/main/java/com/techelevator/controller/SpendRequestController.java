@@ -40,6 +40,8 @@ public class SpendRequestController {
     public SpendRequest getSpendRequestById (@PathVariable int id, Principal principal) {
 
         // TODO need to restrict non-donors from access to spend request.
+
+
         Optional<SpendRequest> spendRequest = jdbcSpendRequestDao.getSpendRequestById(id);
         return spendRequest.orElseThrow(() -> {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Spend request not found.");
