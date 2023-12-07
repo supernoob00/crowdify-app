@@ -2,6 +2,7 @@ package com.techelevator.dao;
 
 import com.techelevator.exception.DaoException;
 import com.techelevator.model.Donation;
+import com.techelevator.model.NewSpendRequestDto;
 import com.techelevator.model.SpendRequest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.CannotGetJdbcConnectionException;
@@ -39,7 +40,12 @@ public class JdbcSpendRequestDao {
 
     public List<SpendRequest> getSpendRequestsByCampaign(int campaignId) {
         List<SpendRequest> requestList = new ArrayList<>();
-        String sql = "SELECT * FROM spend_request WHERE donor_id = ?;";
+        // String sql = "SELECT * FROM spend_request WHERE donor_id = ?;";
+
+        String sql = "SELECT spend_request.* " +
+                "FROM spend_request " +
+                "JOIN campaign USING (campaign_id) " +
+                "WHERE campaign_id = ?;";
 
         try {
             SqlRowSet results = jdbcTemplate.queryForRowSet(sql, campaignId);
@@ -52,20 +58,19 @@ public class JdbcSpendRequestDao {
         return requestList;
     }
 
-    public SpendRequest createSpendRequest(@NotNull SpendRequest requestToCreate) {
+    public SpendRequest createSpendRequest(@NotNull NewSpendRequestDto newSpendRequestDto) {
         String sql = "INSERT into spend_request " +
                 "(campaign_id, request_amount, request_description, " +
-                "request_approved, end_date " +
+                "request_approved, end_date) " +
                 "values (?,?,?,?,?) returning request_id;";
-
         try {
             // TODO: date needs to be converted to SQL compatible format
             int requestId = jdbcTemplate.queryForObject(sql, Integer.class,
-                    requestToCreate.getCampaign_id(),
-                    requestToCreate.getAmount(),
-                    requestToCreate.getDescription(),
-                    requestToCreate.isApproved(),
-                    requestToCreate.getEndDate());
+                    newSpendRequestDto.getCampaign_id(),
+                    newSpendRequestDto.getAmount(),
+                    newSpendRequestDto.getDescription(),
+                    newSpendRequestDto.isApproved(),
+                    newSpendRequestDto.getEndDate());
             return getSpendRequestById(requestId).orElseThrow();
         } catch (CannotGetJdbcConnectionException e) {
             throw new DaoException("Unable to connect to server or database", e);
@@ -82,7 +87,10 @@ public class JdbcSpendRequestDao {
         request.setAmount(rowSet.getInt("request_amount"));
         request.setDescription(rowSet.getString("request_description"));
         request.setApproved(rowSet.getBoolean("request_approved"));
-        request.setEndDate(rowSet.getTimestamp("end_date").toLocalDateTime());
+
+        if (rowSet.getTimestamp("end_date") != null) {
+            request.setEndDate(rowSet.getTimestamp("end_date").toLocalDateTime());
+        }
         return request;
     }
 }
