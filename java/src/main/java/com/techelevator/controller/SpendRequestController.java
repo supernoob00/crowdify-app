@@ -48,17 +48,12 @@ public class SpendRequestController {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are " +
                     "not authorized to view this spend request.");
         }
+        Campaign requestCampaign = jdbcCampaignDao.getCampaignById(spendRequest.getCampaignId()).orElseThrow();
+        int userId = AuthenticationController.getUserIdFromPrincipal(principal, userDao);
 
-        int requestCampaignId = spendRequest.getCampaignId();
-        int donorId = AuthenticationController.getUserIdFromPrincipal(principal, userDao);
-
-        List<Campaign> donorCampaigns = jdbcCampaignDao.getCampaignsByDonorId(donorId);
-
-        for (Campaign campaign : donorCampaigns) {
-            if (campaign.getId() != requestCampaignId) {
-                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are " +
-                        "not authorized to view this campaign.");
-            }
+        if (!requestCampaign.containsDonor(userId) && !requestCampaign.containsManager(userId)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are " +
+                    "not authorized to view this campaign.");
         }
         return spendRequest;
     }
@@ -66,7 +61,7 @@ public class SpendRequestController {
     @GetMapping("/campaigns/{campaignId}/spend-requests")
     @ResponseStatus(HttpStatus.OK)
     public List<SpendRequest> getSpendReqByCampaignId(Principal principal, @PathVariable int campaignId) {
-        
+
         List<SpendRequest> spendRequests = jdbcSpendRequestDao.getSpendRequestsByCampaign(campaignId);
         if (spendRequests.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Spend request not found.");
@@ -76,11 +71,14 @@ public class SpendRequestController {
                     "not authorized to view this spend request.");
         }
 
-        int donorId = AuthenticationController.getUserIdFromPrincipal(principal, userDao);
-        List<Campaign> donorCampaigns = jdbcCampaignDao.getCampaignsByDonorId(donorId);
+        int userId = AuthenticationController.getUserIdFromPrincipal(principal, userDao);
+
+        List<Campaign> donorCampaigns = jdbcCampaignDao.getCampaignsByDonorId(userId);
+
+        Campaign requestCampaign = jdbcCampaignDao.getCampaignById(campaignId).orElseThrow();
 
         for (Campaign campaign : donorCampaigns) {
-            if (campaignId != campaign.getId()) {
+            if (campaignId != campaign.getId() && !requestCampaign.containsManager(userId)) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are " +
                         "not authorized to view this campaign.");
             }
