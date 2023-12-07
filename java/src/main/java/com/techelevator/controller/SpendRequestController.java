@@ -99,8 +99,22 @@ public class SpendRequestController {
 
     @PostMapping("/campaigns/{campaignId}/spend-requests")
     @ResponseStatus(HttpStatus.CREATED)
-    public SpendRequest newRequest (@Valid @RequestBody NewSpendRequestDto newSpendRequestDto, @PathVariable int campaignId) {
-        return jdbcSpendRequestDao.createSpendRequest(newSpendRequestDto);
+    public SpendRequest newRequest (@Valid @RequestBody NewSpendRequestDto newSpendRequestDto, @PathVariable int campaignId, Principal principal) {
+        newSpendRequestDto.setCampaignId(campaignId);
+
+        boolean isManager = false;
+        List<User> managerList = userDao.getManagersByCampaignId(campaignId);
+        int userId = AuthenticationController.getUserIdFromPrincipal(principal, userDao);
+
+        for (int i = 0; i <managerList.size() ; i++) {
+
+            if (userId == managerList.get(i).getId()) {
+                isManager = true;
+                break;
+            }
+        } if (!isManager) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not authorized to create a spend request.");
+        } return jdbcSpendRequestDao.createSpendRequest(newSpendRequestDto);
     }
 
     public boolean isCorrectUser(Principal principal, NewDonationDto newDonationDto) {
