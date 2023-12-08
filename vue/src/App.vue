@@ -24,6 +24,7 @@ export default {
   --navbar-background: #fb8500;
   --user-is-manager-public: pink;
   --user-is-manager-private: lightcoral;
+  --campaign-card-background: lightgray;
   --font-color: #000;
   --link-color: #1C75B9;
   --link-white-color: #fff;
@@ -31,11 +32,14 @@ export default {
 }
 
 [theme="custom-dark"] {
-  --font-color: #bdbab8;
+  --font-color: #e9e9e9;
   --link-color: #0a86da;
   --link-white-color: #bdbab8;
   --bg-color: #333;
   --navbar-background: darkgrey;
+  --campaign-card-background: black;
+  --user-is-manager-public: teal;
+  --user-is-manager-private: rgba(12, 88, 95, 0.374);
 }
 
 html,
@@ -45,7 +49,7 @@ body {
   background: var(--bg-color);
   margin: 0;
   padding: 0;
-  height: 100%;
+  height: 100%
 }
 
 .container {

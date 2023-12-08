@@ -26,21 +26,30 @@
       <div class="num-donations">{{ numberOfDonations }} donations</div>
     </div>
     <hr>
-    <h2 class="block">Donations</h2>
-    <router-link class="button is-link block"
-      :to="{ name: 'CreateDonationView', params: { id: campaign.id } }">Donate</router-link>
-    <donation-display v-for="donation in donationsSortedByAmount" :key="donation.id"
-      :donation="donation"></donation-display>
+    <div class="sideInfo">
+      <section class="donations">
+        <h2 class="block">Donations</h2>
+        <router-link class="button is-link block"
+          :to="{ name: 'CreateDonationView', params: { id: campaign.id } }">Donate</router-link>
+        <donation-display v-for="donation in donationsSortedByAmount" :key="donation.id"
+          :donation="donation"></donation-display>
+      </section>
+      <!-- <section>
+        <spend-request-display :spend-requests="spendRequests"></spend-request-display>
+      </section> -->
+    </div>
   </div>
 </template>
 
 <script>
 import DonationDisplay from './DonationDisplay.vue';
+import SpendRequestDisplay from './SpendRequestDisplay.vue';
 export default {
   components: {
-    DonationDisplay
+    DonationDisplay,
+    SpendRequestDisplay
   },
-  props: ['campaign'],
+  props: ['campaign', 'spendRequests'],
   computed: {
     totalDonated() {
       return this.campaign.donations.reduce((sum, currDonation) => sum += currDonation.amount, 0) / 100;
@@ -65,7 +74,7 @@ export default {
 
 <style scoped>
 .content {
-  max-width: 75%;
+  max-width: 800px;
   margin: 10px;
 }
 

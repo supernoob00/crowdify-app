@@ -2,7 +2,7 @@
   <div>
     <loading-screen v-if="isLoading"></loading-screen>
     <div v-else>
-      <campaign-details :campaign="campaign"></campaign-details>
+      <campaign-details :campaign="campaign" :spend-requests="spendRequests"></campaign-details>
     </div>
   </div>
 </template>
@@ -14,31 +14,48 @@ import LoadingScreen from '../components/LoadingScreen.vue';
 export default {
   components: {
     CampaignDetails,
-    LoadingScreen
+    LoadingScreen,
   },
   data() {
     return {
       campaign: {},
+      spendRequests: [],
       isLoading: true
+    }
+  },
+  computed: {
+    campaignId() {
+      return parseInt(this.$route.params.id);
     }
   },
   methods: {
     async retrieveCampaign() {
       try {
-        let campaignId = parseInt(this.$route.params.id)
-        const response = await campaignService.getCampaign(campaignId);
+        const response = await campaignService.getCampaign(this.campaignId);
         this.campaign = response.data;
       } catch (error) {
         campaignService.handleErrorResponse(this.$store, error, 'getting', 'campaign');
-      } finally {
-        this.isLoading = false;
+      }
+    },
+    async getSpendRequestsForCampaign() {
+      try {
+        const response = await campaignService.getSpendRequestsByCampaignId(this.campaignId);
+        this.spendRequests = response.data;
+        console.log(this.spendRequests)
+      } catch (error) {
+        campaignService.handleErrorResponse(this.$store, error, 'getting', 'campaign');
       }
     }
   },
   async created() {
-    this.retrieveCampaign()
+    await this.retrieveCampaign()
+    this.isLoading = false;
   }
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.body {
+  display: flex;
+}
+</style>
