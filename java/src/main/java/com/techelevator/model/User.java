@@ -10,6 +10,7 @@ import java.util.Objects;
 import java.util.Set;
 
 public class User {
+   // TODO: put in email address
    @Min(1)
    private int id;
    @NotBlank

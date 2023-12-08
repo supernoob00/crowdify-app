@@ -1,12 +1,9 @@
 package com.techelevator.controller;
 
-import com.techelevator.dao.JdbcDonationDao;
-import com.techelevator.dao.JdbcSpendRequestDao;
-import com.techelevator.dao.JdbcVoteDao;
-import com.techelevator.dao.UserDao;
+import com.techelevator.dao.*;
 import com.techelevator.model.*;
-import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.http.HttpStatus;
+import org.springframework.lang.Nullable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -20,37 +17,50 @@ import java.util.Optional;
 @RestController
 @CrossOrigin
 public class DonationController {
+    private final JdbcCampaignDao jdbcCampaignDao;
     private final JdbcDonationDao jdbcDonationDao;
     private final UserDao userDao;
     private final JdbcVoteDao jdbcVoteDao;
 
-    public DonationController(JdbcDonationDao jdbcDonationDao, UserDao userDao, JdbcVoteDao jdbcVoteDao) {
+    public DonationController(JdbcCampaignDao jdbcCampaignDao,
+                              JdbcDonationDao jdbcDonationDao,
+                              UserDao userDao, JdbcVoteDao jdbcVoteDao) {
+        this.jdbcCampaignDao = jdbcCampaignDao;
         this.jdbcDonationDao = jdbcDonationDao;
         this.userDao = userDao;
         this.jdbcVoteDao = jdbcVoteDao;
     }
 
-    //TODO: Get donations by username controller endpoint/DAO method
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/users/{id}/donations")
     @ResponseStatus(HttpStatus.OK)
     public List<Donation> getDonationsByUserId(Principal principal, @PathVariable int id) {
-        //Reformatted method a bit. If id and logged in user don't match, we throw exception
         Optional<User> loggedInUser = userDao.getUserById(id);
-        if (loggedInUser.isPresent() && !loggedInUser.get().getUsername().equals(principal.getName())) {
+        if (loggedInUser.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User id " +
+                    "does not exist.");
+        }
+        if (!loggedInUser.get().getUsername().equals(principal.getName())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not authorized to get these donations.");
         }
         return new ArrayList<>(jdbcDonationDao.getDonationsByUserId(id));
     }
 
 
+    // TODO: user can donate to private donations
     @PostMapping("/donations")
     @ResponseStatus(HttpStatus.CREATED)
     public Donation createDonation(Principal principal, @Valid @RequestBody NewDonationDto newDonationDto) {
-        if (principal == null) {
-            return jdbcDonationDao.createDonation(newDonationDto);
-        }
-        if (!isCorrectUser(principal, newDonationDto)) {
+        // check if valid campaign
+        Campaign campaign = jdbcCampaignDao.getCampaignById(
+                newDonationDto.getCampaignId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Campaign not found."));
+
+        // check if campaign is locked, private, or DTO donor id does not
+        // match current user
+        if (campaign.isLocked()
+                || !campaign.isPublic()
+                || !donationDtoMatchesPrincipal(principal, newDonationDto)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not authorized create this donation.");
         }
         return jdbcDonationDao.createDonation(newDonationDto);
@@ -59,13 +69,19 @@ public class DonationController {
     @PreAuthorize("isAuthenticated()")
     @PutMapping("/donations/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Donation updateDonation(Principal principal, @Valid @RequestBody UpdateDonationDto updateDonationDto) {
-        //TODO: Update donation controller method (comment and refunded status as well?)
+    public Donation updateDonation(@PathVariable int donationId,
+                                   Principal principal,
+                                   @Valid @RequestBody UpdateDonationDto updateDonationDto) {
         return null;
     }
 
 
-    public boolean isCorrectUser(Principal principal, NewDonationDto newDonationDto) {
+    public boolean donationDtoMatchesPrincipal(@Nullable Principal principal,
+                                               NewDonationDto newDonationDto) {
+        if (principal == null) {
+            return newDonationDto.getDonorId() == null
+                    && newDonationDto.isAnonymous();
+        }
         String username = principal.getName();
         Optional<User> optionalUser = userDao.getUserByUsername(username);
         User user = optionalUser.orElseThrow();
