@@ -8,43 +8,43 @@ import java.util.Objects;
 
 public class NewVoteDto {
     @Min(1)
-    private int donor_id;
+    private int donorId;
     @Min(1)
-    private int request_id;
+    private int requestId;
     @Nullable
-    private boolean vote_approved;
+    private boolean voteApproved;
 
-    public NewVoteDto(int donor_id, int request_id, boolean vote_approved) {
-        this.donor_id = donor_id;
-        this.request_id = request_id;
-        this.vote_approved = vote_approved;
+    public NewVoteDto(int donorId, int requestId, boolean voteApproved) {
+        this.donorId = donorId;
+        this.requestId = requestId;
+        this.voteApproved = voteApproved;
     }
 
     public NewVoteDto() {
     }
 
-    public int getDonor_id() {
-        return donor_id;
+    public int getDonorId() {
+        return donorId;
     }
 
-    public void setDonor_id(int donor_id) {
-        this.donor_id = donor_id;
+    public void setDonorId(int donorId) {
+        this.donorId = donorId;
     }
 
-    public int getRequest_id() {
-        return request_id;
+    public int getRequestId() {
+        return requestId;
     }
 
-    public void setRequest_id(int request_id) {
-        this.request_id = request_id;
+    public void setRequestId(int requestId) {
+        this.requestId = requestId;
     }
 
-    public boolean isVote_approved() {
-        return vote_approved;
+    public boolean isVoteApproved() {
+        return voteApproved;
     }
 
-    public void setVote_approved(boolean vote_approved) {
-        this.vote_approved = vote_approved;
+    public void setVoteApproved(boolean voteApproved) {
+        this.voteApproved = voteApproved;
     }
 
     @Override
@@ -52,11 +52,11 @@ public class NewVoteDto {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         NewVoteDto that = (NewVoteDto) o;
-        return donor_id == that.donor_id && request_id == that.request_id && vote_approved == that.vote_approved;
+        return donorId == that.donorId && requestId == that.requestId && voteApproved == that.voteApproved;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(donor_id, request_id, vote_approved);
+        return Objects.hash(donorId, requestId, voteApproved);
     }
 }
