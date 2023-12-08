@@ -3,6 +3,7 @@ package com.techelevator.controller;
 import com.techelevator.dao.*;
 import com.techelevator.model.*;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -82,46 +83,75 @@ public class SpendRequestController {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are " +
                         "not authorized to view this campaign.");
             }
-        } return spendRequests;
-    }
-
-    // TODO doesn't work yet.
-    @GetMapping("/campaigns/{campaignId}/spend-request/{spend-req-id}/votes")
-    @ResponseStatus(HttpStatus.OK)
-    public List<Vote> getVotesBySpendReq(Principal principal, @PathVariable int userId, @PathVariable int campId, @PathVariable int spendReqId) {
-        Optional<User> loggedInUser = userDao.getUserById(userId);
-
-        if (loggedInUser.isPresent() && !loggedInUser.get().getUsername().equals(principal.getName())) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not authorized to get these votes.");
         }
-        return new ArrayList<>(jdbcVoteDao.getVotesBySpendRequestId(spendReqId));
+        return spendRequests;
     }
 
     @PostMapping("/campaigns/{campaignId}/spend-requests")
     @ResponseStatus(HttpStatus.CREATED)
-    public SpendRequest newRequest (@Valid @RequestBody NewSpendRequestDto newSpendRequestDto, @PathVariable int campaignId, Principal principal) {
+    public SpendRequest newRequest(@Valid @RequestBody NewSpendRequestDto newSpendRequestDto, @PathVariable int campaignId, Principal principal) {
         newSpendRequestDto.setCampaignId(campaignId);
 
         boolean isManager = false;
         List<User> managerList = userDao.getManagersByCampaignId(campaignId);
         int userId = AuthenticationController.getUserIdFromPrincipal(principal, userDao);
 
-        for (int i = 0; i <managerList.size() ; i++) {
+        for (int i = 0; i < managerList.size(); i++) {
 
             if (userId == managerList.get(i).getId()) {
                 isManager = true;
                 break;
             }
-        } if (!isManager) {
+        }
+        if (!isManager) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not authorized to create a spend request.");
-        } return jdbcSpendRequestDao.createSpendRequest(newSpendRequestDto);
+        }
+        return jdbcSpendRequestDao.createSpendRequest(newSpendRequestDto);
     }
 
-    public boolean isCorrectUser(Principal principal, NewDonationDto newDonationDto) {
-        String username = principal.getName();
-        Optional<User> optionalUser = userDao.getUserByUsername(username);
-        User user = optionalUser.orElseThrow();
-        int loggedInUserID = user.getId();
-        return loggedInUserID == newDonationDto.getDonorId();
+    // IN PROGRESS.
+    /*@PreAuthorize("isAuthenticated()")
+    @ResponseStatus(HttpStatus.OK)
+    @PutMapping("/spend-requests/{id}")
+    public SpendRequest updateSpendRequest(@Valid @RequestBody UpdateSpendRequestDto updateSpendRequestDto,
+                                           @PathVariable int spendRequestId, Principal principal) {
+
+        boolean isManager = false;
+        List<User> managerList =
+        int userId = AuthenticationController.getUserIdFromPrincipal(principal, userDao);
+
+        for (int i = 0; i < managerList.size(); i++) {
+
+            if (userId == managerList.get(i).getId()) {
+                isManager = true;
+                break;
+            }
+        }
+        if (!isManager) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not authorized to create a spend request.");
+        }
+        return jdbcSpendRequestDao.getSpendRequestById(updateSpendRequestDto.getId()).orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "Spend request not found."));
     }
+*/
+      // TODO doesn't work yet.
+        @GetMapping("/campaigns/{campaignId}/spend-request/{spend-req-id}/votes")
+        @ResponseStatus(HttpStatus.OK)
+        public List<Vote> getVotesBySpendReq (Principal principal,@PathVariable int userId, @PathVariable int campId,
+        @PathVariable int spendReqId){
+            Optional<User> loggedInUser = userDao.getUserById(userId);
+
+            if (loggedInUser.isPresent() && !loggedInUser.get().getUsername().equals(principal.getName())) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not authorized to get these votes.");
+            }
+            return new ArrayList<>(jdbcVoteDao.getVotesBySpendRequestId(spendReqId));
+        }
+
+        public boolean isCorrectUser (Principal principal, NewDonationDto newDonationDto){
+            String username = principal.getName();
+            Optional<User> optionalUser = userDao.getUserByUsername(username);
+            User user = optionalUser.orElseThrow();
+            int loggedInUserID = user.getId();
+            return loggedInUserID == newDonationDto.getDonorId();
+        }
 }

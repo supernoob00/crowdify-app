@@ -4,6 +4,7 @@ import com.techelevator.exception.DaoException;
 import com.techelevator.model.Campaign;
 import com.techelevator.model.NewSpendRequestDto;
 import com.techelevator.model.SpendRequest;
+import com.techelevator.model.UpdateSpendRequestDto;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.CannotGetJdbcConnectionException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -77,6 +78,31 @@ public class JdbcSpendRequestDao {
             throw new DaoException("Data integrity violation", e);
         }
     }
+
+    public SpendRequest updateSpendRequest (UpdateSpendRequestDto updateSpendRequestDto, int spendRequestId) {
+        String sql = "UPDATE spend_request SET " +
+                "request_amount = ?, " +
+                "request_description = ? " +
+                "request_approved = ? " +
+                "end_date " +
+                "WHERE request_id = ?;";
+
+        try {jdbcTemplate.update(sql,
+                updateSpendRequestDto.getAmount(),
+                updateSpendRequestDto.getDescription(),
+                updateSpendRequestDto.isApproved(),
+                updateSpendRequestDto.getEndDate(),
+                spendRequestId);
+
+            return getSpendRequestById(spendRequestId).orElseThrow();
+
+        } catch (CannotGetJdbcConnectionException e) {
+            throw new DaoException("Unable to connect to server or database", e);
+        } catch (DataIntegrityViolationException e) {
+            throw new DaoException("Data integrity violation", e);
+        }
+    }
+
 
 
 
