@@ -82,9 +82,9 @@ public class JdbcSpendRequestDao {
     public SpendRequest updateSpendRequest (UpdateSpendRequestDto updateSpendRequestDto, int spendRequestId) {
         String sql = "UPDATE spend_request SET " +
                 "request_amount = ?, " +
-                "request_description = ? " +
-                "request_approved = ? " +
-                "end_date " +
+                "request_description = ?, " +
+                "request_approved = ?, " +
+                "end_date = ? " +
                 "WHERE request_id = ?;";
 
         try {jdbcTemplate.update(sql,
