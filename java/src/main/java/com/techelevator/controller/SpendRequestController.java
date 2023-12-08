@@ -106,15 +106,14 @@ public class SpendRequestController {
         return jdbcSpendRequestDao.createSpendRequest(newSpendRequestDto);
     }
 
-    // IN PROGRESS.
-    /*@PreAuthorize("isAuthenticated()")
+    @PreAuthorize("isAuthenticated()")
     @ResponseStatus(HttpStatus.OK)
     @PutMapping("/spend-requests/{id}")
     public SpendRequest updateSpendRequest(@Valid @RequestBody UpdateSpendRequestDto updateSpendRequestDto,
-                                           @PathVariable int spendRequestId, Principal principal) {
+                                           @PathVariable int id, Principal principal) {
 
         boolean isManager = false;
-        List<User> managerList =
+        List<User> managerList = userDao.getManagersByCampaignId(id);
         int userId = AuthenticationController.getUserIdFromPrincipal(principal, userDao);
 
         for (int i = 0; i < managerList.size(); i++) {
@@ -127,16 +126,17 @@ public class SpendRequestController {
         if (!isManager) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not authorized to create a spend request.");
         }
-        return jdbcSpendRequestDao.getSpendRequestById(updateSpendRequestDto.getId()).orElseThrow(() ->
-                new ResponseStatusException(HttpStatus.NOT_FOUND, "Spend request not found."));
+        return jdbcSpendRequestDao.updateSpendRequest(updateSpendRequestDto, id);
+               // new ResponseStatusException(HttpStatus.NOT_FOUND, "Spend request not found."));
     }
-*/
-    // TODO doesn't work yet.
-    @GetMapping("/campaigns/{campaignId}/spend-request/{spend-req-id}/votes")
-    @ResponseStatus(HttpStatus.OK)
-    public List<Vote> getVotesBySpendReq(Principal principal, @PathVariable int userId, @PathVariable int campId,
-                                         @PathVariable int spendReqId) {
-        Optional<User> loggedInUser = userDao.getUserById(userId);
+
+
+      // TODO doesn't work yet.
+        @GetMapping("/campaigns/{campaignId}/spend-request/{spend-req-id}/votes")
+        @ResponseStatus(HttpStatus.OK)
+        public List<Vote> getVotesBySpendReq (Principal principal,@PathVariable int userId, @PathVariable int campId,
+        @PathVariable int spendReqId){
+            Optional<User> loggedInUser = userDao.getUserById(userId);
 
         if (loggedInUser.isPresent() && !loggedInUser.get().getUsername().equals(principal.getName())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not authorized to get these votes.");

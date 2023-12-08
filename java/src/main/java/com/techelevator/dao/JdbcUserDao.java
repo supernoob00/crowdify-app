@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 
 import com.techelevator.model.User;
 
+import javax.swing.text.html.Option;
 import javax.validation.constraints.NotNull;
 
 @Component
@@ -91,6 +92,26 @@ public class JdbcUserDao implements UserDao {
         List<User> managers = new ArrayList<>();
         try {
             SqlRowSet results = jdbcTemplate.queryForRowSet(sql, campaignId);
+            while (results.next()) {
+                User manager = getUserById(results.getInt("manager_id")).orElseThrow();
+                managers.add(manager);
+            }
+        } catch (CannotGetJdbcConnectionException e) {
+            throw new DaoException("Unable to connect to server or database", e);
+        }
+        return managers;
+    }
+
+    public List<User> getManagersBySpendId(int spendRequestId) {
+        String sql = "SELECT * from " +
+                "campaign_manager " +
+                "JOIN campaign using (campaign_id) " +
+                "JOIN spend_request using (campaign_id) " +
+                "WHERE request_id = ?;";
+        List<User> managers = new ArrayList<>();
+
+        try {
+            SqlRowSet results = jdbcTemplate.queryForRowSet(sql,spendRequestId);
             while (results.next()) {
                 User manager = getUserById(results.getInt("manager_id")).orElseThrow();
                 managers.add(manager);
