@@ -36,12 +36,12 @@ public class SpendRequestController {
         this.jdbcUserDao = jdbcUserDao;
         this.jdbcCampaignDao = jdbcCampaignDao;
     }
-
-    @GetMapping("/spend-requests/{id}")
+    
+    @GetMapping("campaigns/{campaignId}/spend-requests/{requestId}")
     @ResponseStatus(HttpStatus.OK)
-    public SpendRequest getSpendRequestById(@PathVariable int id, Principal principal) {
+    public SpendRequest getSpendRequestById(@PathVariable int campaignId, @PathVariable int requestId, Principal principal) {
 
-        SpendRequest spendRequest = jdbcSpendRequestDao.getSpendRequestById(id).orElseThrow(() -> {
+        SpendRequest spendRequest = jdbcSpendRequestDao.getSpendRequestById(requestId).orElseThrow(() -> {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Spend request not found.");
         });
 
@@ -49,13 +49,18 @@ public class SpendRequestController {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are " +
                     "not authorized to view this spend request.");
         }
-        Campaign requestCampaign = jdbcCampaignDao.getCampaignById(spendRequest.getCampaignId()).orElseThrow();
+        Campaign requestCampaign = jdbcCampaignDao.getCampaignById(campaignId).orElseThrow();
         int userId = AuthenticationController.getUserIdFromPrincipal(principal, userDao);
 
         if (!requestCampaign.containsDonor(userId) && !requestCampaign.containsManager(userId)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are " +
                     "not authorized to view this campaign.");
         }
+
+        if (spendRequest.getCampaignId() != campaignId) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid path.");
+        }
+
         return spendRequest;
     }
 
@@ -111,12 +116,16 @@ public class SpendRequestController {
 
     @PreAuthorize("isAuthenticated()")
     @ResponseStatus(HttpStatus.OK)
-    @PutMapping("/spend-requests/{id}")
+    @PutMapping("campaigns/{campaignId}/spend-requests/{requestId}")
     public SpendRequest updateSpendRequest(@Valid @RequestBody UpdateSpendRequestDto updateSpendRequestDto,
-                                           @PathVariable int id, Principal principal) {
+                                           @PathVariable int campaignId,
+                                           @PathVariable int requestId,
+                                           Principal principal) {
+
+        Campaign requestCampaign = jdbcCampaignDao.getCampaignById(campaignId).orElseThrow();
 
         boolean isManager = false;
-        List<User> managerList = userDao.getManagersByCampaignId(id);
+        List<User> managerList = userDao.getManagersByCampaignId(campaignId);
         int userId = AuthenticationController.getUserIdFromPrincipal(principal, userDao);
 
         for (int i = 0; i < managerList.size(); i++) {
@@ -127,10 +136,9 @@ public class SpendRequestController {
             }
         }
         if (!isManager) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not authorized to create a spend request.");
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not authorized to update a spend request.");
         }
-        return jdbcSpendRequestDao.updateSpendRequest(updateSpendRequestDto, id);
-               // new ResponseStatusException(HttpStatus.NOT_FOUND, "Spend request not found."));
+        return jdbcSpendRequestDao.updateSpendRequest(updateSpendRequestDto, requestId);
     }
 
 
