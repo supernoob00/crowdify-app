@@ -55,14 +55,31 @@ public class JdbcVoteDao {
         return voteList;
     }
 
-    // TODO: finish this
     public List<Vote> getVotesByCampaignId(int campaignId) {
-        return null;
+        List<Vote> campaignVotes = new ArrayList<>();
+
+        String sql = "SELECT vote.* from vote " +
+                "INNER JOIN spend_request using (request_id)" +
+                "WHERE campaign_id = ?;";
+
+        try {
+            SqlRowSet results = jdbcTemplate.queryForRowSet(sql, campaignId);
+
+            while (results.next()) {
+                campaignVotes.add(mapRowtoVote(results));
+            }
+        }
+        catch (CannotGetJdbcConnectionException e) {
+            throw new DaoException("Unable to connect to server or database", e);
+        }
+        return campaignVotes;
     }
 
-    public Vote createVote(Vote vote) {
-        return null;
-    }
+    //TODO: needs finished
+//    public Vote createVote(Vote vote) {
+//        String sql = "INSERT into vote (donor_id, request_id, vote_approved) VALUES (?, ?, ?);";
+//
+//    }
 
     // TODO: finish this - also cannot change vote if associated spend
     //  request is closed
