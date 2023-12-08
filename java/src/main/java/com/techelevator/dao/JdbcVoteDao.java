@@ -1,14 +1,18 @@
 package com.techelevator.dao;
 
 import com.techelevator.exception.DaoException;
+import com.techelevator.model.NewVoteDto;
 import com.techelevator.model.Vote;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.CannotGetJdbcConnectionException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class JdbcVoteDao {
@@ -75,11 +79,51 @@ public class JdbcVoteDao {
         return campaignVotes;
     }
 
-    //TODO: needs finished
-//    public Vote createVote(Vote vote) {
-//        String sql = "INSERT into vote (donor_id, request_id, vote_approved) VALUES (?, ?, ?);";
-//
-//    }
+    public Vote createVote(@NotNull NewVoteDto newVoteDto) {
+        Vote newVote;
+        String sql = "INSERT into vote (donor_id, request_id, vote_approved) " +
+                "VALUES (?, ?, ?) RETURNING donor_id, request_id;";
+
+        try {
+            Integer newVoteId = jdbcTemplate.queryForObject(sql, Integer.class,
+                    newVoteDto.getDonorId(),
+                    newVoteDto.getRequestId(),
+                    newVoteDto.isVoteApproved()
+            );
+            if (newVoteId == null || newVoteId == 0) {
+                System.out.println(newVoteId);
+                throw new DaoException("Failed to cast vote.");
+            }
+            newVote = getVoteByDonorAndRequestId(newVoteDto.getDonorId(), newVoteDto.getRequestId())
+                    .orElseThrow();
+
+        } catch (CannotGetJdbcConnectionException e) {
+            throw new DaoException("Unable to connect to server or database", e);
+        } catch (DataIntegrityViolationException e) {
+            throw new DaoException("Data integrity violation", e);
+        }
+        return newVote;
+    }
+
+    public Optional<Vote> getVoteByDonorAndRequestId(int donorId, int requestId) {
+        Vote thisVote;
+        String sql = "SELECT * FROM vote WHERE donor_id = ? and request_id = ?;";
+
+        try {
+            SqlRowSet result = jdbcTemplate.queryForRowSet(sql, donorId, requestId);
+
+        if (result.next()) {
+            return Optional.of(mapRowtoVote(result));
+
+        }
+        }catch (CannotGetJdbcConnectionException e) {
+            throw new DaoException("Unable to connect to server or database", e);
+        } catch (DataIntegrityViolationException e) {
+            throw new DaoException("Data integrity violation", e);
+        }
+        return Optional.empty();
+    }
+
 
     // TODO: finish this - also cannot change vote if associated spend
     //  request is closed

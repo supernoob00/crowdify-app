@@ -2,6 +2,7 @@ package com.techelevator.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.context.annotation.Conditional;
+import org.springframework.lang.Nullable;
 
 import javax.validation.constraints.*;
 import java.util.Objects;
@@ -9,6 +10,7 @@ import java.util.Objects;
 public class NewDonationDto {
 
     @Min(1)
+    @Nullable
     private Integer donorId;
     @Min(1)
     private int campaignId;
