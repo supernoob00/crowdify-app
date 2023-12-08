@@ -26,7 +26,7 @@
       <div class="num-donations">{{ numberOfDonations }} donations</div>
     </div>
     <hr>
-    <div class="sideInfo">
+    <div class="side-info">
       <section class="donations">
         <h2 class="block">Donations</h2>
         <router-link class="button is-link block"
@@ -34,9 +34,11 @@
         <donation-display v-for="donation in donationsSortedByAmount" :key="donation.id"
           :donation="donation"></donation-display>
       </section>
-      <!-- <section>
-        <spend-request-display :spend-requests="spendRequests"></spend-request-display>
-      </section> -->
+      <section v-if="spendRequestsObj.canView">
+        <h2 class="block">Spend Requests</h2>
+        <spend-request-display v-for="spendRequest in spendRequestsObj.list" :key="spendRequest.id"
+          :spend-request="spendRequest"></spend-request-display>
+      </section>
     </div>
   </div>
 </template>
@@ -49,7 +51,11 @@ export default {
     DonationDisplay,
     SpendRequestDisplay
   },
-  props: ['campaign', 'spendRequests'],
+  props: ['campaign', 'spendRequestsObj'],
+  data() {
+    return {
+    }
+  },
   computed: {
     totalDonated() {
       return this.campaign.donations.reduce((sum, currDonation) => sum += currDonation.amount, 0) / 100;
@@ -63,12 +69,8 @@ export default {
     donationsSortedByAmount() {
       const donationsCopy = [...this.campaign.donations]
       return donationsCopy.sort((d1, d2) => d2.amount - d1.amount);
-    },
-    isManager() {
-      return this.campaign.managers.filter(m => m.username === this.$store.state.user.username).length > 0;
     }
-  }
-
+  },
 }
 </script>
 
@@ -114,5 +116,13 @@ hr {
 
 .campaign-creator {
   font-weight: 600;
+}
+
+.side-info {
+  display: flex;
+}
+
+.side-info>section {
+  width: 50%;
 }
 </style>

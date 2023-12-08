@@ -2,7 +2,7 @@
   <div>
     <loading-screen v-if="isLoading"></loading-screen>
     <div v-else>
-      <campaign-details :campaign="campaign" :spend-requests="spendRequests"></campaign-details>
+      <campaign-details :campaign="campaign" :spend-requests-obj="spendRequestObj"></campaign-details>
     </div>
   </div>
 </template>
@@ -19,13 +19,22 @@ export default {
   data() {
     return {
       campaign: {},
-      spendRequests: [],
+      spendRequestObj: {},
       isLoading: true
     }
   },
   computed: {
     campaignId() {
       return parseInt(this.$route.params.id);
+    },
+    isManager() {
+      return this.campaign.managers.filter(m => m.username === this.$store.state.user.username).length > 0;
+    },
+    isStakeHolder() {
+      return this.campaign.donations.filter(d => d.donorId === this.$store.state.user.id).length > 0;
+    },
+    canViewSpendRequests() {
+      return this.isManager || this.isStakeHolder;
     }
   },
   methods: {
@@ -35,20 +44,26 @@ export default {
         this.campaign = response.data;
       } catch (error) {
         campaignService.handleErrorResponse(this.$store, error, 'getting', 'campaign');
+      } finally {
+        this.isLoading = false;
       }
     },
     async getSpendRequestsForCampaign() {
       try {
         const response = await campaignService.getSpendRequestsByCampaignId(this.campaignId);
-        this.spendRequests = response.data;
-        console.log(this.spendRequests)
+        this.spendRequestObj.list = response.data;
+        this.spendRequestObj.canView = this.canViewSpendRequests;
+        console.log(this.spendRequestObj)
       } catch (error) {
-        campaignService.handleErrorResponse(this.$store, error, 'getting', 'campaign');
+        campaignService.handleErrorResponse(this.$store, error, 'getting', 'spend request');
       }
     }
   },
   async created() {
-    await this.retrieveCampaign()
+    await this.retrieveCampaign();
+    if (this.canViewSpendRequests) {
+      await this.getSpendRequestsForCampaign();
+    }
     this.isLoading = false;
   }
 }
