@@ -17,6 +17,7 @@
     </div>
     <hr>
     <div id="campaign-description" class="block">{{ campaign.description }}</div>
+    <h6>From {{ viewDates.startDate }} to {{ viewDates.endDate }}</h6>
     <div class="progress-container">
       <div class="block" id="progress-meter-heading">
         <h3 class="amount-raised">${{ totalDonated }}</h3>
@@ -69,6 +70,14 @@ export default {
     donationsSortedByAmount() {
       const donationsCopy = [...this.campaign.donations]
       return donationsCopy.sort((d1, d2) => d2.amount - d1.amount);
+    },
+    viewDates() {
+      const uptoDateIndex = 10;
+      const uptoTimeIndex = 16;
+      return {
+        startDate: this.campaign.startDate.slice(0, uptoDateIndex),
+        endDate: this.campaign.endDate.slice(0, uptoTimeIndex)
+      }
     }
   },
 }

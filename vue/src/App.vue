@@ -44,12 +44,11 @@ export default {
 
 html,
 body {
-  color: #000;
   color: var(--font-color);
   background: var(--bg-color);
   margin: 0;
   padding: 0;
-  height: 100%
+  height: 100%;
 }
 
 .container {
