@@ -103,9 +103,6 @@ public class JdbcSpendRequestDao {
         }
     }
 
-
-
-
     public SpendRequest mapRowToSpendRequest(SqlRowSet rowSet) {
         SpendRequest request = new SpendRequest();
 
