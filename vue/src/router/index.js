@@ -13,6 +13,7 @@ import MyAccountView from '../views/MyAccountView.vue';
 import SpendRequestView from '../views/SpendRequestView.vue';
 import CreateSpendRequestView from '../views/CreateSpendRequestView.vue'
 import EditSpendRequestView from '../views/EditSpendRequestView.vue';
+import ForbiddenView from '../views/ForbiddenView.vue';
 /*
  * The Vue Router is used to "direct" the browser to render a specific view component
  * inside of App.vue depending on the URL.
@@ -115,11 +116,11 @@ const routes = [
       requiresAuth: true
     }
   },
-
-  // if forbidden, create this view
-  // {
-  //   component: Forbbiden
-  // }
+  {
+    path: '/forbidden',
+    name: 'forbidden',
+    component: ForbiddenView
+  }
 ];
 
 // Create the router

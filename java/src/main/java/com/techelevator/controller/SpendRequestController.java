@@ -69,9 +69,6 @@ public class SpendRequestController {
     public List<SpendRequest> getSpendReqByCampaignId(Principal principal, @PathVariable int campaignId) {
 
         List<SpendRequest> spendRequests = jdbcSpendRequestDao.getSpendRequestsByCampaign(campaignId);
-        if (spendRequests.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Spend request not found.");
-        }
         if (principal == null) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are " +
                     "not authorized to view this spend request.");
@@ -149,17 +146,17 @@ public class SpendRequestController {
         @PathVariable int spendReqId){
             Optional<User> loggedInUser = userDao.getUserById(userId);
 
-            if (loggedInUser.isPresent() && !loggedInUser.get().getUsername().equals(principal.getName())) {
-                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not authorized to get these votes.");
-            }
-            return new ArrayList<>(jdbcVoteDao.getVotesBySpendRequestId(spendReqId));
+        if (loggedInUser.isPresent() && !loggedInUser.get().getUsername().equals(principal.getName())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not authorized to get these votes.");
         }
+        return new ArrayList<>(jdbcVoteDao.getVotesBySpendRequestId(spendReqId));
+    }
 
-        public boolean isCorrectUser (Principal principal, NewDonationDto newDonationDto){
-            String username = principal.getName();
-            Optional<User> optionalUser = userDao.getUserByUsername(username);
-            User user = optionalUser.orElseThrow();
-            int loggedInUserID = user.getId();
-            return loggedInUserID == newDonationDto.getDonorId();
-        }
+    public boolean isCorrectUser(Principal principal, NewDonationDto newDonationDto) {
+        String username = principal.getName();
+        Optional<User> optionalUser = userDao.getUserByUsername(username);
+        User user = optionalUser.orElseThrow();
+        int loggedInUserID = user.getId();
+        return loggedInUserID == newDonationDto.getDonorId();
+    }
 }
