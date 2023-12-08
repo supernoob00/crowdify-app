@@ -52,7 +52,6 @@ public class CampaignController {
         return campaigns;
     }
 
-    // TODO: let donors see private campaigns that they've donated to
     /* show campaign if user has view permissions */
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(path = "/campaigns/{id}", method = RequestMethod.GET)
@@ -71,9 +70,10 @@ public class CampaignController {
                     "not authorized to view this campaign.");
         }
 
-        // check if id of logged in user matches any manager of campaign
+        // check if id of logged in user matches any manager or donor of
+        // campaign
         int userId = AuthenticationController.getUserIdFromPrincipal(principal, jdbcUserDao);
-        if (campaign.containsManager(userId)) {
+        if (campaign.containsManager(userId) || campaign.containsDonor(userId)) {
             return campaign;
         }
         // no match found
@@ -81,6 +81,8 @@ public class CampaignController {
                 "not authorized to view this campaign.");
     }
 
+    // TODO: check same name, valid times, valid fund request
+    /* create a new campaign with the creator as the current logged in user */
     @PreAuthorize("isAuthenticated()")
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(path = "/campaigns", method = RequestMethod.POST)
@@ -88,6 +90,7 @@ public class CampaignController {
         return jdbcCampaignDao.createCampaign(newCampaignDto);
     }
 
+    // TODO: should return error if dto and url do not match
     @PreAuthorize("isAuthenticated()")
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(path = "/campaigns/{id}", method = RequestMethod.PUT)
