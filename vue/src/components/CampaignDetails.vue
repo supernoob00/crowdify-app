@@ -71,6 +71,9 @@ export default {
       const donationsCopy = [...this.campaign.donations]
       return donationsCopy.sort((d1, d2) => d2.amount - d1.amount);
     },
+    isManager() {
+      return this.campaign.managers.filter(m => m.username === this.$store.state.user.username).length > 0;
+    },
     viewDates() {
       const uptoDateIndex = 10;
       const uptoTimeIndex = 16;
