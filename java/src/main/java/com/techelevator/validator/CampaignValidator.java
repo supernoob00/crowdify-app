@@ -5,7 +5,6 @@ import com.techelevator.model.Campaign;
 import com.techelevator.model.Donation;
 import com.techelevator.model.User;
 import org.springframework.validation.Errors;
-import org.springframework.validation.Validator;
 
 public class CampaignValidator implements Validator {
     @Override
@@ -14,7 +13,7 @@ public class CampaignValidator implements Validator {
     }
 
     @Override
-    public void validate(Object o, Errors errors) {
+    public void validate(Object o, ErrorResult errors) {
         Campaign campaign = (Campaign) o;
 
         // validate dates
@@ -45,13 +44,6 @@ public class CampaignValidator implements Validator {
         if (!campaign.containsManager(
                 campaign.getCreator().getId())) {
             errors.reject("List of managers must contain campaign creator");
-        }
-
-        // validate no manager donated to campaign
-        for (User user : campaign.getManagers()) {
-            if (campaign.containsDonor(user.getId())) {
-                errors.reject("A manager cannot donate to their own campaign");
-            }
         }
 
         // TODO: should this constraint exist?

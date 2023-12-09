@@ -5,6 +5,7 @@ import com.techelevator.dao.JdbcDonationDao;
 import com.techelevator.dao.JdbcUserDao;
 import com.techelevator.model.*;
 import com.techelevator.validator.CampaignValidator;
+import com.techelevator.validator.ErrorResult;
 import com.techelevator.validator.NewCampaignDtoValidator;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -58,16 +59,18 @@ public class CampaignController {
     /* show campaign if user has view permissions */
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(path = "/campaigns/{id}", method = RequestMethod.GET)
-    public Campaign getCampaign(@PathVariable int id, Principal principal, BindingResult result) {
+    public Campaign getCampaign(@PathVariable int id, Principal principal) {
         Campaign campaign = jdbcCampaignDao.getCampaignById(id).orElseThrow(() -> {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Campaign not found.");
         });
 
+        ErrorResult result = new ErrorResult();
         CampaignValidator validator = new CampaignValidator();
         validator.validate(campaign, result);
 
         if (result.hasErrors()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, result.getAllErrors().toString());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    result.getCauses().toString());
         }
 
         if (campaign.isPublic()) {
@@ -94,14 +97,14 @@ public class CampaignController {
     @PreAuthorize("isAuthenticated()")
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(path = "/campaigns", method = RequestMethod.POST)
-    public Campaign addCampaign(@Valid @RequestBody NewCampaignDto newCampaignDto,
-                                BindingResult result) {
+    public Campaign addCampaign(@Valid @RequestBody NewCampaignDto newCampaignDto) {
+        ErrorResult result = new ErrorResult();
         NewCampaignDtoValidator validator = new NewCampaignDtoValidator(jdbcUserDao);
         validator.validate(newCampaignDto, result);
 
         if (result.hasErrors()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    result.getAllErrors().toString());
+                    result.getCauses().toString());
         }
         return jdbcCampaignDao.createCampaign(newCampaignDto);
     }
@@ -112,18 +115,18 @@ public class CampaignController {
     @RequestMapping(path = "/campaigns/{id}", method = RequestMethod.PUT)
     public Campaign updateCampaign(@Valid @RequestBody UpdateCampaignDto updateCampaignDto,
                                    @PathVariable int id,
-                                   Principal principal,
-                                   BindingResult result) {
+                                   Principal principal) {
         Campaign campaignToUpdate = jdbcCampaignDao.getCampaignById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                         "Campaign not found."));
 
+        ErrorResult result = new ErrorResult();
         CampaignValidator validator = new CampaignValidator();
         validator.validate(updateCampaignDto, result);
 
         if (result.hasErrors()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    result.getAllErrors().toString());
+                    result.getCauses().toString());
         }
 
         int userId = AuthenticationController.getUserIdFromPrincipal(principal, jdbcUserDao);
@@ -138,7 +141,7 @@ public class CampaignController {
     @PreAuthorize("isAuthenticated()")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @RequestMapping(path = "/campaigns/{id}", method = RequestMethod.DELETE)
-    public void deleteCampaign(@PathVariable int id, Principal principal, BindingResult result) {
+    public void deleteCampaign(@PathVariable int id, Principal principal) {
         Campaign campaignToDelete = jdbcCampaignDao.getCampaignById(id).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                         "Campaign not found."));
@@ -155,12 +158,14 @@ public class CampaignController {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are " +
                     "not authorized to delete this campaign.");
         }
+
+        ErrorResult result = new ErrorResult();
         CampaignValidator validator = new CampaignValidator();
         validator.validate(campaignToDelete, result);
 
         if (result.hasErrors()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    result.getAllErrors().toString());
+                    result.getCauses().toString());
         }
     }
 

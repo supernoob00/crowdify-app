@@ -1,8 +1,6 @@
 package com.techelevator.validator;
 
 import com.techelevator.model.NewSpendRequestDto;
-import org.springframework.validation.Errors;
-import org.springframework.validation.Validator;
 
 import java.time.LocalDateTime;
 
@@ -13,11 +11,11 @@ public class NewSpendRequestDtoValidator implements Validator {
     }
 
     @Override
-    public void validate(Object o, Errors errors) {
+    public void validate(Object o, ErrorResult errorResult) {
         NewSpendRequestDto dto = (NewSpendRequestDto) o;
 
         if (dto.getEndDate().isBefore(LocalDateTime.now())) {
-            errors.rejectValue("d", "d");
+            errorResult.rejectValue("d", "d");
         }
     }
 
