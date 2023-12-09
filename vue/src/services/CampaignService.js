@@ -25,8 +25,9 @@ export default {
     return axios.get(`/users/${userId}/donations`);
   },
 
-  getSpendRequestById(id) {
-    return axios.get(`/spend-requests/${id}`);
+  getSpendRequestById(campaignId, spendRequestId) {
+    console.log(`/campaigns/${campaignId}/spend-requests/${spendRequestId}`);
+    return axios.get(`/campaigns/${campaignId}/spend-requests/${spendRequestId}`);
   },
 
   createSpendRequest(newSpendRequestDto) {

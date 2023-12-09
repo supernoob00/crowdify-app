@@ -1,10 +1,8 @@
 <template>
-  <div>
-    <nav-bar></nav-bar>
-    <notification-text class="header"></notification-text>
-    <div id="capstone-app" class="container">
-      <router-view></router-view>
-    </div>
+  <nav-bar></nav-bar>
+  <notification-text class="header"></notification-text>
+  <div id="capstone-app" class="container">
+    <router-view></router-view>
   </div>
 </template>
 
@@ -49,6 +47,10 @@ body {
   margin: 0;
   padding: 0;
   height: 100%;
+}
+
+hr {
+  margin: 1rem 0;
 }
 
 .container {
