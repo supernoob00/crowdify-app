@@ -47,8 +47,15 @@ public class UpdateCampaignDtoValidator implements Validator {
                         "locked");
             }
 
+            // validate new campaign end date is not before current date
+            if (dto.getEndDate().isBefore(LocalDateTime.now())) {
+                errorResult.reject("New campaign end date must not be before " +
+                        "current date");
+            }
+
             // TODO:  funding goal can only be increased if already met OR
             //  there are no donors
+
         }
     }
 }

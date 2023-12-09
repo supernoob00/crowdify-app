@@ -200,12 +200,6 @@ public class JdbcCampaignDao {
         }
     }
 
-    // TODO: finish this
-    public int getCurrentFunds(int campaignId) {
-        String sql = "";
-        return 0;
-    }
-
     private Campaign mapRowtoCampaign(SqlRowSet rowSet) {
         Campaign campaign = new Campaign();
         campaign.setId(rowSet.getInt("campaign_id"));

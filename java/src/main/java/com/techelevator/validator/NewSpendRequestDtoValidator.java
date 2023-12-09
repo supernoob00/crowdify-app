@@ -19,6 +19,9 @@ public class NewSpendRequestDtoValidator implements Validator {
         }
     }
 
+//    int total = campaign.getDonationTotal()
+//            - spendRequestDao.approvedTotalByCampaignId(campaign.getId());
+
     // TODO: validate end date
 
     // TODO: validate campaign id

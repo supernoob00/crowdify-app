@@ -69,7 +69,7 @@ CREATE TABLE spend_request (
     request_amount integer NOT NULL, --TODO: constraint less than current funds - all donations minus all spend requests (should use trigger)
     request_description varchar(500) NOT NULL,
     request_approved boolean DEFAULT false NOT NULL,
-    end_date timestamp,
+    end_date timestamp NOT NULL,
 
     CONSTRAINT pk_request_id PRIMARY KEY (request_id),
     CONSTRAINT fk_campaign_id FOREIGN KEY (campaign_id) REFERENCES campaign,
