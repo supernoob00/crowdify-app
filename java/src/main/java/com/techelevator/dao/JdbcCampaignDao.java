@@ -156,9 +156,9 @@ public class JdbcCampaignDao {
                     updateCampaignDto.getEndDate(),
                     updateCampaignDto.isPublic(),
                     updateCampaignDto.isLocked(),
-                    updateCampaignDto.getId());
+                    updateCampaignDto.getCampaignId());
 
-            return getCampaignById(updateCampaignDto.getId());
+            return getCampaignById(updateCampaignDto.getCampaignId());
 
         } catch (CannotGetJdbcConnectionException e) {
             throw new DaoException("Unable to connect to server or database", e);

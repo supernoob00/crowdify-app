@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Objects;
 
 public class Campaign {
-
     @Min(1)
     private int id;
     @NotBlank
@@ -24,7 +23,7 @@ public class Campaign {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime endDate;
     private boolean locked;
-    private boolean isPublic; // TODO: CONSTRAINT: cannot be public and deleted
+    private boolean isPublic;
     @NotNull
     private List<Donation> donations = new ArrayList<>();
     @NotEmpty

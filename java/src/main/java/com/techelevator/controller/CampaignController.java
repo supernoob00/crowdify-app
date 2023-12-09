@@ -97,7 +97,7 @@ public class CampaignController {
     public Campaign updateCampaign(@Valid @RequestBody UpdateCampaignDto updateCampaignDto,
                                    Principal principal) {
         Campaign campaignToUpdate = jdbcCampaignDao.getCampaignById(
-                updateCampaignDto.getId())
+                updateCampaignDto.getCampaignId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                         "Campaign not found."));
 

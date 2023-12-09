@@ -67,6 +67,7 @@ CREATE TABLE donation (
 CREATE TABLE spend_request (
     request_id SERIAL,
     campaign_id integer NOT NULL,
+    request_name varchar(50) NOT NULL,
     request_amount integer NOT NULL, --TODO: constraint less than current funds - all donations minus all spend requests (should use trigger)
     request_description varchar(500) NOT NULL,
     request_approved boolean DEFAULT false NOT NULL,

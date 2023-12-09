@@ -9,7 +9,7 @@ import java.util.Objects;
 
 public class UpdateCampaignDto {
     @Min(1)
-    private int id;
+    private int campaignId; // TODO: delete this
     @NotBlank
     private String name;
     @NotBlank
@@ -24,8 +24,8 @@ public class UpdateCampaignDto {
     @NotNull
     private boolean isPublic;
 
-    public UpdateCampaignDto(int id, String name, String description, int fundingGoal, LocalDateTime startDate, LocalDateTime endDate, boolean locked, boolean isPublic) {
-        this.id = id;
+    public UpdateCampaignDto(int campaignId, String name, String description, int fundingGoal, LocalDateTime startDate, LocalDateTime endDate, boolean locked, boolean isPublic) {
+        this.campaignId = campaignId;
         this.name = name;
         this.description = description;
         this.fundingGoal = fundingGoal;
@@ -38,12 +38,12 @@ public class UpdateCampaignDto {
     public UpdateCampaignDto() {
     }
 
-    public int getId() {
-        return id;
+    public int getCampaignId() {
+        return campaignId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setCampaignId(int campaignId) {
+        this.campaignId = campaignId;
     }
 
     public String getName() {
@@ -107,11 +107,11 @@ public class UpdateCampaignDto {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         UpdateCampaignDto that = (UpdateCampaignDto) o;
-        return id == that.id && fundingGoal == that.fundingGoal && locked == that.locked && isPublic == that.isPublic && name.equals(that.name) && description.equals(that.description) && startDate.equals(that.startDate) && endDate.equals(that.endDate);
+        return campaignId == that.campaignId && fundingGoal == that.fundingGoal && locked == that.locked && isPublic == that.isPublic && name.equals(that.name) && description.equals(that.description) && startDate.equals(that.startDate) && endDate.equals(that.endDate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description, fundingGoal, startDate, endDate, locked, isPublic);
+        return Objects.hash(campaignId, name, description, fundingGoal, startDate, endDate, locked, isPublic);
     }
 }
