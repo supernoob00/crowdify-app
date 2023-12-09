@@ -1,16 +1,25 @@
 <template>
   <div>
-    <h3>{{ spendRequest.name }}</h3>
-    <h5>For {{ campaign.name }}</h5>
+    <router-link :to="{
+      name: 'SpendRequestView',
+      params: { campaignId: spendRequest.campaignId, spendRequestId: spendRequest.id }
+    }">
+      {{ spendRequest.name }}</router-link>
+    <h4> {{ amountDisplay }}</h4>
+    <hr>
     <p>{{ spendRequest.description }}</p>
+    <p>{{ status }}</p>
   </div>
 </template>
 
 <script setup>
-import { defineProps, onBeforeMount, ref } from 'vue';
+import { defineProps, onBeforeMount, ref, computed } from 'vue';
 import campaignService from '../services/CampaignService';
 const props = defineProps(['spendRequest']);
 const campaign = ref({});
+
+const amountDisplay = computed(() => `$${props.spendRequest.amount / 100}`)
+const status = computed(() => props.spendRequest.approved ? 'Approved' : 'Pending')
 
 async function getCampaign() {
   try {

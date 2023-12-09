@@ -105,10 +105,6 @@ export default {
   margin-right: 10px;
 }
 
-hr {
-  margin: 1rem 0;
-}
-
 .progress-container {
   max-width: 500px;
 }

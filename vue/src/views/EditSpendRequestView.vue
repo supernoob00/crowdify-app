@@ -21,24 +21,31 @@ export default {
       spendRequest: {}
     }
   },
+  computed: {
+    spendRequestId() {
+      return parseInt(this.$route.params.spendRequestId);
+    },
+    campaignId() {
+      return parseInt(this.$route.params.campaignId);
+    }
+  },
   methods: {
     async getSpendRequest() {
-      const spendRequestId = parseInt(this.$route.params.id)
       try {
-        const response = await campaignService.getSpendRequestById(spendRequestId);
-        this.newSpendRequest = response.data;
+        const response = await campaignService.getSpendRequestById(this.campaignId, this.spendRequestId);
+        this.spendRequest = response.data;
         this.spendRequest.amount /= 100;
         this.spendRequest.endDate = this.spendRequest.endDate.slice(0, 10);
       } catch (error) {
         campaignService.handleErrorResponse(this.$store, error, 'getting', 'spendRequest');
-        this.$router.push({ name: 'SpendRequestView', params: { id: spendRequestId } })
+        this.$router.push({ name: 'SpendRequestView', params: { campaignId: this.campaignId, spendRequestId: this.spendRequestId } });
       } finally {
         this.isLoading = false;
       }
     }
   },
   async created() {
-    this.getSpendRequest()
+    await this.getSpendRequest()
   }
 }
 </script>
