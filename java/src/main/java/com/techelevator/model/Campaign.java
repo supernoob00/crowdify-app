@@ -26,7 +26,7 @@ public class Campaign {
     private boolean isPublic;
     @NotNull
     private List<Donation> donations = new ArrayList<>();
-    // TODO: this should be a set of managers
+    // TODO: this should be a set of managers, instead of a list
     @NotNull @NotEmpty
     private List<User> managers = new ArrayList<>(); // contains creator
     @NotNull
