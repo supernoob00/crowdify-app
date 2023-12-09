@@ -37,11 +37,11 @@ public class SpendRequestController {
         this.jdbcCampaignDao = jdbcCampaignDao;
     }
 
-    @GetMapping("/spend-requests/{id}")
+    @GetMapping("campaigns/{campaignId}/spend-requests/{requestId}")
     @ResponseStatus(HttpStatus.OK)
-    public SpendRequest getSpendRequestById(@PathVariable int id, Principal principal) {
+    public SpendRequest getSpendRequestById(@PathVariable int campaignId, @PathVariable int requestId, Principal principal) {
 
-        SpendRequest spendRequest = jdbcSpendRequestDao.getSpendRequestById(id).orElseThrow(() -> {
+        SpendRequest spendRequest = jdbcSpendRequestDao.getSpendRequestById(requestId).orElseThrow(() -> {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Spend request not found.");
         });
 
@@ -49,13 +49,18 @@ public class SpendRequestController {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are " +
                     "not authorized to view this spend request.");
         }
-        Campaign requestCampaign = jdbcCampaignDao.getCampaignById(spendRequest.getCampaignId()).orElseThrow();
+        Campaign requestCampaign = jdbcCampaignDao.getCampaignById(campaignId).orElseThrow();
         int userId = AuthenticationController.getUserIdFromPrincipal(principal, userDao);
 
         if (!requestCampaign.containsDonor(userId) && !requestCampaign.containsManager(userId)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are " +
-                    "not authorized to view this campaign.");
+                    "not authorized to view this spend request.");
         }
+
+        if (spendRequest.getCampaignId() != campaignId) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid path.");
+        }
+
         return spendRequest;
     }
 
@@ -64,9 +69,6 @@ public class SpendRequestController {
     public List<SpendRequest> getSpendReqByCampaignId(Principal principal, @PathVariable int campaignId) {
 
         List<SpendRequest> spendRequests = jdbcSpendRequestDao.getSpendRequestsByCampaign(campaignId);
-        if (spendRequests.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Spend request not found.");
-        }
         if (principal == null) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are " +
                     "not authorized to view this spend request.");
@@ -109,15 +111,18 @@ public class SpendRequestController {
         return jdbcSpendRequestDao.createSpendRequest(newSpendRequestDto);
     }
 
-    // IN PROGRESS.
-    /*@PreAuthorize("isAuthenticated()")
+    @PreAuthorize("isAuthenticated()")
     @ResponseStatus(HttpStatus.OK)
-    @PutMapping("/spend-requests/{id}")
+    @PutMapping("campaigns/{campaignId}/spend-requests/{requestId}")
     public SpendRequest updateSpendRequest(@Valid @RequestBody UpdateSpendRequestDto updateSpendRequestDto,
-                                           @PathVariable int spendRequestId, Principal principal) {
+                                           @PathVariable int campaignId,
+                                           @PathVariable int requestId,
+                                           Principal principal) {
+
+        Campaign requestCampaign = jdbcCampaignDao.getCampaignById(campaignId).orElseThrow();
 
         boolean isManager = false;
-        List<User> managerList =
+        List<User> managerList = userDao.getManagersByCampaignId(campaignId);
         int userId = AuthenticationController.getUserIdFromPrincipal(principal, userDao);
 
         for (int i = 0; i < managerList.size(); i++) {
@@ -128,30 +133,26 @@ public class SpendRequestController {
             }
         }
         if (!isManager) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not authorized to create a spend request.");
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not authorized to update a spend request.");
         }
-        return jdbcSpendRequestDao.getSpendRequestById(updateSpendRequestDto.getId()).orElseThrow(() ->
-                new ResponseStatusException(HttpStatus.NOT_FOUND, "Spend request not found."));
+        return jdbcSpendRequestDao.updateSpendRequest(updateSpendRequestDto, requestId);
     }
-*/
-      // TODO doesn't work yet.
-        @GetMapping("/campaigns/{campaignId}/spend-request/{spend-req-id}/votes")
+
+        @GetMapping("campaigns/{campaignId}/spend-requests/{requestId}/votes")
         @ResponseStatus(HttpStatus.OK)
-        public List<Vote> getVotesBySpendReq (Principal principal,@PathVariable int userId, @PathVariable int campId,
-        @PathVariable int spendReqId){
-            Optional<User> loggedInUser = userDao.getUserById(userId);
+        public List<Vote> getVotesBySpendReq (Principal principal,
+                                              @PathVariable int campaignId,
+                                              @PathVariable int requestId) {
+            Optional<User> loggedInUser = userDao.getUserByUsername(principal.getName());
 
-            if (loggedInUser.isPresent() && !loggedInUser.get().getUsername().equals(principal.getName())) {
-                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not authorized to get these votes.");
-            }
-            return new ArrayList<>(jdbcVoteDao.getVotesBySpendRequestId(spendReqId));
+            return new ArrayList<>(jdbcVoteDao.getVotesBySpendRequestId(requestId));
         }
 
-        public boolean isCorrectUser (Principal principal, NewDonationDto newDonationDto){
-            String username = principal.getName();
-            Optional<User> optionalUser = userDao.getUserByUsername(username);
-            User user = optionalUser.orElseThrow();
-            int loggedInUserID = user.getId();
-            return loggedInUserID == newDonationDto.getDonorId();
-        }
+    public boolean isCorrectUser(Principal principal, NewDonationDto newDonationDto) {
+        String username = principal.getName();
+        Optional<User> optionalUser = userDao.getUserByUsername(username);
+        User user = optionalUser.orElseThrow();
+        int loggedInUserID = user.getId();
+        return loggedInUserID == newDonationDto.getDonorId();
+    }
 }

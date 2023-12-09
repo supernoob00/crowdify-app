@@ -37,6 +37,10 @@ export default {
     return axios.put(`/spend-requests/${updateSpendRequestDto.id}`, updateSpendRequestDto);
   },
 
+  getSpendRequestsByCampaignId(id) {
+    return axios.get(`/campaigns/${id}/spend-requests`);
+  },
+
   handleErrorResponse(store, error, verb, object) {
     if (error.response) {
       store.commit('SET_NOTIFICATION',

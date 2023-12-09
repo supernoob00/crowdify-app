@@ -17,6 +17,7 @@
     </div>
     <hr>
     <div id="campaign-description" class="block">{{ campaign.description }}</div>
+    <h6>From {{ viewDates.startDate }} to {{ viewDates.endDate }}</h6>
     <div class="progress-container">
       <div class="block" id="progress-meter-heading">
         <h3 class="amount-raised">${{ totalDonated }}</h3>
@@ -26,21 +27,36 @@
       <div class="num-donations">{{ numberOfDonations }} donations</div>
     </div>
     <hr>
-    <h2 class="block">Donations</h2>
-    <router-link class="button is-link block"
-      :to="{ name: 'CreateDonationView', params: { id: campaign.id } }">Donate</router-link>
-    <donation-display v-for="donation in donationsSortedByAmount" :key="donation.id"
-      :donation="donation"></donation-display>
+    <div class="side-info">
+      <section class="donations">
+        <h2 class="block">Donations</h2>
+        <router-link class="button is-link block"
+          :to="{ name: 'CreateDonationView', params: { id: campaign.id } }">Donate</router-link>
+        <donation-display v-for="donation in donationsSortedByAmount" :key="donation.id"
+          :donation="donation"></donation-display>
+      </section>
+      <section v-if="spendRequestsObj.canView">
+        <h2 class="block">Spend Requests</h2>
+        <spend-request-display v-for="spendRequest in spendRequestsObj.list" :key="spendRequest.id"
+          :spend-request="spendRequest"></spend-request-display>
+      </section>
+    </div>
   </div>
 </template>
 
 <script>
 import DonationDisplay from './DonationDisplay.vue';
+import SpendRequestDisplay from './SpendRequestDisplay.vue';
 export default {
   components: {
-    DonationDisplay
+    DonationDisplay,
+    SpendRequestDisplay
   },
-  props: ['campaign'],
+  props: ['campaign', 'spendRequestsObj'],
+  data() {
+    return {
+    }
+  },
   computed: {
     totalDonated() {
       return this.campaign.donations.reduce((sum, currDonation) => sum += currDonation.amount, 0) / 100;
@@ -57,15 +73,22 @@ export default {
     },
     isManager() {
       return this.campaign.managers.filter(m => m.username === this.$store.state.user.username).length > 0;
+    },
+    viewDates() {
+      const uptoDateIndex = 10;
+      const uptoTimeIndex = 16;
+      return {
+        startDate: this.campaign.startDate.slice(0, uptoDateIndex),
+        endDate: this.campaign.endDate.slice(0, uptoTimeIndex)
+      }
     }
-  }
-
+  },
 }
 </script>
 
 <style scoped>
 .content {
-  max-width: 75%;
+  max-width: 800px;
   margin: 10px;
 }
 
@@ -105,5 +128,13 @@ hr {
 
 .campaign-creator {
   font-weight: 600;
+}
+
+.side-info {
+  display: flex;
+}
+
+.side-info>section {
+  width: 50%;
 }
 </style>
