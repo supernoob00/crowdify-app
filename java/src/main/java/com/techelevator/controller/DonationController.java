@@ -2,9 +2,13 @@ package com.techelevator.controller;
 
 import com.techelevator.dao.*;
 import com.techelevator.model.*;
+import com.techelevator.validator.CampaignValidator;
+import com.techelevator.validator.NewDonationDtoValidator;
+import com.techelevator.validator.UpdateDonationDtoValidator;
 import org.springframework.http.HttpStatus;
 import org.springframework.lang.Nullable;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -22,13 +26,17 @@ public class DonationController {
     private final UserDao userDao;
     private final JdbcVoteDao jdbcVoteDao;
 
+    private final JdbcUserDao jdbcUserDao;
+
     public DonationController(JdbcCampaignDao jdbcCampaignDao,
                               JdbcDonationDao jdbcDonationDao,
-                              UserDao userDao, JdbcVoteDao jdbcVoteDao) {
+                              UserDao userDao, JdbcVoteDao jdbcVoteDao,
+                              JdbcUserDao jdbcUserDao) {
         this.jdbcCampaignDao = jdbcCampaignDao;
         this.jdbcDonationDao = jdbcDonationDao;
         this.userDao = userDao;
         this.jdbcVoteDao = jdbcVoteDao;
+        this.jdbcUserDao = jdbcUserDao;
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -50,7 +58,7 @@ public class DonationController {
     // TODO: user can donate to private donations
     @PostMapping("/donations")
     @ResponseStatus(HttpStatus.CREATED)
-    public Donation createDonation(Principal principal, @Valid @RequestBody NewDonationDto newDonationDto) {
+    public Donation createDonation(Principal principal, @Valid @RequestBody NewDonationDto newDonationDto, BindingResult result) {
         // check if valid campaign
         Campaign campaign = jdbcCampaignDao.getCampaignById(
                 newDonationDto.getCampaignId())
@@ -63,6 +71,15 @@ public class DonationController {
                 || !donationDtoMatchesPrincipal(principal, newDonationDto)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not authorized create this donation.");
         }
+
+        NewDonationDtoValidator validator = new NewDonationDtoValidator(jdbcCampaignDao);
+        validator.validate(newDonationDto, result);
+
+        if (result.hasErrors()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    result.getAllErrors().toString());
+        }
+
         return jdbcDonationDao.createDonation(newDonationDto);
     }
 
@@ -71,9 +88,40 @@ public class DonationController {
     @ResponseStatus(HttpStatus.OK)
     public Donation updateDonation(@PathVariable int donationId,
                                    Principal principal,
-                                   @Valid @RequestBody UpdateDonationDto updateDonationDto) {
+                                   @Valid @RequestBody UpdateDonationDto updateDonationDto,
+                                   BindingResult result) {
+        Donation donationToUpdate = jdbcDonationDao.getDonationById(donationId).orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "Donation not found."));
+
+        int userId = AuthenticationController.getUserIdFromPrincipal(principal, jdbcUserDao);
+        List<Donation> donations = getDonationsByUserId(principal,donationId);
+
+            
+        }
+
+
+        // TODO: currently nothing in the updateDonationDtoValidator class.
+
+     /*   UpdateDonationDtoValidator validator = new UpdateDonationDtoValidator();
+        validator.validate(updateDonationDto, result);
+
+        if (result.hasErrors()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    result.getAllErrors().toString());*/
+
+
         return null;
     }
+
+/*
+
+        if (campaignToUpdate.containsManager(userId)) {
+            return jdbcCampaignDao.updateCampaign(updateCampaignDto).orElseThrow();
+        }
+        throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are " +
+                "not authorized to update this campaign.");
+    }*/
+
 
 
     public boolean donationDtoMatchesPrincipal(@Nullable Principal principal,
