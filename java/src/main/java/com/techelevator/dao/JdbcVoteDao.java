@@ -82,7 +82,7 @@ public class JdbcVoteDao {
     public Vote createVote(@NotNull NewVoteDto newVoteDto) {
         Vote newVote;
         String sql = "INSERT into vote (donor_id, request_id, vote_approved) " +
-                "VALUES (?, ?, ?) RETURNING donor_id, request_id;";
+                "VALUES (?, ?, ?) RETURNING donor_id";
 
         try {
             Integer newVoteId = jdbcTemplate.queryForObject(sql, Integer.class,
