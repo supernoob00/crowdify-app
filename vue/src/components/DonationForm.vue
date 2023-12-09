@@ -55,6 +55,10 @@ export default {
       const dto = {}
       dto.campaignId = this.campaignId;
       dto.donorId = this.currentUser.id;
+      if (dto.donorId === undefined) {
+        dto.anonymous = true;
+      }
+      //TODO: add anonymous field to create donation form.
       dto.comment = this.editDonation.comment;
       dto.amount = this.editDonation.amount * 100;
       return dto;

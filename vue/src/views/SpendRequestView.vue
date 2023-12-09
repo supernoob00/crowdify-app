@@ -25,6 +25,7 @@
             <i class="fa-solid fa-pen-to-square"></i></router-link>
         </div>
       </div>
+      <hr>
       <h3>{{ spendRequest.description }}</h3>
     </div>
   </div>

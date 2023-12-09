@@ -63,7 +63,6 @@ export default {
   },
   async created() {
     await this.retrieveCampaign();
-    console.log(this.$store.state.user)
     if (this.canViewSpendRequests) {
       await this.getSpendRequestsForCampaign();
     }
