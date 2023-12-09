@@ -42,7 +42,7 @@ public class SpendRequestController {
         this.jdbcCampaignDao = jdbcCampaignDao;
     }
 
-    @GetMapping("campaigns/{campaignId}/spend-requests/{requestId}")
+    @GetMapping("/campaigns/{campaignId}/spend-requests/{requestId}")
     @ResponseStatus(HttpStatus.OK)
     public SpendRequest getSpendRequestById(@PathVariable int campaignId, @PathVariable int requestId, Principal principal) {
 
