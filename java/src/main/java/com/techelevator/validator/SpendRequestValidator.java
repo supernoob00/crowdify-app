@@ -32,13 +32,15 @@ public class SpendRequestValidator implements Validator {
 
         Campaign campaign = campaignDao.getCampaignById(request.getCampaignId()).orElse(null);
 
+        // validate
+
         // validate campaign id is valid
         if (campaign == null) {
             errorResult.reject("Spend request must be to a valid campaign");
         } else {
-            // validate spend request only approved if total donations are
-            // greater than or equal to sum of all approved spend requests
-            // and there is a majority vote
+            // validate spend request only approved if total (both
+            // refunded and non-refunded) donations are greater than or equal
+            // to sum of all approved spend requests
             int spendRequestSum = spendRequestDao.approvedTotalByCampaignId(campaign.getId());
             if (request.getAmount() + spendRequestSum > campaign.getDonationTotal()) {
                 errorResult.reject("Total amount of approved spend requests " +
@@ -58,11 +60,6 @@ public class SpendRequestValidator implements Validator {
                 errorResult.reject("There must be a majority of voters for a spend" +
                         " request to be approved.");
             }
-
-            // TODO: can spend request be made if funding goal not reached?
-
-            // TODO: add constraint funding goal cannot be made if balance is
-            //  negative
         }
     }
 }

@@ -41,10 +41,10 @@ INSERT INTO donation (donor_id, campaign_id, donation_amount, donation_date, don
 (3, 1, 5000, '2020-06-22 20:00:00','Love it!', false, false),
 (4, 2, 5000, '2024-06-22 20:00:00','It''s cool to be able to support in a real way with my money in this fashion!', false, true);
 
-INSERT INTO spend_request (campaign_id, request_amount,request_name, request_description, request_approved) VALUES
-(1, 100,'I''m going waste this money', 'some monies', false), --id 1
-(1, 50,'Throwin away some more lol', 'more money', false), --id 2
-(2, 50, 'I need a new car','cash', false); --id 3
+INSERT INTO spend_request (campaign_id, request_amount,request_name, request_description, request_approved, end_date) VALUES
+(1, 100,'I''m going waste this money', 'some monies', false, 2025-06-22 19:10:25), --id 1
+(1, 50,'Throwin away some more lol', 'more money', false, 2026-06-22 19:10:25), --id 2
+(2, 50, 'I need a new car','cash', false, 2026-06-22 19:10:25); --id 3
 
 INSERT INTO vote (donor_id, request_id, vote_approved) VALUES
 --invalid vote, because this is a manager (1, 1, true),

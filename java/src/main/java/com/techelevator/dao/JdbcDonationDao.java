@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Component
@@ -100,6 +101,16 @@ public class JdbcDonationDao {
         return Optional.empty();
     }
 
+    public int getDonationTotalByCampaignId(int campaignId) {
+        String sql = "SELECT SUM (donation_amount) FROM donation WHERE " +
+                "campaign_id = ?;";
+        try {
+            return Objects.requireNonNull(
+                    jdbcTemplate.queryForObject(sql, Integer.class, campaignId));
+        } catch (CannotGetJdbcConnectionException e) {
+            throw new DaoException("Unable to connect to server or database", e);
+        }
+    }
 
     public Donation mapRowToDonation(SqlRowSet results) {
         Donation donation = new Donation();
