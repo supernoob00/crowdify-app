@@ -15,8 +15,13 @@
           <span class="campaign-creator">{{ campaign.creator.username }}</span>
         </div>
         <div class="buttons">
-          <router-link v-if="isManager" class="button is-link"
-            :to="{ name: 'EditSpendRequestView', params: { id: spendRequest.id } }">
+          <router-link v-if="isManager" class="button is-link" :to="{
+            name: 'EditSpendRequestView',
+            params: {
+              campaignId: spendRequest.campaignId,
+              spendRequestId: spendRequest.id
+            }
+          }">
             <i class="fa-solid fa-pen-to-square"></i></router-link>
         </div>
       </div>

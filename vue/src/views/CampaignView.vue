@@ -24,17 +24,20 @@ export default {
     }
   },
   computed: {
+    currentUser() {
+      return this.$store.state.user;
+    },
     campaignId() {
       return parseInt(this.$route.params.id);
     },
     isManager() {
-      return this.campaign.managers.filter(m => m.username === this.$store.state.user.username).length > 0;
+      return this.campaign.managers.filter(m => m.username === this.currentUser.username).length > 0;
     },
     isStakeHolder() {
-      return this.campaign.donations.filter(d => d.donorId === this.$store.state.user.id).length > 0;
+      return this.campaign.donations.filter(d => d.donorId === this.currentUser.id).length > 0;
     },
     canViewSpendRequests() {
-      return this.isManager || this.isStakeHolder;
+      return (this.currentUser.id != undefined) && (this.isManager || this.isStakeHolder);
     }
   },
   methods: {
@@ -53,7 +56,6 @@ export default {
         const response = await campaignService.getSpendRequestsByCampaignId(this.campaignId);
         this.spendRequestObj.list = response.data;
         this.spendRequestObj.canView = this.canViewSpendRequests;
-        console.log(this.spendRequestObj)
       } catch (error) {
         campaignService.handleErrorResponse(this.$store, error, 'getting', 'spend request');
       }
@@ -61,6 +63,7 @@ export default {
   },
   async created() {
     await this.retrieveCampaign();
+    console.log(this.$store.state.user)
     if (this.canViewSpendRequests) {
       await this.getSpendRequestsForCampaign();
     }
