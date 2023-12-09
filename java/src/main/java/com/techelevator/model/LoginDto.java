@@ -1,6 +1,7 @@
 package com.techelevator.model;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
 /*
@@ -10,9 +11,9 @@ import java.util.Objects;
     from the server to the client from a login endpoint.
  */
 public class LoginDto {
-   @NotBlank
+   @NotNull @NotBlank
    private String username;
-   @NotBlank
+   @NotNull @NotBlank
    private String password;
 
    public String getUsername() {

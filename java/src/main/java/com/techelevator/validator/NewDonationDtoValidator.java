@@ -21,14 +21,13 @@ public class NewDonationDtoValidator implements Validator {
     @Override
     public void validate(Object o, Errors errors) {
         NewDonationDto dto = (NewDonationDto) o;
-        Campaign campaign = campaignDao.getCampaignById(dto.getCampaignId()).orElse(null);
 
         // validate anonymous if user is null
         if (dto.getDonorId() == null && !dto.isAnonymous()) {
             errors.reject("Donation must be marked anonymous if user is null");
         }
 
-        // validate donor is not a manager
+        Campaign campaign = campaignDao.getCampaignById(dto.getCampaignId()).orElse(null);
 
         // validate campaign id is valid
         if (campaign == null) {
@@ -40,7 +39,7 @@ public class NewDonationDtoValidator implements Validator {
                         "deleted");
             }
 
-            // validate campaign not private (?)
+            // TODO: validate campaign not private (?)
         }
     }
 }

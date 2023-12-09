@@ -9,13 +9,12 @@ public class SpendRequest {
     private int id;
     @Min(1)
     private int campaignId;
-    @NotBlank
+    @NotNull @NotBlank
     private String requestName;
     @Positive
     private int amount;
     @NotBlank
     private String description;
-    @NotNull
     private boolean approved;
     @NotNull
     private LocalDateTime endDate;

@@ -13,11 +13,9 @@ import java.util.Objects;
     to the client from a login endpoint.
  */
 public class LoginResponseDto {
-    @NotBlank
-    @JsonProperty("token")
+    @NotNull @NotBlank @JsonProperty("token")
     private String token;
-    @NotNull
-    @JsonProperty("user")
+    @NotNull @JsonProperty("user")
     private User user;
 
     public LoginResponseDto(String token, User user) {

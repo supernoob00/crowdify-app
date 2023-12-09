@@ -11,7 +11,6 @@ public class NewVoteDto {
     private int donorId;
     @Min(1)
     private int requestId;
-    @Nullable
     private boolean voteApproved;
 
     public NewVoteDto(int donorId, int requestId, boolean voteApproved) {

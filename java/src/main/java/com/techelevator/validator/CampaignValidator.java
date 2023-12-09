@@ -1,5 +1,6 @@
 package com.techelevator.validator;
 
+import com.techelevator.dao.JdbcCampaignDao;
 import com.techelevator.model.Campaign;
 import com.techelevator.model.Donation;
 import com.techelevator.model.User;
@@ -40,7 +41,7 @@ public class CampaignValidator implements Validator {
                     "deleted");
         }
 
-        // validate list of managers contains creators
+        // validate list of managers contains creator
         if (!campaign.containsManager(
                 campaign.getCreator().getId())) {
             errors.reject("List of managers must contain campaign creator");
@@ -53,6 +54,7 @@ public class CampaignValidator implements Validator {
             }
         }
 
+        // TODO: should this constraint exist?
         // validate no donations are refunded if unlocked
         if (!campaign.isLocked()
                 && campaign.getDonations()
@@ -61,5 +63,7 @@ public class CampaignValidator implements Validator {
             errors.reject("Donations can only be refunded if the campaign is " +
                     "locked");
         }
+
+        // TODO: can be locked before funding goal/end date?
     }
 }

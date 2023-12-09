@@ -16,7 +16,7 @@ public class Donation {
     private int campaignId;
     @NotNull
     private String campaignName;
-    @Min(1) @Max(50000000)
+    @Min(1) @Max(50_000_000)
     private int amount;
     @NotNull
     private LocalDateTime date;

@@ -3,10 +3,7 @@ package com.techelevator.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.lang.Nullable;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.*;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -22,7 +19,7 @@ public class User {
    private String password;
    @JsonIgnore
    private boolean activated;
-   @NotNull
+   @NotNull @NotEmpty
    private Set<Authority> authorities = new HashSet<>();
 
    public User() {

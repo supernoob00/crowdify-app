@@ -95,9 +95,9 @@ public class CampaignController {
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(path = "/campaigns/{id}", method = RequestMethod.PUT)
     public Campaign updateCampaign(@Valid @RequestBody UpdateCampaignDto updateCampaignDto,
+                                   @PathVariable int id,
                                    Principal principal) {
-        Campaign campaignToUpdate = jdbcCampaignDao.getCampaignById(
-                updateCampaignDto.getCampaignId())
+        Campaign campaignToUpdate = jdbcCampaignDao.getCampaignById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                         "Campaign not found."));
 

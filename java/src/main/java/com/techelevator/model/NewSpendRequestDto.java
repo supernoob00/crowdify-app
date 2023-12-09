@@ -9,7 +9,7 @@ import java.util.Objects;
 public class NewSpendRequestDto {
     @Min(1)
     private int campaignId;
-    @NotBlank
+    @NotNull @NotBlank
     private String requestName;
     @Positive
     private int amount;
@@ -36,13 +36,7 @@ public class NewSpendRequestDto {
         this.campaignId = campaignId;
     }
 
-    public String getRequestName() {
-        return requestName;
-    }
 
-    public void setRequestName(String requestName) {
-        this.requestName = requestName;
-    }
 
     public int getAmount() {
         return amount;
