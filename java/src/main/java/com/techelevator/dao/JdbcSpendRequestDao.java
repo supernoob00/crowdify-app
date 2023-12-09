@@ -69,6 +69,7 @@ public class JdbcSpendRequestDao {
             // TODO: date needs to be converted to SQL compatible format
             int requestId = jdbcTemplate.queryForObject(sql, Integer.class,
                     newSpendRequestDto.getCampaignId(),
+                    newSpendRequestDto.getRequestName(),
                     newSpendRequestDto.getAmount(),
                     newSpendRequestDto.getDescription(),
                     newSpendRequestDto.getEndDate());
@@ -123,6 +124,7 @@ public class JdbcSpendRequestDao {
 
         request.setId(rowSet.getInt("request_id"));
         request.setCampaignId(rowSet.getInt("campaign_id"));
+        request.setRequestName(rowSet.getString("request_name"));
         request.setAmount(rowSet.getInt("request_amount"));
         request.setDescription(rowSet.getString("request_description"));
         request.setApproved(rowSet.getBoolean("request_approved"));

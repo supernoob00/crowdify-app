@@ -18,8 +18,9 @@ public class NewSpendRequestDto {
     @NotNull @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime endDate;
 
-    public NewSpendRequestDto(int campaignId, int amount, String description, LocalDateTime endDate) {
+    public NewSpendRequestDto(int campaignId, String requestName, int amount, String description, LocalDateTime endDate) {
         this.campaignId = campaignId;
+        this.requestName = requestName;
         this.amount = amount;
         this.description = description;
         this.endDate = endDate;
@@ -60,6 +61,14 @@ public class NewSpendRequestDto {
 
     public void setEndDate(LocalDateTime endDate) {
         this.endDate = endDate;
+    }
+
+    public String getRequestName() {
+        return requestName;
+    }
+
+    public void setRequestName(String requestName) {
+        this.requestName = requestName;
     }
 
     @Override
