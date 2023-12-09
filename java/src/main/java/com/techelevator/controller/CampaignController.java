@@ -4,10 +4,12 @@ import com.techelevator.dao.JdbcCampaignDao;
 import com.techelevator.dao.JdbcDonationDao;
 import com.techelevator.dao.JdbcUserDao;
 import com.techelevator.model.*;
+import com.techelevator.validator.CampaignValidator;
 import com.techelevator.validator.NewCampaignDtoValidator;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -95,7 +97,7 @@ public class CampaignController {
 
         if (result.hasErrors()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "Invalid data");
+                    result.getAllErrors().toString());
         }
         return jdbcCampaignDao.createCampaign(newCampaignDto);
     }
@@ -123,12 +125,18 @@ public class CampaignController {
     @PreAuthorize("isAuthenticated()")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @RequestMapping(path = "/campaigns/{id}", method = RequestMethod.DELETE)
-    public void deleteCampaign(@PathVariable int id, Principal principal) {
+    public void deleteCampaign(@PathVariable int id, Principal principal,
+                               BindingResult result) {
         Campaign campaignToDelete = jdbcCampaignDao.getCampaignById(id).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                         "Campaign not found."));
 
         int userId = AuthenticationController.getUserIdFromPrincipal(principal, jdbcUserDao);
+
+        campaignToDelete.setDeleted(true);
+
+        CampaignValidator validator = new CampaignValidator();
+        validator.validate(campaignToDelete, result);
 
         if (campaignToDelete.containsManager(userId)) {
             jdbcCampaignDao.markCampaignDeletedById(id);

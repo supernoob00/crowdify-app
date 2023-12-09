@@ -66,4 +66,6 @@ public class CampaignValidator implements Validator {
 
         // TODO: can be locked before funding goal/end date?
     }
+
+
 }
