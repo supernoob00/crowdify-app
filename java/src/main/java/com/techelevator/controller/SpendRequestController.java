@@ -97,7 +97,9 @@ public class SpendRequestController {
 
     @PostMapping("/campaigns/{campaignId}/spend-requests")
     @ResponseStatus(HttpStatus.CREATED)
-    public SpendRequest newRequest(@Valid @RequestBody NewSpendRequestDto newSpendRequestDto, @PathVariable int campaignId, Principal principal) {
+    public SpendRequest newRequest(@Valid @RequestBody NewSpendRequestDto newSpendRequestDto,
+                                   @PathVariable int campaignId,
+                                   Principal principal) {
         newSpendRequestDto.setCampaignId(campaignId);
 
         boolean isManager = false;

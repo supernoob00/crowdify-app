@@ -11,9 +11,7 @@ public class SpendRequest {
     private int id;
     @Min(1)
     private int campaignId;
-    @NotNull
-    @NotBlank
-    @JsonProperty("name")
+    @NotNull @NotBlank @JsonProperty("name")
     private String requestName;
     @Positive
     private int amount;

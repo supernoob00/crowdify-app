@@ -3,6 +3,7 @@ package com.techelevator.controller;
 import com.techelevator.dao.*;
 import com.techelevator.model.*;
 import com.techelevator.validator.CampaignValidator;
+import com.techelevator.validator.ErrorResult;
 import com.techelevator.validator.NewDonationDtoValidator;
 import com.techelevator.validator.UpdateDonationDtoValidator;
 import org.springframework.http.HttpStatus;
@@ -58,7 +59,7 @@ public class DonationController {
     // TODO: user can donate to private donations
     @PostMapping("/donations")
     @ResponseStatus(HttpStatus.CREATED)
-    public Donation createDonation(Principal principal, @Valid @RequestBody NewDonationDto newDonationDto, BindingResult result) {
+    public Donation createDonation(Principal principal, @Valid @RequestBody NewDonationDto newDonationDto) {
         // check if valid campaign
         Campaign campaign = jdbcCampaignDao.getCampaignById(
                 newDonationDto.getCampaignId())
@@ -72,12 +73,13 @@ public class DonationController {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not authorized create this donation.");
         }
 
+        ErrorResult result = new ErrorResult();
         NewDonationDtoValidator validator = new NewDonationDtoValidator(jdbcCampaignDao);
         validator.validate(newDonationDto, result);
 
         if (result.hasErrors()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    result.getAllErrors().toString());
+                    result.getCauses().toString());
         }
 
         return jdbcDonationDao.createDonation(newDonationDto);
@@ -88,41 +90,25 @@ public class DonationController {
     @ResponseStatus(HttpStatus.OK)
     public Donation updateDonation(@PathVariable int donationId,
                                    Principal principal,
-                                   @Valid @RequestBody UpdateDonationDto updateDonationDto,
-                                   BindingResult result) {
+                                   @Valid @RequestBody UpdateDonationDto updateDonationDto) {
         Donation donationToUpdate = jdbcDonationDao.getDonationById(donationId).orElseThrow(() ->
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "Donation not found."));
 
         int userId = AuthenticationController.getUserIdFromPrincipal(principal, jdbcUserDao);
         List<Donation> donations = getDonationsByUserId(principal,donationId);
 
-            
-        }
-
-
         // TODO: currently nothing in the updateDonationDtoValidator class.
 
-     /*   UpdateDonationDtoValidator validator = new UpdateDonationDtoValidator();
-        validator.validate(updateDonationDto, result);
-
-        if (result.hasErrors()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    result.getAllErrors().toString());*/
-
-
+//        UpdateDonationDtoValidator validator = new UpdateDonationDtoValidator();
+//        validator.validate(updateDonationDto, result);
+//
+//        if (result.hasErrors()) {
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+//                    result.getAllErrors().toString());*/
+//            return null;
+//        }
         return null;
     }
-
-/*
-
-        if (campaignToUpdate.containsManager(userId)) {
-            return jdbcCampaignDao.updateCampaign(updateCampaignDto).orElseThrow();
-        }
-        throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are " +
-                "not authorized to update this campaign.");
-    }*/
-
-
 
     public boolean donationDtoMatchesPrincipal(@Nullable Principal principal,
                                                NewDonationDto newDonationDto) {
