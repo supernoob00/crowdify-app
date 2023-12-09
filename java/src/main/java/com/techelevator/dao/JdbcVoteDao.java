@@ -131,18 +131,7 @@ public class JdbcVoteDao {
 
     // TODO: finish this - also cannot change vote if associated spend
     //  request is closed
-    public Vote changeVote(Principal principal, UpdateVoteDto updateVoteDto) {
-
-        User loggedInUser = userDao.getUserByUsername(principal.getName()).orElseThrow();
-        SpendRequest spendRequest = jdbcSpendRequestDao.getSpendRequestById(updateVoteDto.getRequestId()).orElseThrow();
-
-        if (loggedInUser.getId() != updateVoteDto.getUserId()) {
-            throw new DaoException("You are not authorized to edit this donation.");
-        }
-
-        if (spendRequest.isApproved()) {
-            throw new DaoException("This spend request is no longer accepting votes.");
-        }
+    public Vote changeVote(UpdateVoteDto updateVoteDto) {
 
         String sql = "UPDATE vote SET " +
                 "vote_approved = ? " +
