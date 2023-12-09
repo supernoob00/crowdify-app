@@ -4,6 +4,7 @@ import com.techelevator.dao.*;
 import com.techelevator.exception.DaoException;
 import com.techelevator.model.*;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.relational.core.sql.Update;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.CannotGetJdbcConnectionException;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -181,8 +182,43 @@ public class SpendRequestController {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not authorized to vote in this campaign.");
         }
         return jdbcVoteDao.createVote(newvoteDto);
-
     }
+
+// update vote
+
+    @PreAuthorize("isAuthenticated()")
+    @ResponseStatus(HttpStatus.OK)
+    @PutMapping("/campaigns/{campaignId}/spend-requests/{requestId}/votes")
+
+    public Vote updateVote (@Valid @RequestBody UpdateVoteDto updateVoteDto,
+                            Principal principal,
+                            @PathVariable int campaignId,
+                            @PathVariable int requestId) {
+
+        boolean isDonor = false;
+        int loggedInUserId = AuthenticationController.getUserIdFromPrincipal(principal, userDao);
+        List<Campaign> campaignList = jdbcCampaignDao.getCampaignsByDonorId(loggedInUserId);
+
+        for (int i = 0; i < campaignList.size(); i++) {
+            if (campaignId == campaignList.get(i).getId()) {
+                isDonor = true;
+                break;
+            }
+        }
+        if (!isDonor) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not authorized to vote in this campaign.");
+        }
+
+        SpendRequest spendRequest = jdbcSpendRequestDao.getSpendRequestById(updateVoteDto.getRequestId()).orElseThrow();
+
+        if (spendRequest.isApproved()) {
+            throw new DaoException("This spend request is no longer accepting votes.");
+
+        } return jdbcVoteDao.changeVote(updateVoteDto);
+    }
+
+
+
 
     public boolean isCorrectUser(Principal principal, NewDonationDto newDonationDto) {
         String username = principal.getName();
