@@ -36,7 +36,7 @@ public class SpendRequestController {
         this.jdbcUserDao = jdbcUserDao;
         this.jdbcCampaignDao = jdbcCampaignDao;
     }
-    
+
     @GetMapping("campaigns/{campaignId}/spend-requests/{requestId}")
     @ResponseStatus(HttpStatus.OK)
     public SpendRequest getSpendRequestById(@PathVariable int campaignId, @PathVariable int requestId, Principal principal) {
@@ -54,7 +54,7 @@ public class SpendRequestController {
 
         if (!requestCampaign.containsDonor(userId) && !requestCampaign.containsManager(userId)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are " +
-                    "not authorized to view this campaign.");
+                    "not authorized to view this spend request.");
         }
 
         if (spendRequest.getCampaignId() != campaignId) {
@@ -141,19 +141,16 @@ public class SpendRequestController {
         return jdbcSpendRequestDao.updateSpendRequest(updateSpendRequestDto, requestId);
     }
 
-
-      // TODO doesn't work yet.
-        @GetMapping("/campaigns/{campaignId}/spend-request/{spend-req-id}/votes")
+        @GetMapping("campaigns/{campaignId}/spend-requests/{requestId}/votes")
         @ResponseStatus(HttpStatus.OK)
-        public List<Vote> getVotesBySpendReq (Principal principal,@PathVariable int userId, @PathVariable int campId,
-        @PathVariable int spendReqId){
-            Optional<User> loggedInUser = userDao.getUserById(userId);
+        public List<Vote> getVotesBySpendReq (Principal principal,
+                                              @PathVariable int campaignId,
+                                              @PathVariable int requestId) {
+            Optional<User> loggedInUser = userDao.getUserByUsername(principal.getName());
 
-            if (loggedInUser.isPresent() && !loggedInUser.get().getUsername().equals(principal.getName())) {
-                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not authorized to get these votes.");
-            }
-            return new ArrayList<>(jdbcVoteDao.getVotesBySpendRequestId(spendReqId));
+            return new ArrayList<>(jdbcVoteDao.getVotesBySpendRequestId(requestId));
         }
+
 
         public boolean isCorrectUser (Principal principal, NewDonationDto newDonationDto){
             String username = principal.getName();
