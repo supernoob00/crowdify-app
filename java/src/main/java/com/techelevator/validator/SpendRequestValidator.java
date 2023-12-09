@@ -6,9 +6,6 @@ import com.techelevator.dao.JdbcVoteDao;
 import com.techelevator.model.Campaign;
 import com.techelevator.model.SpendRequest;
 import com.techelevator.model.Vote;
-import org.springframework.validation.Errors;
-import org.springframework.validation.Validator;
-
 import java.util.List;
 
 public class SpendRequestValidator implements Validator {
@@ -30,21 +27,21 @@ public class SpendRequestValidator implements Validator {
     }
 
     @Override
-    public void validate(Object o, Errors errors) {
+    public void validate(Object o, ErrorResult errorResult) {
         SpendRequest request = (SpendRequest) o;
 
         Campaign campaign = campaignDao.getCampaignById(request.getCampaignId()).orElse(null);
 
         // validate campaign id is valid
         if (campaign == null) {
-            errors.reject("Spend request must be to a valid campaign");
+            errorResult.reject("Spend request must be to a valid campaign");
         } else {
             // validate spend request only approved if total donations are
             // greater than or equal to sum of all approved spend requests
             // and there is a majority vote
             int spendRequestSum = spendRequestDao.approvedTotalByCampaignId(campaign.getId());
             if (request.getAmount() + spendRequestSum > campaign.getDonationTotal()) {
-                errors.reject("Total amount of approved spend requests " +
+                errorResult.reject("Total amount of approved spend requests " +
                         "exceeds donations");
             }
 
@@ -58,7 +55,7 @@ public class SpendRequestValidator implements Validator {
                 }
             }
             if (yesCount * 2 <= votes.size()) {
-                errors.reject("There must be a majority of voters for a spend" +
+                errorResult.reject("There must be a majority of voters for a spend" +
                         " request to be approved.");
             }
 
