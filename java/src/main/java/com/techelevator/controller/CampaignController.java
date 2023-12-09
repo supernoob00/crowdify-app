@@ -61,7 +61,7 @@ public class CampaignController {
     public Campaign getCampaign(@PathVariable int id, Principal principal, BindingResult result) {
         Campaign campaign = jdbcCampaignDao.getCampaignById(id).orElseThrow(() -> {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Campaign not found.");
-        });;
+        });
 
         CampaignValidator validator = new CampaignValidator();
         validator.validate(campaign, result);
@@ -86,12 +86,10 @@ public class CampaignController {
         if (campaign.containsManager(userId) || campaign.containsDonor(userId)) {
             return campaign;
         }
-        // no match found
         throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are " +
                 "not authorized to view this campaign.");
     }
 
-    // TODO: check same name, valid times, valid fund request
     /* create a new campaign with the creator as the current logged in user */
     @PreAuthorize("isAuthenticated()")
     @ResponseStatus(HttpStatus.CREATED)
