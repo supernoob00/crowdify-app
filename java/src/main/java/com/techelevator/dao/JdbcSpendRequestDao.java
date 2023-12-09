@@ -1,7 +1,6 @@
 package com.techelevator.dao;
 
 import com.techelevator.exception.DaoException;
-import com.techelevator.model.Campaign;
 import com.techelevator.model.NewSpendRequestDto;
 import com.techelevator.model.SpendRequest;
 import com.techelevator.model.UpdateSpendRequestDto;
@@ -14,6 +13,7 @@ import org.springframework.stereotype.Component;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Component
@@ -62,8 +62,9 @@ public class JdbcSpendRequestDao {
 
     public SpendRequest createSpendRequest(@NotNull NewSpendRequestDto newSpendRequestDto) {
         String sql = "INSERT into spend_request " +
-                "(campaign_id, request_amount, request_description, end_date) " +
-                "values (?,?,?,?) returning request_id;";
+                "(campaign_id, request_name, request_amount, " +
+                "request_description, end_date) " +
+                "values (?,?,?,?,?) returning request_id;";
         try {
             // TODO: date needs to be converted to SQL compatible format
             int requestId = jdbcTemplate.queryForObject(sql, Integer.class,
@@ -100,6 +101,20 @@ public class JdbcSpendRequestDao {
             throw new DaoException("Unable to connect to server or database", e);
         } catch (DataIntegrityViolationException e) {
             throw new DaoException("Data integrity violation", e);
+        }
+    }
+
+    public int approvedTotalByCampaignId(int campaignId) {
+        String sql = "SELECT SUM (request_amount) FROM spend_request WHERE " +
+                "campaign_id = ? AND approved";
+        try {
+            // should throw an NullPointerException if campaign id is invalid;
+            // if needed, validating the campaign id should be done beforehand
+            // by the caller using the getCampaignById() method
+            return Objects.requireNonNull(jdbcTemplate.queryForObject(sql,
+                    Integer.class, campaignId));
+        } catch (CannotGetJdbcConnectionException e) {
+            throw new DaoException("Unable to connect to server or database", e);
         }
     }
 

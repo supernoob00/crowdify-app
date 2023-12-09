@@ -143,7 +143,6 @@ public class JdbcCampaignDao {
                 "campaign_name = ?, " +
                 "description = ?, " +
                 "funding_goal = ?, " +
-                "start_date = ?, " +
                 "end_date = ?, " +
                 "public = ?, " +
                 "locked = ? WHERE campaign_id = ?";
@@ -152,13 +151,13 @@ public class JdbcCampaignDao {
                     updateCampaignDto.getName(),
                     updateCampaignDto.getDescription(),
                     updateCampaignDto.getFundingGoal(),
-                    updateCampaignDto.getStartDate(),
                     updateCampaignDto.getEndDate(),
                     updateCampaignDto.isPublic(),
                     updateCampaignDto.isLocked(),
-                    updateCampaignDto.getId());
+                    updateCampaignDto.getCampaignId());
 
-            return getCampaignById(updateCampaignDto.getId());
+            System.out.println(updateCampaignDto);
+            return getCampaignById(updateCampaignDto.getCampaignId());
 
         } catch (CannotGetJdbcConnectionException e) {
             throw new DaoException("Unable to connect to server or database", e);
@@ -199,6 +198,12 @@ public class JdbcCampaignDao {
         } catch (CannotGetJdbcConnectionException e) {
             throw new DaoException("Unable to connect to server or database", e);
         }
+    }
+
+    // TODO: finish this
+    public int getCurrentFunds(int campaignId) {
+        String sql = "";
+        return 0;
     }
 
     private Campaign mapRowtoCampaign(SqlRowSet rowSet) {

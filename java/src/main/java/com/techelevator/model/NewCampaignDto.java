@@ -9,17 +9,17 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class NewCampaignDto {
-    @NotBlank
+    @NotNull @NotBlank
     private String name;
-    @NotBlank
+    @NotNull @NotBlank
     private String description;
     @Min(100)
     private int fundingGoal;
     @Min(1)
     private int creatorId;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @NotNull @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime startDate;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @NotNull @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime endDate;
     private boolean isPublic;
 

@@ -1,26 +1,25 @@
 package com.techelevator.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.lang.Nullable;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.*;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
 public class User {
-   // TODO: put in email address
    @Min(1)
    private int id;
    @NotBlank
    private String username;
-   @JsonIgnore
-   @NotBlank
+   @Email @Nullable
+   private String email;
+   @JsonIgnore @NotBlank @Min(6)
    private String password;
    @JsonIgnore
    private boolean activated;
-   @NotNull
+   @NotNull @NotEmpty
    private Set<Authority> authorities = new HashSet<>();
 
    public User() {
@@ -48,6 +47,14 @@ public class User {
 
    public void setUsername(String username) {
       this.username = username;
+   }
+
+   public String getEmail() {
+      return email;
+   }
+
+   public void setEmail(String email) {
+      this.email = email;
    }
 
    public String getPassword() {
@@ -87,16 +94,12 @@ public class User {
       if (this == o) return true;
       if (o == null || getClass() != o.getClass()) return false;
       User user = (User) o;
-      return id == user.id &&
-              activated == user.activated &&
-              Objects.equals(username, user.username) &&
-              Objects.equals(password, user.password) &&
-              Objects.equals(authorities, user.authorities);
+      return id == user.id && activated == user.activated && username.equals(user.username) && Objects.equals(email, user.email) && password.equals(user.password);
    }
 
    @Override
    public int hashCode() {
-      return Objects.hash(id, username, password, activated, authorities);
+      return Objects.hash(id, username, email, password, activated);
    }
 
    @Override
@@ -104,6 +107,8 @@ public class User {
       return "User{" +
               "id=" + id +
               ", username='" + username + '\'' +
+              ", email='" + email + '\'' +
+              ", password='" + password + '\'' +
               ", activated=" + activated +
               ", authorities=" + authorities +
               '}';

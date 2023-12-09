@@ -1,5 +1,7 @@
 package com.techelevator.model;
 
+import org.springframework.lang.Nullable;
+
 import javax.validation.constraints.*;
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -8,13 +10,13 @@ import java.util.Objects;
 public class Donation {
     @Min(1)
     private int donationId;
+    @Nullable
     private User donor;
     @Min(1)
     private int campaignId;
     @NotNull
     private String campaignName;
-    @Min(1)
-    @Max(50000000)
+    @Min(1) @Max(50_000_000)
     private int amount;
     @NotNull
     private LocalDateTime date;

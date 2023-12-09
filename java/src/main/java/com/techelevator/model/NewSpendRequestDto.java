@@ -2,22 +2,20 @@ package com.techelevator.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
+import javax.validation.constraints.*;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class NewSpendRequestDto {
     @Min(1)
     private int campaignId;
+    @NotNull @NotBlank
+    private String requestName;
     @Positive
     private int amount;
     @NotBlank
     private String description;
-    @NotNull
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @NotNull @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime endDate;
 
     public NewSpendRequestDto(int campaignId, int amount, String description, LocalDateTime endDate) {
@@ -37,6 +35,8 @@ public class NewSpendRequestDto {
     public void setCampaignId(int campaignId) {
         this.campaignId = campaignId;
     }
+
+
 
     public int getAmount() {
         return amount;
@@ -67,12 +67,12 @@ public class NewSpendRequestDto {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         NewSpendRequestDto that = (NewSpendRequestDto) o;
-        return campaignId == that.campaignId && amount == that.amount && description.equals(that.description) && endDate.equals(that.endDate);
+        return campaignId == that.campaignId && amount == that.amount && requestName.equals(that.requestName) && description.equals(that.description) && endDate.equals(that.endDate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(campaignId, amount, description, endDate);
+        return Objects.hash(campaignId, requestName, amount, description, endDate);
     }
 }
 

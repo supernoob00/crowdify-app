@@ -1,9 +1,6 @@
 package com.techelevator.model;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
+import javax.validation.constraints.*;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -12,11 +9,12 @@ public class SpendRequest {
     private int id;
     @Min(1)
     private int campaignId;
+    @NotNull @NotBlank
+    private String requestName;
     @Positive
     private int amount;
     @NotBlank
     private String description;
-    @NotNull
     private boolean approved;
     @NotNull
     private LocalDateTime endDate;
@@ -47,6 +45,14 @@ public class SpendRequest {
 
     public void setCampaignId(int campaignId) {
         this.campaignId = campaignId;
+    }
+
+    public String getRequestName() {
+        return requestName;
+    }
+
+    public void setRequestName(String requestName) {
+        this.requestName = requestName;
     }
 
     public int getAmount() {
@@ -85,12 +91,12 @@ public class SpendRequest {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        SpendRequest that = (SpendRequest) o;
-        return id == that.id && campaignId == that.campaignId && amount == that.amount && approved == that.approved && Objects.equals(description, that.description) && Objects.equals(endDate, that.endDate);
+        SpendRequest request = (SpendRequest) o;
+        return id == request.id && campaignId == request.campaignId && amount == request.amount && approved == request.approved && requestName.equals(request.requestName) && description.equals(request.description) && endDate.equals(request.endDate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, campaignId, amount, description, approved, endDate);
+        return Objects.hash(id, campaignId, requestName, amount, description, approved, endDate);
     }
 }

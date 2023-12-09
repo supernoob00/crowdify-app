@@ -2,6 +2,7 @@ package com.techelevator.model;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
 /*
@@ -11,13 +12,13 @@ import java.util.Objects;
     to the client from a login endpoint.
  */
 public class RegisterUserDto {
-    @NotBlank
+    @NotNull @NotBlank
     private String username;
-    @NotBlank
+    @NotNull @NotBlank
     private String password;
-    @NotBlank
+    @NotNull @NotBlank
     private String confirmPassword;
-    @NotBlank(message = "Please select a role for this user.")
+    @NotNull @NotBlank(message = "Please select a role for this user.")
     private String role;
 
     public String getUsername() {

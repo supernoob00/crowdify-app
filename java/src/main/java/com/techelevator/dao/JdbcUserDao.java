@@ -29,7 +29,7 @@ public class JdbcUserDao implements UserDao {
 
     @Override
     public Optional<User> getUserById(int userId) {
-        String sql = "SELECT user_id, username, password_hash, role FROM users WHERE user_id = ?";
+        String sql = "SELECT * FROM users WHERE user_id = ?";
         try {
             SqlRowSet results = jdbcTemplate.queryForRowSet(sql, userId);
             if (results.next()) {
@@ -44,7 +44,7 @@ public class JdbcUserDao implements UserDao {
     @Override
     public List<User> getUsers() {
         List<User> users = new ArrayList<>();
-        String sql = "SELECT user_id, username, password_hash, role FROM users";
+        String sql = "SELECT * FROM users";
         try {
             SqlRowSet results = jdbcTemplate.queryForRowSet(sql);
             while (results.next()) {
@@ -59,7 +59,7 @@ public class JdbcUserDao implements UserDao {
 
     @Override
     public Optional<User> getUserByUsername(@NotNull String username) {
-        String sql = "SELECT user_id, username, password_hash, role FROM users WHERE username = LOWER(TRIM(?));";
+        String sql = "SELECT * FROM users WHERE username = LOWER(TRIM(?));";
         try {
             SqlRowSet rowSet = jdbcTemplate.queryForRowSet(sql, username);
             if (rowSet.next()) {
@@ -124,7 +124,7 @@ public class JdbcUserDao implements UserDao {
 
 
     public Optional<User> getCreatorByCampaignId(int campaignId) {
-        String sql = "SELECT user_id, username, password_hash, role FROM " +
+        String sql = "SELECT * FROM " +
                 "users INNER JOIN campaign_manager ON (manager_id = " +
                 "user_id) WHERE campaign_id = ? AND creator;";
         try {
@@ -142,6 +142,7 @@ public class JdbcUserDao implements UserDao {
         User user = new User();
         user.setId(rs.getInt("user_id"));
         user.setUsername(rs.getString("username"));
+        user.setEmail(rs.getString("email"));
         user.setPassword(rs.getString("password_hash"));
         user.setAuthoritiesFromString(Objects.requireNonNull(rs.getString("role")));
         user.setActivated(true);

@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Objects;
 
 public class Campaign {
-
     @Min(1)
     private int id;
     @NotBlank
@@ -24,10 +23,11 @@ public class Campaign {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime endDate;
     private boolean locked;
-    private boolean isPublic; // TODO: CONSTRAINT: cannot be public and deleted
+    private boolean isPublic;
     @NotNull
     private List<Donation> donations = new ArrayList<>();
-    @NotEmpty
+    // TODO: this should be a set of managers
+    @NotNull @NotEmpty
     private List<User> managers = new ArrayList<>(); // contains creator
     @NotNull
     private User creator;
@@ -141,9 +141,15 @@ public class Campaign {
     public int getDonationTotal() {
         int total = 0;
         for (Donation donation : donations) {
-            total += donation.getAmount();
+            if (!donation.isRefunded()) {
+                total += donation.getAmount();
+            }
         }
         return total;
+    }
+
+    public boolean isGoalMet() {
+        return getDonationTotal() >= fundingGoal;
     }
 
     public boolean isDeleted() {
