@@ -37,8 +37,6 @@ public class NewSpendRequestDto {
         this.campaignId = campaignId;
     }
 
-
-
     public int getAmount() {
         return amount;
     }
