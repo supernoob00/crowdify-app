@@ -1,8 +1,7 @@
 package com.techelevator.dao;
 
 import com.techelevator.exception.DaoException;
-import com.techelevator.model.NewVoteDto;
-import com.techelevator.model.Vote;
+import com.techelevator.model.*;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.CannotGetJdbcConnectionException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -10,6 +9,7 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 
 import javax.validation.constraints.NotNull;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -18,9 +18,13 @@ import java.util.Optional;
 public class JdbcVoteDao {
 
     private final JdbcTemplate jdbcTemplate;
+    private final UserDao userDao;
+    private final JdbcSpendRequestDao jdbcSpendRequestDao;
 
-    public JdbcVoteDao(JdbcTemplate jdbcTemplate) {
+    public JdbcVoteDao(JdbcTemplate jdbcTemplate, UserDao userDao, JdbcSpendRequestDao jdbcSpendRequestDao) {
         this.jdbcTemplate = jdbcTemplate;
+        this.userDao = userDao;
+        this.jdbcSpendRequestDao = jdbcSpendRequestDao;
     }
 
     // get votes by spend request id
@@ -127,8 +131,36 @@ public class JdbcVoteDao {
 
     // TODO: finish this - also cannot change vote if associated spend
     //  request is closed
-    public int changeVote(int voteId, boolean newValue) {
-        return 0;
+    public Vote changeVote(Principal principal, UpdateVoteDto updateVoteDto) {
+
+        User loggedInUser = userDao.getUserByUsername(principal.getName()).orElseThrow();
+        SpendRequest spendRequest = jdbcSpendRequestDao.getSpendRequestById(updateVoteDto.getRequestId()).orElseThrow();
+
+        if (loggedInUser.getId() != updateVoteDto.getUserId()) {
+            throw new DaoException("You are not authorized to edit this donation.");
+        }
+
+        if (spendRequest.isApproved()) {
+            throw new DaoException("This spend request is no longer accepting votes.");
+        }
+
+        String sql = "UPDATE vote SET " +
+                "vote_approved = ? " +
+                "WHERE donor_id = ? AND request_id = ?;";
+
+        try {
+            jdbcTemplate.update(sql,
+                    updateVoteDto.isApproved(),
+                    updateVoteDto.getUserId(),
+                    updateVoteDto.getRequestId());
+
+        } catch (CannotGetJdbcConnectionException e) {
+            throw new DaoException("Unable to connect to server or database", e);
+        } catch (DataIntegrityViolationException e) {
+            throw new DaoException("Data integrity violation", e);
+        }
+
+        return getVoteByDonorAndRequestId(updateVoteDto.getUserId(), updateVoteDto.getRequestId()).orElseThrow();
     }
 
     private Vote mapRowtoVote(SqlRowSet rowSet) {
