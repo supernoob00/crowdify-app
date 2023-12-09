@@ -1,6 +1,7 @@
 <template>
   <div>
-    <p>For {{ campaign.name }}</p>
+    <h3>{{ spendRequest.name }}</h3>
+    <h5>For {{ campaign.name }}</h5>
     <p>{{ spendRequest.description }}</p>
   </div>
 </template>

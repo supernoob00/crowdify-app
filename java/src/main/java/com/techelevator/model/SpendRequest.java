@@ -1,5 +1,7 @@
 package com.techelevator.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.validation.constraints.*;
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -9,7 +11,9 @@ public class SpendRequest {
     private int id;
     @Min(1)
     private int campaignId;
-    @NotNull @NotBlank
+    @NotNull
+    @NotBlank
+    @JsonProperty("name")
     private String requestName;
     @Positive
     private int amount;
