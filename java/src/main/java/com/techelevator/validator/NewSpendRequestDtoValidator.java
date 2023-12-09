@@ -11,11 +11,11 @@ public class NewSpendRequestDtoValidator implements Validator {
     }
 
     @Override
-    public void validate(Object o, Errors errors) {
+    public void validate(Object o, ErrorResult errorResult) {
         NewSpendRequestDto dto = (NewSpendRequestDto) o;
 
         if (dto.getEndDate().isBefore(LocalDateTime.now())) {
-            errors.rejectValue("d", "d");
+            errorResult.rejectValue("d", "d");
         }
     }
 

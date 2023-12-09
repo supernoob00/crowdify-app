@@ -15,25 +15,25 @@ public class NewDonationDtoValidator implements Validator {
     public boolean supports(Class<?> aClass) {
         return NewDonationDtoValidator.class.equals(aClass);
     }
-    
+
     @Override
-    public void validate(Object o, Errors errors) {
+    public void validate(Object o, ErrorResult errorResult) {
         NewDonationDto dto = (NewDonationDto) o;
 
         // validate anonymous if user is null
         if (dto.getDonorId() == null && !dto.isAnonymous()) {
-            errors.reject("Donation must be marked anonymous if user is null");
+            errorResult.reject("Donation must be marked anonymous if user is null");
         }
 
         Campaign campaign = campaignDao.getCampaignById(dto.getCampaignId()).orElse(null);
 
         // validate campaign id is valid
         if (campaign == null) {
-            errors.reject("Donation must be to a valid campaign");
+            errorResult.reject("Donation must be to a valid campaign");
         } else {
             // validate receiving campaign is not locked or deleted
             if (campaign.isLocked() || campaign.isDeleted()) {
-                errors.reject("Campaign receiving donation must not be locked or " +
+                errorResult.reject("Campaign receiving donation must not be locked or " +
                         "deleted");
             }
 

@@ -23,19 +23,19 @@ public class UpdateCampaignDtoValidator implements Validator {
     }
 
     @Override
-    public void validate(Object o, Errors errors) {
+    public void validate(Object o, ErrorResult errorResult) {
         UpdateCampaignDto dto = (UpdateCampaignDto) o;
 
         // validate date
         if (dto.getEndDate().isBefore(LocalDateTime.now())) {
-            errors.reject("End date before current date");
+            errorResult.reject("End date before current date");
         }
 
         Campaign campaign = campaignDao.getCampaignById(campaignId).orElse(null);
 
         // validate campaign id is valid
         if (campaign == null) {
-            errors.reject("Spend request must be to a valid campaign");
+            errorResult.reject("Spend request must be to a valid campaign");
         } else {
             // TODO: should this constraint exist?
             // validate no donations are refunded if unlocked
@@ -43,7 +43,7 @@ public class UpdateCampaignDtoValidator implements Validator {
                     && campaign.getDonations()
                     .stream()
                     .anyMatch(Donation::isRefunded)) {
-                errors.reject("Donations can only be refunded if the campaign is " +
+                errorResult.reject("Donations can only be refunded if the campaign is " +
                         "locked");
             }
 
