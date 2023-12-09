@@ -93,7 +93,7 @@ const routes = [
     }
   },
   {
-    path: "/spend-requests/:id",
+    path: "/campaigns/:campaignId/spend-requests/:spendRequestId",
     name: "SpendRequestView",
     component: SpendRequestView,
     meta: {

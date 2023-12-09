@@ -4,7 +4,13 @@
     <div v-else class="content">
       <div class="header">
         <div>
-          <h1>Spend Request for {{ campaign.name }}</h1>
+          <h1>Spend Request for
+            <span>
+              <router-link class="campaign-name" :to="{ name: 'CampaignView', params: { id: this.campaignId } }">
+                {{ campaign.name }}
+              </router-link>
+            </span>
+          </h1>
           <span>Created by </span>
           <span class="campaign-creator">{{ campaign.creator.username }}</span>
         </div>
@@ -35,7 +41,10 @@ export default {
   },
   computed: {
     spendRequestId() {
-      return parseInt(this.$route.params.id);
+      return parseInt(this.$route.params.spendRequestId);
+    },
+    campaignId() {
+      return parseInt(this.$route.params.campaignId);
     },
     isManager() {
       return this.campaign.managers.filter(m => m.username === this.$store.state.user.username).length > 0;
@@ -44,7 +53,7 @@ export default {
   methods: {
     async getSpendRequest() {
       try {
-        const response = await campaignService.getSpendRequestById(this.spendRequestId);
+        const response = await campaignService.getSpendRequestById(this.campaignId, this.spendRequestId);
         if (response.status === 200) {
           this.spendRequest = response.data;
         }
@@ -54,7 +63,7 @@ export default {
     },
     async getCampaign() {
       try {
-        const response = await campaignService.getCampaign(this.spendRequest.campaignId);
+        const response = await campaignService.getCampaign(this.campaignId);
         if (response.status === 200) {
           this.campaign = response.data;
         }
@@ -89,6 +98,15 @@ export default {
 
 .header .buttons .fa-plus {
   margin-right: 10px;
+}
+
+.campaign-name {
+  color: var(--font-color);
+  text-decoration: underline;
+}
+
+.campaign-creator {
+  font-weight: 600;
 }
 
 hr {

@@ -1,10 +1,8 @@
 <template>
-  <div>
-    <nav-bar></nav-bar>
-    <notification-text class="header"></notification-text>
-    <div id="capstone-app" class="container">
-      <router-view></router-view>
-    </div>
+  <nav-bar></nav-bar>
+  <notification-text class="header"></notification-text>
+  <div id="capstone-app" class="container">
+    <router-view></router-view>
   </div>
 </template>
 
