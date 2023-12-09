@@ -4,8 +4,10 @@ import com.techelevator.dao.JdbcCampaignDao;
 import com.techelevator.dao.JdbcDonationDao;
 import com.techelevator.dao.JdbcUserDao;
 import com.techelevator.model.*;
+import com.techelevator.validator.NewCampaignDtoValidator;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -86,7 +88,15 @@ public class CampaignController {
     @PreAuthorize("isAuthenticated()")
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(path = "/campaigns", method = RequestMethod.POST)
-    public Campaign addCampaign(@Valid @RequestBody NewCampaignDto newCampaignDto) {
+    public Campaign addCampaign(@Valid @RequestBody NewCampaignDto newCampaignDto,
+                                BindingResult result) {
+        NewCampaignDtoValidator validator = new NewCampaignDtoValidator(jdbcUserDao);
+        validator.validate(newCampaignDto, result);
+
+        if (result.hasErrors()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Invalid data");
+        }
         return jdbcCampaignDao.createCampaign(newCampaignDto);
     }
 
