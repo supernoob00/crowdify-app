@@ -3,8 +3,6 @@ package com.techelevator.validator;
 import com.techelevator.dao.JdbcCampaignDao;
 import com.techelevator.model.Campaign;
 import com.techelevator.model.NewDonationDto;
-import org.springframework.validation.Errors;
-import org.springframework.validation.Validator;
 
 public class NewDonationDtoValidator implements Validator {
     private final JdbcCampaignDao campaignDao;
@@ -17,7 +15,7 @@ public class NewDonationDtoValidator implements Validator {
     public boolean supports(Class<?> aClass) {
         return NewDonationDtoValidator.class.equals(aClass);
     }
-
+    
     @Override
     public void validate(Object o, Errors errors) {
         NewDonationDto dto = (NewDonationDto) o;

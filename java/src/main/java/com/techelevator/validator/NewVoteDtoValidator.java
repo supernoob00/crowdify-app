@@ -4,8 +4,6 @@ import com.techelevator.dao.JdbcCampaignDao;
 import com.techelevator.dao.JdbcSpendRequestDao;
 import com.techelevator.dao.JdbcUserDao;
 import com.techelevator.model.*;
-import org.springframework.validation.Errors;
-import org.springframework.validation.Validator;
 
 import java.time.LocalDateTime;
 import java.util.Objects;

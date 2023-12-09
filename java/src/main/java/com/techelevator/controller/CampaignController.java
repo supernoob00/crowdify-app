@@ -9,6 +9,7 @@ import com.techelevator.validator.NewCampaignDtoValidator;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -58,10 +59,11 @@ public class CampaignController {
     /* show campaign if user has view permissions */
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(path = "/campaigns/{id}", method = RequestMethod.GET)
-    public Campaign getCampaign(@PathVariable int id, Principal principal, BindingResult result) {
+    public Campaign getCampaign(@PathVariable int id, Principal principal) {
         Campaign campaign = jdbcCampaignDao.getCampaignById(id).orElseThrow(() -> {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Campaign not found.");
         });;
+
 
         CampaignValidator validator = new CampaignValidator();
         validator.validate(campaign, result);

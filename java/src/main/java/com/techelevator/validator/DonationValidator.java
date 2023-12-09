@@ -3,8 +3,6 @@ package com.techelevator.validator;
 import com.techelevator.dao.JdbcCampaignDao;
 import com.techelevator.model.Campaign;
 import com.techelevator.model.Donation;
-import org.springframework.validation.Errors;
-import org.springframework.validation.Validator;
 
 public class DonationValidator implements Validator {
     private final JdbcCampaignDao campaignDao;

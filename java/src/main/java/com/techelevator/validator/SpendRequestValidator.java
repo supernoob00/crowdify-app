@@ -6,9 +6,6 @@ import com.techelevator.dao.JdbcVoteDao;
 import com.techelevator.model.Campaign;
 import com.techelevator.model.SpendRequest;
 import com.techelevator.model.Vote;
-import org.springframework.validation.Errors;
-import org.springframework.validation.Validator;
-
 import java.util.List;
 
 public class SpendRequestValidator implements Validator {

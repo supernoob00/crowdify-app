@@ -1,8 +1,6 @@
 package com.techelevator.validator;
 
 import com.techelevator.model.NewSpendRequestDto;
-import org.springframework.validation.Errors;
-import org.springframework.validation.Validator;
 
 import java.time.LocalDateTime;
 

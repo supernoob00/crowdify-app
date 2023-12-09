@@ -2,10 +2,6 @@ package com.techelevator.validator;
 
 import com.techelevator.dao.JdbcUserDao;
 import com.techelevator.model.NewCampaignDto;
-import org.springframework.validation.Errors;
-import org.springframework.validation.Validator;
-
-import java.time.LocalDateTime;
 
 public class NewCampaignDtoValidator implements Validator {
     private final JdbcUserDao userDao;
