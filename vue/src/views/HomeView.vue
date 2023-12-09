@@ -4,7 +4,8 @@
     <div v-else class="content">
       <h1>Campaigns</h1>
       <campaign-list :campaigns="campaigns"></campaign-list>
-      <router-link :to="{ name: 'CreateCampaignView' }" class="button is-link">Create Campaign</router-link>
+      <router-link :to="{ name: 'CreateCampaignView' }" class="button is-link"><i
+          class="fa-solid fa-plus"></i>Campaign</router-link>
     </div>
   </div>
 </template>
@@ -56,6 +57,10 @@ export default {
 }
 
 .header h1 {
+  margin-right: 10px;
+}
+
+.fa-plus {
   margin-right: 10px;
 }
 </style>
