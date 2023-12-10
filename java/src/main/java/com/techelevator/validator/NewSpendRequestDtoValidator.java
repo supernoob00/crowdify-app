@@ -6,7 +6,7 @@ import com.techelevator.model.NewSpendRequestDto;
 
 import java.time.LocalDateTime;
 
-public class NewSpendRequestDtoValidator implements Validator {
+public class NewSpendRequestDtoValidator implements Validator<NewSpendRequestDto> {
     private final JdbcCampaignDao campaignDao;
 
     public NewSpendRequestDtoValidator(JdbcCampaignDao campaignDao) {
@@ -19,9 +19,7 @@ public class NewSpendRequestDtoValidator implements Validator {
     }
 
     @Override
-    public void validate(Object o, ErrorResult errorResult) {
-        NewSpendRequestDto dto = (NewSpendRequestDto) o;
-
+    public void validate(NewSpendRequestDto dto, ErrorResult errorResult) {
         if (dto.getAmount() <= 0) {
             errorResult.reject("Spend request must be positive");
         }

@@ -9,7 +9,7 @@ import com.techelevator.model.Donation;
 import com.techelevator.model.UpdateDonationDto;
 import com.techelevator.model.User;
 
-public class UpdateDonationDtoValidator implements Validator {
+public class UpdateDonationDtoValidator implements Validator<UpdateDonationDto> {
     private int donationId;
     private JdbcDonationDao donationDao;
     private JdbcCampaignDao campaignDao;
@@ -28,9 +28,7 @@ public class UpdateDonationDtoValidator implements Validator {
     }
 
     @Override
-    public void validate(Object o, ErrorResult errorResult) {
-        UpdateDonationDto dto = (UpdateDonationDto) o;
-
+    public void validate(UpdateDonationDto dto, ErrorResult errorResult) {
         Donation donation = donationDao.getDonationById(donationId).orElse(null);
 
         // validate donation id is valid
