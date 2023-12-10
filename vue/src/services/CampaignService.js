@@ -42,8 +42,8 @@ export default {
     return axios.get(`/campaigns/${id}/spend-requests`);
   },
   // not working below
-  getVotesBySpendRequestId(id) {
-    return axios.get(`/campaigns/${id}`)
+  getVotesBySpendRequestId(sr) {
+    return axios.get(`/campaigns/${sr.campaignId}/spend-requests/${sr.id}/votes`);
   },
 
   handleErrorResponse(store, error, verb, object) {

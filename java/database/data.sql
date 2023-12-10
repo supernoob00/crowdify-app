@@ -20,13 +20,12 @@ description,
 funding_goal,
 start_date,
 end_date,
-locked,
 public
 )
 VALUES
-('Giant Inflatable Hot Dog', 'Yum', 30000, '2020-06-22 19:10:25', '2020-06-23 19:10:25', false, false),
-('Pick Up Rocks', 'I like rocks', 10000, '2023-06-22 19:10:25', '2027-06-23 19:10:25', true, true),
-('World''s Most Burnt Pizza', 'Eat some pizza', 5000, '2023-06-22 19:10:25', '2027-06-23 19:10:25', false, true);
+('Giant Inflatable Hot Dog', 'Yum', 30000, '2020-06-22 19:10:25', '2024-01-23 19:10:25', false),
+('Pick Up Rocks', 'I like rocks', 10000, '2023-06-22 19:10:25', '2024-06-23 19:10:25', false),
+('World''s Most Burnt Pizza', 'Eat some pizza', 5000, '2023-06-22 19:10:25', '2024-06-23 19:10:25', true);
 
 INSERT INTO campaign_manager (campaign_id, manager_id, creator) VALUES
 (1, 1, true),

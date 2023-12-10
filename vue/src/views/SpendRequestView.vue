@@ -27,7 +27,15 @@
         </div>
       </div>
       <hr>
-      <h3>{{ spendRequest.description }}</h3>
+      <p>{{ spendRequest.description }}</p>
+      <hr>
+      <h5>votes</h5>
+      <p>{{ votes.length }} out of {{ donorList.size }} votes cast</p>
+      <p>{{ approvedVotes.length }} approved</p>
+      <p>{{ disapprovedVotes.length }} disapproved</p>
+      <p>{{ approvalPercent }}% approved</p>
+      <!-- See below only for managers (?) -->
+      <!-- <div v-for="(vote, index) in votes" :key="index">{{ vote }}</div> -->
     </div>
   </div>
 </template>
@@ -44,6 +52,7 @@ export default {
     return {
       campaign: {},
       spendRequest: {},
+      votes: {},
       isLoading: true,
     }
   },
@@ -59,6 +68,24 @@ export default {
     },
     amountDisplay() {
       return displayMoney(this.spendRequest.amount);
+    },
+    donorList() {
+      const uniqueDonors = new Set();
+      this.campaign.donations.forEach(d => {
+        if (d.donor != null) {
+          uniqueDonors.add(d.donor.username);
+        }
+      });
+      return uniqueDonors;
+    },
+    approvedVotes() {
+      return this.votes.filter(v => v.approved);
+    },
+    disapprovedVotes() {
+      return this.votes.filter(v => !v.approved);
+    },
+    approvalPercent() {
+      return this.approvedVotes.length / (this.disapprovedVotes.length + this.approvedVotes.length) * 100
     }
   },
   methods: {
@@ -82,10 +109,21 @@ export default {
         campaignService.handleErrorResponse(this.$store, error, 'getting', 'campaign');
       }
     },
+    async getVotes() {
+      try {
+        const response = await campaignService.getVotesBySpendRequestId(this.spendRequest);
+        if (response.status === 200) {
+          this.votes = response.data;
+        }
+      } catch (error) {
+        campaignService.handleErrorResponse(this.$store, error, 'getting', 'votes');
+      }
+    }
   },
   async created() {
-    await this.getSpendRequest();
     await this.getCampaign();
+    await this.getSpendRequest();
+    await this.getVotes();
     this.isLoading = false;
   }
 }

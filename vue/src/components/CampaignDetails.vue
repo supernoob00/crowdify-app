@@ -47,6 +47,7 @@
 <script>
 import DonationDisplay from './DonationDisplay.vue';
 import SpendRequestDisplay from './SpendRequestDisplay.vue';
+import { displayMoney } from '../services/Utilities';
 export default {
   components: {
     DonationDisplay,

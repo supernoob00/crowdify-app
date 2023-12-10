@@ -21,7 +21,7 @@
           <input type="Number" class="input" placeholder="$1 Minimum" v-model="editCampaign.fundingGoal">
         </div>
       </div>
-      <div class="field">
+      <div class="field" v-if="campaign.id === -1">
         <label class="label">Start Date</label>
         <div class="control">
           <input type="date" class="input" :min="minStartDate" placeholder="Start Date" v-model="editCampaign.startDate">
