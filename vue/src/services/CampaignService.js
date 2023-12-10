@@ -26,7 +26,6 @@ export default {
   },
 
   getSpendRequestById(campaignId, spendRequestId) {
-    console.log(`/campaigns/${campaignId}/spend-requests/${spendRequestId}`);
     return axios.get(`/campaigns/${campaignId}/spend-requests/${spendRequestId}`);
   },
 

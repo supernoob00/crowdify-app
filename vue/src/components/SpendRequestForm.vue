@@ -93,9 +93,12 @@ export default {
           const response = await campaignService.createSpendRequest(this.newSpendRequestDto);
           if (response.status === 201) {
             const createdSpendRequest = response.data;
-            this.$store.commit('SET_NOTIFICATION', { message: 'Created Campaign!', type: 'success' })
+            this.$store.commit('SET_NOTIFICATION', { message: 'Created SpendRequest!', type: 'success' })
             this.resetAddForm();
-            this.$router.push({ name: 'SpendRequestView', params: { id: createdSpendRequest.id } })
+            this.$router.push({
+              name: 'SpendRequestView',
+              params: { campaignId: createdSpendRequest.campaignId, spendRequestId: createdSpendRequest.id }
+            })
           }
         } catch (error) {
           campaignService.handleErrorResponse(this.$store, error, 'creating', 'campaign');
@@ -106,9 +109,13 @@ export default {
         try {
           const response = await campaignService.putSpendRequest(this.updateSpendRequestDto, this.editSpendRequest.id);
           if (response.status === 200) {
+            const updatedSpendRequest = response.data;
             this.$store.commit('SET_NOTIFICATION', { message: 'Updated Campaign!', type: 'success' });
             this.resetAddForm();
-            this.$router.push({ name: 'CampaignView', params: { id: this.editSpendRequest.id } });
+            this.$router.push({
+              name: 'SpendRequestView',
+              params: { campaignId: updatedSpendRequest.campaignId, spendRequestId: updatedSpendRequest.id }
+            })
           }
         } catch (error) {
           campaignService.handleErrorResponse(this.$store, error, 'updating', 'campaign');

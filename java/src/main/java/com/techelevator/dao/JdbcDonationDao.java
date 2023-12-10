@@ -1,10 +1,7 @@
 package com.techelevator.dao;
 
 import com.techelevator.exception.DaoException;
-import com.techelevator.model.Campaign;
-import com.techelevator.model.Donation;
-import com.techelevator.model.NewDonationDto;
-import com.techelevator.model.User;
+import com.techelevator.model.*;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.CannotGetJdbcConnectionException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -113,6 +110,35 @@ public class JdbcDonationDao {
         } catch (CannotGetJdbcConnectionException e) {
             throw new DaoException("Unable to connect to server or database", e);
         }
+    }
+
+    public Donation updateDonation(UpdateDonationDto updateDonationDto, int donationId) {
+
+        if (updateDonationDto.isRefunded()) {
+            updateDonationDto.setAmount(0);
+        }
+
+        String sql = "UPDATE donation SET " +
+                "donation_amount = ?, " +
+                "donation_comment = ?, " +
+                "refunded = ? " +
+                "WHERE donation_id = ?;";
+
+        try {
+            jdbcTemplate.update(sql,
+                    updateDonationDto.getAmount(),
+                    updateDonationDto.getComment(),
+                    updateDonationDto.isRefunded(),
+                    donationId);
+        } catch (CannotGetJdbcConnectionException e) {
+            throw new DaoException("Unable to connect to server or database", e);
+        } catch (DataIntegrityViolationException e) {
+            throw new DaoException("Data integrity violation", e);
+        }
+
+        return getDonationById(donationId).orElseThrow();
+
+
     }
 
     public Donation mapRowToDonation(SqlRowSet results) {
