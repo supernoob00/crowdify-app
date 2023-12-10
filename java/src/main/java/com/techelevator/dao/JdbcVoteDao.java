@@ -18,13 +18,9 @@ import java.util.Optional;
 public class JdbcVoteDao {
 
     private final JdbcTemplate jdbcTemplate;
-    private final UserDao userDao;
-    private final JdbcSpendRequestDao jdbcSpendRequestDao;
 
-    public JdbcVoteDao(JdbcTemplate jdbcTemplate, UserDao userDao, JdbcSpendRequestDao jdbcSpendRequestDao) {
+    public JdbcVoteDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        this.userDao = userDao;
-        this.jdbcSpendRequestDao = jdbcSpendRequestDao;
     }
 
     // get votes by spend request id
