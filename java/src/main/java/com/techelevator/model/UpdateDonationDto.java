@@ -14,10 +14,12 @@ public class UpdateDonationDto {
     private int amount;
     @NotBlank
     private String comment;
+    private boolean refunded;
 
-    public UpdateDonationDto(int amount, String comment) {
+    public UpdateDonationDto(int amount, String comment, boolean refunded) {
         this.amount = amount;
         this.comment = comment;
+        this.refunded = refunded;
     }
 
     public UpdateDonationDto() {
@@ -37,5 +39,13 @@ public class UpdateDonationDto {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public boolean isRefunded() {
+        return refunded;
+    }
+
+    public void setRefunded(boolean refunded) {
+        this.refunded = refunded;
     }
 }
