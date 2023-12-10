@@ -1,5 +1,6 @@
 package com.techelevator.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.lang.Nullable;
 
@@ -8,9 +9,11 @@ import java.util.Objects;
 
 public class NewVoteDto {
     @Min(1)
+    @JsonProperty("userId")
     private int donorId;
     @Min(1)
     private int requestId;
+    @JsonProperty("approved")
     private boolean voteApproved;
 
     public NewVoteDto(int donorId, int requestId, boolean voteApproved) {

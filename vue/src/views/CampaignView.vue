@@ -34,10 +34,10 @@ export default {
       return this.campaign.managers.filter(m => m.username === this.currentUser.username).length > 0;
     },
     isStakeHolder() {
-      return this.campaign.donations.filter(d => d.donorId === this.currentUser.id).length > 0;
+      return this.campaign.donations.filter(d => d.donor != null && d.donor.id === this.currentUser.id).length > 0;
     },
     canViewSpendRequests() {
-      
+      console.log(this.isStakeHolder);
       return (this.currentUser.id != undefined) && (this.isManager || this.isStakeHolder);
     }
   },

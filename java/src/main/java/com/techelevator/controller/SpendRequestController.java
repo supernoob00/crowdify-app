@@ -249,9 +249,10 @@ public class SpendRequestController {
             result.reject("This spend request is no longer accepting votes");
         }
 
-        Validator validator = new VoteValidator(jdbcUserDao,
-                jdbcSpendRequestDao, jdbcCampaignDao);
-        validator.validate(result, result);
+//TODO: add a new validator for updateVoteDto
+//        Validator<Vote> validator = new VoteValidator(jdbcUserDao,
+//                jdbcSpendRequestDao, jdbcCampaignDao);
+//        validator.validate(updateVoteDto, result);
 
         if (result.hasErrors()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,

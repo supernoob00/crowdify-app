@@ -2,7 +2,7 @@
   <nav class="navbar is-light" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
       <div class="navbar-item">
-        <img src="@/assets/icon1.png">
+        <img src="../assets/icon1.png">
       </div>
     </div>
     <div class="navbar-start">
