@@ -19,6 +19,7 @@ public class UpdateCampaignDto {
     @Min(100)
     private int fundingGoal;
     @NotNull @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    // TODO: add start date to update, only if before start date
     private LocalDateTime endDate;
     private boolean locked;
     private boolean isPublic;

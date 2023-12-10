@@ -9,7 +9,6 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 public class UpdateDonationDto {
-
     @Min(1) @Max(50_000_000)
     private int amount;
     @NotBlank

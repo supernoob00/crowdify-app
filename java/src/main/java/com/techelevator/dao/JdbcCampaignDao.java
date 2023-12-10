@@ -21,11 +21,15 @@ public class JdbcCampaignDao {
     private final JdbcTemplate jdbcTemplate;
     private final JdbcDonationDao jdbcDonationDao;
     private final UserDao userDao;
+    private final JdbcSpendRequestDao spendRequestDao;
 
-    public JdbcCampaignDao(JdbcTemplate jdbcTemplate, JdbcDonationDao jdbcDonationDao, UserDao userDao) {
+    public JdbcCampaignDao(JdbcTemplate jdbcTemplate,
+                           JdbcDonationDao jdbcDonationDao, UserDao userDao,
+                           JdbcSpendRequestDao spendRequestDao) {
         this.jdbcTemplate = jdbcTemplate;
         this.jdbcDonationDao = jdbcDonationDao;
         this.userDao = userDao;
+        this.spendRequestDao = spendRequestDao;
     }
 
     public List<Campaign> getCampaignList() {
@@ -198,6 +202,11 @@ public class JdbcCampaignDao {
         } catch (CannotGetJdbcConnectionException e) {
             throw new DaoException("Unable to connect to server or database", e);
         }
+    }
+
+    public int getTotalFunds(int campaignId) {
+        return jdbcDonationDao.getDonationTotalByCampaignId(campaignId)
+                - spendRequestDao.approvedTotalByCampaignId(campaignId);
     }
 
     private Campaign mapRowtoCampaign(SqlRowSet rowSet) {

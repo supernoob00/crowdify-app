@@ -16,6 +16,10 @@ public class CampaignValidator implements Validator {
     public void validate(Object o, ErrorResult errors) {
         Campaign campaign = (Campaign) o;
 
+        if (campaign.getFundingGoal() < 100) {
+            errors.reject("Minimum funding foal for campaign is $1");
+        }
+
         // validate dates
         if (campaign.getEndDate().isBefore(campaign.getStartDate())) {
             errors.reject("End date before start date");
