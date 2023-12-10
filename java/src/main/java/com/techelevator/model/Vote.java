@@ -1,11 +1,12 @@
 package com.techelevator.model;
 
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
 public class Vote {
-    @Min(1)
-    private int userId;
+    @NotNull
+    private User user;
     @Min(1)
     private int requestId;
     private boolean approved;
@@ -13,18 +14,18 @@ public class Vote {
     public Vote() {
     }
 
-    public Vote(int userId, int requestId, boolean approved) {
-        this.userId = userId;
+    public Vote(User user, int requestId, boolean approved) {
+        this.user = user;
         this.requestId = requestId;
         this.approved = approved;
     }
 
-    public int getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public int getRequestId() {
@@ -48,12 +49,12 @@ public class Vote {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Vote vote = (Vote) o;
-        return userId == vote.userId && requestId == vote.requestId && approved == vote.approved;
+        return requestId == vote.requestId && approved == vote.approved && user.equals(vote.user);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userId, requestId, approved);
+        return Objects.hash(user, requestId, approved);
     }
 }
 

@@ -28,7 +28,7 @@ public class VoteValidator implements Validator<Vote> {
     @Override
     public void validate(Vote vote, ErrorResult errorResult) {
         // validate voter id is valid
-        User voter = userDao.getUserById(vote.getUserId()).orElse(null);
+        User voter = userDao.getUserById(vote.getUser().getId()).orElse(null);
         if (voter == null) {
             errorResult.rejectValue("voterId", "invalid");
         }
