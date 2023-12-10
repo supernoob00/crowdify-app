@@ -149,12 +149,13 @@ public class JdbcVoteDao {
     }
 
     private Vote mapRowtoVote(SqlRowSet rowSet) {
+        JdbcUserDao userDao = new JdbcUserDao(jdbcTemplate);
         Vote vote = new Vote();
 
-        vote.setUserId(rowSet.getInt("donor_id"));
+        User user = userDao.getUserById(rowSet.getInt("donor_id")).orElseThrow();
+        vote.setUser(user);
         vote.setRequestId(rowSet.getInt("request_id"));
         vote.setApproved(rowSet.getBoolean("vote_approved"));
-
-    return vote;
+        return vote;
     }
 }
