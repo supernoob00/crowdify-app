@@ -4,10 +4,11 @@ import com.techelevator.dao.JdbcCampaignDao;
 import com.techelevator.model.Campaign;
 import com.techelevator.model.Donation;
 import com.techelevator.model.UpdateCampaignDto;
+import com.techelevator.model.UpdateSpendRequestDto;
 
 import java.time.LocalDateTime;
 
-public class UpdateCampaignDtoValidator implements Validator {
+public class UpdateCampaignDtoValidator implements Validator<UpdateCampaignDto> {
     private final int campaignId;
     private final JdbcCampaignDao campaignDao;
 
@@ -23,9 +24,7 @@ public class UpdateCampaignDtoValidator implements Validator {
     }
 
     @Override
-    public void validate(Object o, ErrorResult errorResult) {
-        UpdateCampaignDto dto = (UpdateCampaignDto) o;
-
+    public void validate(UpdateCampaignDto dto, ErrorResult errorResult) {
         if (dto.getFundingGoal() < 100) {
             errorResult.reject("Minimum funding foal for campaign is $1");
         }

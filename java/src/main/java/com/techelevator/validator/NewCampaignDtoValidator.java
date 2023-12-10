@@ -3,7 +3,7 @@ package com.techelevator.validator;
 import com.techelevator.dao.JdbcUserDao;
 import com.techelevator.model.NewCampaignDto;
 
-public class NewCampaignDtoValidator implements Validator {
+public class NewCampaignDtoValidator implements Validator<NewCampaignDto> {
     private final JdbcUserDao userDao;
 
     public NewCampaignDtoValidator(JdbcUserDao userDao) {
@@ -16,9 +16,7 @@ public class NewCampaignDtoValidator implements Validator {
     }
 
     @Override
-    public void validate(Object o, ErrorResult errorResult) {
-        NewCampaignDto dto = (NewCampaignDto) o;
-
+    public void validate(NewCampaignDto dto, ErrorResult errorResult) {
         if (dto.getFundingGoal() < 100) {
             errorResult.reject("Minimum funding foal for campaign is $1");
         }

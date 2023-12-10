@@ -6,15 +6,14 @@ import com.techelevator.model.Donation;
 import com.techelevator.model.User;
 import org.springframework.validation.Errors;
 
-public class CampaignValidator implements Validator {
+public class CampaignValidator implements Validator<Campaign> {
     @Override
     public boolean supports(Class<?> aClass) {
         return Campaign.class.equals(aClass);
     }
 
     @Override
-    public void validate(Object o, ErrorResult errors) {
-        Campaign campaign = (Campaign) o;
+    public void validate(Campaign campaign, ErrorResult errors) {
 
         if (campaign.getFundingGoal() < 100) {
             errors.reject("Minimum funding foal for campaign is $1");

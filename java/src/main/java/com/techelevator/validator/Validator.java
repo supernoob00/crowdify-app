@@ -1,7 +1,7 @@
 package com.techelevator.validator;
 
-public interface Validator {
+public interface Validator<T> {
     boolean supports(Class<?> aClass);
 
-    void validate(Object o, ErrorResult errorResult);
+    void validate(T t, ErrorResult errorResult);
 }

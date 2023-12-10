@@ -8,7 +8,7 @@ import com.techelevator.model.SpendRequest;
 import com.techelevator.model.Vote;
 import java.util.List;
 
-public class SpendRequestValidator implements Validator {
+public class SpendRequestValidator implements Validator<SpendRequest> {
     private final JdbcCampaignDao campaignDao;
     private final JdbcSpendRequestDao spendRequestDao;
     private final JdbcVoteDao voteDao;
@@ -27,9 +27,7 @@ public class SpendRequestValidator implements Validator {
     }
 
     @Override
-    public void validate(Object o, ErrorResult errorResult) {
-        SpendRequest request = (SpendRequest) o;
-
+    public void validate(SpendRequest request, ErrorResult errorResult) {
         if (request.getAmount() <= 0) {
             errorResult.reject("Spend request amount must be positive");
         }
