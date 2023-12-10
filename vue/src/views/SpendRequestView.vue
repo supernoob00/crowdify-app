@@ -13,6 +13,7 @@
           </h1>
           <span>Created by </span>
           <span class="campaign-creator">{{ campaign.creator.username }}</span>
+          <p class="request-amount">{{ amountDisplay }}</p>
         </div>
         <div class="buttons">
           <router-link v-if="isManager" class="button is-link" :to="{
@@ -26,7 +27,6 @@
         </div>
       </div>
       <hr>
-      <p>{{ amountDisplay }}</p>
       <h3>{{ spendRequest.description }}</h3>
     </div>
   </div>
@@ -35,6 +35,7 @@
 <script>
 import campaignService from '../services/CampaignService';
 import LoadingScreen from '../components/LoadingScreen.vue';
+import { displayMoney } from '../services/Utilities';
 export default {
   components: {
     LoadingScreen,
@@ -57,7 +58,7 @@ export default {
       return this.campaign.managers.filter(m => m.username === this.$store.state.user.username).length > 0;
     },
     amountDisplay() {
-      return `$${this.spendRequest.amount / 100}`;
+      return displayMoney(this.spendRequest.amount);
     }
   },
   methods: {
@@ -117,9 +118,5 @@ export default {
 
 .campaign-creator {
   font-weight: 600;
-}
-
-hr {
-  margin: 1rem 0;
 }
 </style>
