@@ -62,7 +62,7 @@ public class DonationController {
     public Donation createDonation(Principal principal, @Valid @RequestBody NewDonationDto newDonationDto) {
         // check if valid campaign
         Campaign campaign = jdbcCampaignDao.getCampaignById(
-                newDonationDto.getCampaignId())
+                        newDonationDto.getCampaignId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Campaign not found."));
 
         // check if campaign is locked, private, or DTO donor id does not
@@ -86,28 +86,32 @@ public class DonationController {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @PutMapping("/donations/{id}")
+    @PutMapping("/donations/{donationId}")
     @ResponseStatus(HttpStatus.OK)
     public Donation updateDonation(@PathVariable int donationId,
                                    Principal principal,
                                    @Valid @RequestBody UpdateDonationDto updateDonationDto) {
+        // gets the donation associated with the path variable
         Donation donationToUpdate = jdbcDonationDao.getDonationById(donationId).orElseThrow(() ->
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "Donation not found."));
 
-        int userId = AuthenticationController.getUserIdFromPrincipal(principal, jdbcUserDao);
-        List<Donation> donations = getDonationsByUserId(principal,donationId);
+        boolean isCorrectDonor = false;
+        int loggedInUserId = AuthenticationController.getUserIdFromPrincipal(principal, userDao);
+        List<Donation> loggedInDonationList = jdbcDonationDao.getDonationsByUserId(loggedInUserId);
 
-        // TODO: currently nothing in the updateDonationDtoValidator class.
+        // makes sure that there's a donation associated with the logged in user that matches the path variable.
+        for (Donation donation : loggedInDonationList) {
+            if (donation.getDonationId() == donationId) {
+                isCorrectDonor = true;
+                break;
+            }
+        }
+        if (!isCorrectDonor) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not authorized to update this vote.");
 
-//        UpdateDonationDtoValidator validator = new UpdateDonationDtoValidator();
-//        validator.validate(updateDonationDto, result);
-//
-//        if (result.hasErrors()) {
-//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-//                    result.getAllErrors().toString());*/
-//            return null;
-//        }
-        return null;
+            // TODO: do we need validation here?
+
+        } return jdbcDonationDao.updateDonation(updateDonationDto, donationId);
     }
 
     public boolean donationDtoMatchesPrincipal(@Nullable Principal principal,
