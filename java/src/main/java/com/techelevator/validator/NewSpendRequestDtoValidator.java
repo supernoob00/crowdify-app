@@ -1,10 +1,18 @@
 package com.techelevator.validator;
 
+import com.techelevator.dao.JdbcCampaignDao;
+import com.techelevator.model.Campaign;
 import com.techelevator.model.NewSpendRequestDto;
 
 import java.time.LocalDateTime;
 
 public class NewSpendRequestDtoValidator implements Validator {
+    private final JdbcCampaignDao campaignDao;
+
+    public NewSpendRequestDtoValidator(JdbcCampaignDao campaignDao) {
+        this.campaignDao = campaignDao;
+    }
+
     @Override
     public boolean supports(Class<?> aClass) {
         return NewSpendRequestDto.class.equals(aClass);
@@ -14,21 +22,36 @@ public class NewSpendRequestDtoValidator implements Validator {
     public void validate(Object o, ErrorResult errorResult) {
         NewSpendRequestDto dto = (NewSpendRequestDto) o;
 
-        if (dto.getEndDate().isBefore(LocalDateTime.now())) {
-            errorResult.rejectValue("d", "d");
+        if (dto.getAmount() <= 0) {
+            errorResult.reject("Spend request must be positive");
+        }
+
+        // TODO: add buffer period
+//        if (dto.getEndDate().isBefore(LocalDateTime.now())) {
+//            errorResult.reject("");
+//        }
+
+        Campaign campaign = campaignDao.getCampaignById(dto.getCampaignId()).orElse(null);
+        if (campaign == null) {
+            errorResult.reject("Spend request must be for a valid campaign");
+        } else {
+            if (campaign.isLocked() || campaign.isDeleted()) {
+                errorResult.reject("Campaign must not be locked or deleted");
+            }
+
+            if (!campaign.isGoalMet()) {
+                errorResult.reject("Campaign goal must have been met");
+            }
+
+            if (dto.getAmount() > campaignDao.getTotalFunds(dto.getCampaignId())) {
+                errorResult.reject("Must have enough funds for spend request");
+            }
+
+            // validate spend request end date is before campaign end date
+            if (dto.getEndDate().isBefore(campaign.getStartDate())) {
+                errorResult.reject("Spend request end date cannot be before " +
+                        "campaign start date");
+            }
         }
     }
-
-//    int total = campaign.getDonationTotal()
-//            - spendRequestDao.approvedTotalByCampaignId(campaign.getId());
-
-    // TODO: validate end date
-
-    // TODO: validate campaign id
-
-    // TODO: validate campaign is not locked or deleted
-
-    // TODO: validate campaign is in second phase
-
-    // TODO: validate amount less than or equal to current funds
 }

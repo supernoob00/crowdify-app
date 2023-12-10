@@ -19,6 +19,10 @@ public class NewCampaignDtoValidator implements Validator {
     public void validate(Object o, ErrorResult errorResult) {
         NewCampaignDto dto = (NewCampaignDto) o;
 
+        if (dto.getFundingGoal() < 100) {
+            errorResult.reject("Minimum funding foal for campaign is $1");
+        }
+
         // validate dates
         if (dto.getEndDate().isBefore(dto.getStartDate())) {
             errorResult.reject("End date before start date");

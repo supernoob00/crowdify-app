@@ -18,10 +18,13 @@ import java.util.Optional;
 public class JdbcDonationDao {
     private final JdbcTemplate jdbcTemplate;
     private final UserDao userDao;
+    private final JdbcSpendRequestDao spendRequestDao;
 
-    public JdbcDonationDao(JdbcTemplate jdbcTemplate, UserDao userDao) {
+    public JdbcDonationDao(JdbcTemplate jdbcTemplate, UserDao userDao,
+                           JdbcSpendRequestDao spendRequestDao) {
         this.userDao = userDao;
         this.jdbcTemplate = jdbcTemplate;
+        this.spendRequestDao = spendRequestDao;
     }
 
     public List<Donation> getDonationsByUserId(int userId) {
@@ -100,7 +103,7 @@ public class JdbcDonationDao {
 
     public int getDonationTotalByCampaignId(int campaignId) {
         String sql = "SELECT SUM (donation_amount) FROM donation WHERE " +
-                "campaign_id = ?;";
+                "NOT refunded AND campaign_id = ?;";
         try {
             return Objects.requireNonNull(
                     jdbcTemplate.queryForObject(sql, Integer.class, campaignId));
@@ -145,7 +148,8 @@ public class JdbcDonationDao {
         donation.setDonationId(results.getInt("donation_id"));
         donation.setDonor(donor);
 
-        JdbcCampaignDao campaignDao = new JdbcCampaignDao(jdbcTemplate, this, userDao);
+        JdbcCampaignDao campaignDao = new JdbcCampaignDao(jdbcTemplate, this,
+                userDao, spendRequestDao);
         int campaignId = results.getInt("campaign_id");
         String campaignName = campaignDao.getCampaignNameById(campaignId).orElseThrow();
 

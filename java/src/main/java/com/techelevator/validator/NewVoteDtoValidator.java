@@ -55,6 +55,11 @@ public class NewVoteDtoValidator implements Validator {
             Campaign campaign = campaignDao.getCampaignById(
                     request.getCampaignId()).orElseThrow();
 
+            // validate associated campaign is not locked or deleted
+            if (campaign.isDeleted() || campaign.isLocked()) {
+                errorResult.reject("Campaign cannot be deleted or locked");
+            }
+
             // validate voter id is a donor of the campaign associated with the
             // spend request
             if (voter != null && campaign.getDonations().stream()

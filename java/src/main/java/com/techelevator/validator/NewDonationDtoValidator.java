@@ -20,6 +20,11 @@ public class NewDonationDtoValidator implements Validator {
     public void validate(Object o, ErrorResult errorResult) {
         NewDonationDto dto = (NewDonationDto) o;
 
+        // validate positive amount
+        if (dto.getAmount() <= 0) {
+            errorResult.reject("Donation amount must be positive");
+        }
+
         // validate anonymous if user is null
         if (dto.getDonorId() == null && !dto.isAnonymous()) {
             errorResult.reject("Donation must be marked anonymous if user is null");
@@ -36,7 +41,6 @@ public class NewDonationDtoValidator implements Validator {
                 errorResult.reject("Campaign receiving donation must not be locked or " +
                         "deleted");
             }
-
             // TODO: validate campaign not private (?)
         }
     }

@@ -30,9 +30,11 @@ public class SpendRequestValidator implements Validator {
     public void validate(Object o, ErrorResult errorResult) {
         SpendRequest request = (SpendRequest) o;
 
-        Campaign campaign = campaignDao.getCampaignById(request.getCampaignId()).orElse(null);
+        if (request.getAmount() <= 0) {
+            errorResult.reject("Spend request amount must be positive");
+        }
 
-        // validate
+        Campaign campaign = campaignDao.getCampaignById(request.getCampaignId()).orElse(null);
 
         // validate campaign id is valid
         if (campaign == null) {
@@ -56,9 +58,15 @@ public class SpendRequestValidator implements Validator {
                     yesCount++;
                 }
             }
-            if (yesCount * 2 <= votes.size()) {
+            if (request.isApproved() && yesCount * 2 <= votes.size()) {
                 errorResult.reject("There must be a majority of voters for a spend" +
                         " request to be approved.");
+            }
+
+            // validate spend request end date is before campaign end date
+            if (request.getEndDate().isBefore(campaign.getStartDate())) {
+                errorResult.reject("Spend request end date cannot be before " +
+                        "campaign start date");
             }
         }
     }

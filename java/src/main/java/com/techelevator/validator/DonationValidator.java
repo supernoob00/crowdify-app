@@ -20,6 +20,11 @@ public class DonationValidator implements Validator {
     public void validate(Object o, ErrorResult errorResult) {
         Donation donation = (Donation) o;
 
+        // validate positive amount
+        if (donation.getAmount() <= 0) {
+            errorResult.reject("Donation amount must be positive");
+        }
+
         // validate anonymous if user is null
         if (donation.getDonor() == null && !donation.isAnonymous()) {
             errorResult.reject("Donation must be marked anonymous if user is null");
