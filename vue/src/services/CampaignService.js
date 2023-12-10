@@ -41,9 +41,14 @@ export default {
   getSpendRequestsByCampaignId(id) {
     return axios.get(`/campaigns/${id}/spend-requests`);
   },
-  // not working below
   getVotesBySpendRequestId(sr) {
     return axios.get(`/campaigns/${sr.campaignId}/spend-requests/${sr.id}/votes`);
+  },
+  createVote(spendRequestId, campaignId, newVoteDto) {
+    return axios.post(`/campaigns/${campaignId}/spend-requests/${spendRequestId}/votes`, newVoteDto);
+  },
+  updateVote(spendRequestId, campaignId, newVoteDto) {
+    return axios.put(`/campaigns/${campaignId}/spend-requests/${spendRequestId}/votes`, newVoteDto);
   },
 
   handleErrorResponse(store, error, verb, object) {

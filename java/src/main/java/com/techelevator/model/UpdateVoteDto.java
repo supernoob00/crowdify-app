@@ -1,5 +1,7 @@
 package com.techelevator.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.validation.constraints.Min;
 
 public class UpdateVoteDto {
