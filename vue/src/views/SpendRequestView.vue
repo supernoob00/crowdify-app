@@ -132,7 +132,7 @@ export default {
       return this.editVote.approved === undefined ? { button: true } : { button: true, 'is-danger': !this.editVote.approved };
     },
     hasVoted() {
-      return this.votes.filter(v => v.userId === this.$store.state.user.id).length > 0;
+      return this.votes.filter(v => v.user.id === this.$store.state.user.id).length > 0;
     },
     canVote() {
       return !this.isManager;
@@ -178,7 +178,7 @@ export default {
     },
     async getVotes() {
       try {
-        const response = await campaignService.getVotesBySpendRequestId(this.spendRequest);
+        const response = await campaignService.getVotesBySpendRequestId(this.campaignId, this.spendRequestId);
         if (response.status === 200) {
           this.votes = response.data;
         }
@@ -193,9 +193,7 @@ export default {
     async submitForm() {
       if (this.hasVoted) {
         try {
-          const response = await campaignService.updateVote(
-            this.spendRequest.id, this.spendRequest.campaignId, this.newVoteDto
-          );
+          const response = await campaignService.updateVote(this.campaignId, this.spendRequestId, this.newVoteDto);
           if (response.status === 200) {
             this.$store.commit('SET_NOTIFICATION', { message: 'Updated Vote!', type: 'success' })
           }
@@ -204,8 +202,7 @@ export default {
         }
       } else {
         try {
-          const response = await campaignService.createVote(
-            this.spendRequest.id, this.spendRequest.campaignId, this.newVoteDto);
+          const response = await campaignService.createVote(this.campaignId, this.spendRequestId, this.newVoteDto);
           if (response.status === 201) {
             this.$store.commit('SET_NOTIFICATION', { message: 'Voted!', type: 'success' })
           }
