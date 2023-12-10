@@ -3,6 +3,7 @@ package com.techelevator.controller;
 import com.techelevator.dao.*;
 import com.techelevator.exception.DaoException;
 import com.techelevator.model.*;
+import com.techelevator.validator.*;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.relational.core.sql.Update;
 import org.springframework.http.HttpStatus;
@@ -116,6 +117,15 @@ public class SpendRequestController {
         if (!isManager) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not authorized to create a spend request.");
         }
+
+        ErrorResult result = new ErrorResult();
+        Validator validator = new NewSpendRequestDtoValidator(jdbcCampaignDao);
+        validator.validate(newSpendRequestDto, result);
+
+        if (result.hasErrors()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    result.getCauses().toString());
+        }
         return jdbcSpendRequestDao.createSpendRequest(newSpendRequestDto);
     }
 
@@ -142,6 +152,16 @@ public class SpendRequestController {
         }
         if (!isManager) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not authorized to update a spend request.");
+        }
+
+        ErrorResult result = new ErrorResult();
+        Validator validator = new UpdateSpendRequestDtoValidator(requestId,
+                jdbcSpendRequestDao, jdbcCampaignDao, jdbcVoteDao);
+        validator.validate(updateSpendRequestDto, result);
+
+        if (result.hasErrors()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    result.getCauses().toString());
         }
         return jdbcSpendRequestDao.updateSpendRequest(updateSpendRequestDto, requestId);
     }
@@ -183,6 +203,17 @@ public class SpendRequestController {
         if (!isDonor) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not authorized to vote in this campaign.");
         }
+
+        ErrorResult result = new ErrorResult();
+        Validator validator = new NewVoteDtoValidator(jdbcUserDao,
+                jdbcSpendRequestDao, jdbcCampaignDao);
+        validator.validate(newvoteDto, result);
+
+        if (result.hasErrors()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    result.getCauses().toString());
+        }
+
         return jdbcVoteDao.createVote(newvoteDto);
     }
 
@@ -213,14 +244,22 @@ public class SpendRequestController {
 
         SpendRequest spendRequest = jdbcSpendRequestDao.getSpendRequestById(updateVoteDto.getRequestId()).orElseThrow();
 
+        ErrorResult result = new ErrorResult();
         if (spendRequest.isApproved()) {
-            throw new DaoException("This spend request is no longer accepting votes.");
+            result.reject("This spend request is no longer accepting votes");
+        }
 
-        } return jdbcVoteDao.changeVote(updateVoteDto);
+        Validator validator = new VoteValidator(jdbcUserDao,
+                jdbcSpendRequestDao, jdbcCampaignDao);
+        validator.validate(result, result);
+
+        if (result.hasErrors()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    result.getCauses().toString());
+        }
+
+        return jdbcVoteDao.changeVote(updateVoteDto);
     }
-
-
-
 
     public boolean isCorrectUser(Principal principal, NewDonationDto newDonationDto) {
         String username = principal.getName();
