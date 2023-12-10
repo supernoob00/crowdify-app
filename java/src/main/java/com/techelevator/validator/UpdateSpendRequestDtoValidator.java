@@ -10,7 +10,7 @@ import com.techelevator.model.Vote;
 
 import java.util.List;
 
-public class UpdateSpendRequestDtoValidator implements Validator {
+public class UpdateSpendRequestDtoValidator implements Validator<UpdateSpendRequestDto> {
     private final int requestId;
     private final JdbcSpendRequestDao requestDao;
     private final JdbcCampaignDao campaignDao;
@@ -32,9 +32,7 @@ public class UpdateSpendRequestDtoValidator implements Validator {
     }
 
     @Override
-    public void validate(Object o, ErrorResult errorResult) {
-        UpdateSpendRequestDto dto = (UpdateSpendRequestDto) o;
-
+    public void validate(UpdateSpendRequestDto dto, ErrorResult errorResult) {
         if (dto.getAmount() <= 0) {
             errorResult.reject("Spend request amount must be greater than " +
                     "zero");

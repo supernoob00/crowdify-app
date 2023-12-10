@@ -4,7 +4,7 @@ import com.techelevator.dao.JdbcCampaignDao;
 import com.techelevator.model.Campaign;
 import com.techelevator.model.NewDonationDto;
 
-public class NewDonationDtoValidator implements Validator {
+public class NewDonationDtoValidator implements Validator<NewDonationDto> {
     private final JdbcCampaignDao campaignDao;
 
     public NewDonationDtoValidator(JdbcCampaignDao campaignDao) {
@@ -17,9 +17,7 @@ public class NewDonationDtoValidator implements Validator {
     }
 
     @Override
-    public void validate(Object o, ErrorResult errorResult) {
-        NewDonationDto dto = (NewDonationDto) o;
-
+    public void validate(NewDonationDto dto, ErrorResult errorResult) {
         // validate positive amount
         if (dto.getAmount() <= 0) {
             errorResult.reject("Donation amount must be positive");

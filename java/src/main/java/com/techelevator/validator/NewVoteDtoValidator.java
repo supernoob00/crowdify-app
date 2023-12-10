@@ -7,7 +7,7 @@ import com.techelevator.model.*;
 
 import java.util.Objects;
 
-public class NewVoteDtoValidator implements Validator {
+public class NewVoteDtoValidator implements Validator<NewVoteDto> {
     private final JdbcUserDao userDao;
     private final JdbcSpendRequestDao requestDao;
     private final JdbcCampaignDao campaignDao;
@@ -26,9 +26,7 @@ public class NewVoteDtoValidator implements Validator {
     }
 
     @Override
-    public void validate(Object o, ErrorResult errorResult) {
-        NewVoteDto dto = (NewVoteDto) o;
-
+    public void validate(NewVoteDto dto, ErrorResult errorResult) {
         // validate voter id is valid
         User voter = userDao.getUserById(dto.getDonorId()).orElse(null);
         if (voter == null) {

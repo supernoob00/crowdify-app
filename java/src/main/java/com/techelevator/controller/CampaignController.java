@@ -7,6 +7,7 @@ import com.techelevator.model.*;
 import com.techelevator.validator.CampaignValidator;
 import com.techelevator.validator.ErrorResult;
 import com.techelevator.validator.NewCampaignDtoValidator;
+import com.techelevator.validator.UpdateCampaignDtoValidator;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
@@ -121,7 +122,8 @@ public class CampaignController {
                         "Campaign not found."));
 
         ErrorResult result = new ErrorResult();
-        CampaignValidator validator = new CampaignValidator();
+        UpdateCampaignDtoValidator validator =
+                new UpdateCampaignDtoValidator(id, jdbcCampaignDao);
         validator.validate(updateCampaignDto, result);
 
         if (result.hasErrors()) {
