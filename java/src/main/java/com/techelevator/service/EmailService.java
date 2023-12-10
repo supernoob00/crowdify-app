@@ -1,6 +1,8 @@
 package com.techelevator.service;
 
+import com.techelevator.dao.JdbcUserDao;
 import com.techelevator.model.EmailDetails;
+import com.techelevator.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailException;
@@ -16,20 +18,24 @@ public class EmailService {
     @Value("${spring.mail.username}")
     private String sender;
 
-    public boolean sendSimpleMail(EmailDetails details)
+    public void sendForgotPasswordMail(User user) throws MailException {
+        String subject = "Your Forgotten Password";
+        String message = "This is a test message";
+
+        EmailDetails email = new EmailDetails(user.getEmail(), message,
+                subject);
+        sendSimpleMail(email);
+    }
+
+    private void sendSimpleMail(EmailDetails details) throws MailException
     {
-        try {
-            SimpleMailMessage mailMessage = new SimpleMailMessage();
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
 
-            mailMessage.setFrom(sender);
-            mailMessage.setTo(details.getRecipient());
-            mailMessage.setText(details.getMsgBody());
-            mailMessage.setSubject(details.getSubject());
+        mailMessage.setFrom(sender);
+        mailMessage.setTo(details.getRecipient());
+        mailMessage.setText(details.getMsgBody());
+        mailMessage.setSubject(details.getSubject());
 
-            javaMailSender.send(mailMessage);
-            return true;
-        } catch (MailException me) {
-            return false;
-        }
+        javaMailSender.send(mailMessage);
     }
 }
