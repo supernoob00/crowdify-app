@@ -2,10 +2,7 @@ package com.techelevator.controller;
 
 import com.techelevator.dao.*;
 import com.techelevator.model.*;
-import com.techelevator.validator.CampaignValidator;
-import com.techelevator.validator.ErrorResult;
-import com.techelevator.validator.NewDonationDtoValidator;
-import com.techelevator.validator.UpdateDonationDtoValidator;
+import com.techelevator.validator.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.lang.Nullable;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -14,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
@@ -108,14 +106,23 @@ public class DonationController {
         }
         if (!isCorrectDonor) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not authorized to update this vote.");
+        }
 
-            // TODO: do we need validation here?
+        ErrorResult result = new ErrorResult();
+        Validator validator = new UpdateDonationDtoValidator(donationId,
+                jdbcDonationDao, jdbcCampaignDao);
+        validator.validate(updateDonationDto, result);
 
-        } return jdbcDonationDao.updateDonation(updateDonationDto, donationId);
+        if (result.hasErrors()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    result.getCauses().toString());
+        }
+
+        return jdbcDonationDao.updateDonation(updateDonationDto, donationId);
     }
 
     public boolean donationDtoMatchesPrincipal(@Nullable Principal principal,
-                                               NewDonationDto newDonationDto) {
+                                               @NotNull NewDonationDto newDonationDto) {
         if (principal == null) {
             return newDonationDto.getDonorId() == null
                     && newDonationDto.isAnonymous();

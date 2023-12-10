@@ -160,7 +160,13 @@ public class CampaignController {
         }
 
         ErrorResult result = new ErrorResult();
+
+        if (campaignToDelete.isDeleted()) {
+            result.reject("Campaign has already been already deleted");
+        }
+
         CampaignValidator validator = new CampaignValidator();
+        campaignToDelete.setDeleted(true);
         validator.validate(campaignToDelete, result);
 
         if (result.hasErrors()) {
