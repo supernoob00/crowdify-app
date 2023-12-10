@@ -19,17 +19,9 @@ import java.util.Optional;
 @Component
 public class JdbcCampaignDao {
     private final JdbcTemplate jdbcTemplate;
-    private final JdbcDonationDao jdbcDonationDao;
-    private final UserDao userDao;
-    private final JdbcSpendRequestDao spendRequestDao;
 
-    public JdbcCampaignDao(JdbcTemplate jdbcTemplate,
-                           JdbcDonationDao jdbcDonationDao, UserDao userDao,
-                           JdbcSpendRequestDao spendRequestDao) {
+    public JdbcCampaignDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        this.jdbcDonationDao = jdbcDonationDao;
-        this.userDao = userDao;
-        this.spendRequestDao = spendRequestDao;
     }
 
     public List<Campaign> getCampaignList() {
@@ -205,11 +197,16 @@ public class JdbcCampaignDao {
     }
 
     public int getTotalFunds(int campaignId) {
-        return jdbcDonationDao.getDonationTotalByCampaignId(campaignId)
+        JdbcDonationDao donationDao = new JdbcDonationDao(jdbcTemplate);
+        JdbcSpendRequestDao spendRequestDao = new JdbcSpendRequestDao(jdbcTemplate);
+        return donationDao.getDonationTotalByCampaignId(campaignId)
                 - spendRequestDao.approvedTotalByCampaignId(campaignId);
     }
 
     private Campaign mapRowtoCampaign(SqlRowSet rowSet) {
+        JdbcDonationDao jdbcDonationDao = new JdbcDonationDao(jdbcTemplate);
+        JdbcUserDao userDao = new JdbcUserDao(jdbcTemplate);
+
         Campaign campaign = new Campaign();
         campaign.setId(rowSet.getInt("campaign_id"));
         campaign.setName(rowSet.getString("campaign_name"));

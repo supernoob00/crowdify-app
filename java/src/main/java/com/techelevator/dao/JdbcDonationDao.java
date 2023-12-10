@@ -17,14 +17,9 @@ import java.util.Optional;
 @Component
 public class JdbcDonationDao {
     private final JdbcTemplate jdbcTemplate;
-    private final UserDao userDao;
-    private final JdbcSpendRequestDao spendRequestDao;
 
-    public JdbcDonationDao(JdbcTemplate jdbcTemplate, UserDao userDao,
-                           JdbcSpendRequestDao spendRequestDao) {
-        this.userDao = userDao;
+    public JdbcDonationDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        this.spendRequestDao = spendRequestDao;
     }
 
     public List<Donation> getDonationsByUserId(int userId) {
@@ -142,14 +137,16 @@ public class JdbcDonationDao {
     }
 
     public Donation mapRowToDonation(SqlRowSet results) {
+        JdbcUserDao userDao = new JdbcUserDao(jdbcTemplate);
+        JdbcSpendRequestDao spendRequestDao = new JdbcSpendRequestDao(jdbcTemplate);
+
         Donation donation = new Donation();
         User donor = userDao.getUserById(results.getInt("donor_id")).orElse(null);
 
         donation.setDonationId(results.getInt("donation_id"));
         donation.setDonor(donor);
 
-        JdbcCampaignDao campaignDao = new JdbcCampaignDao(jdbcTemplate, this,
-                userDao, spendRequestDao);
+        JdbcCampaignDao campaignDao = new JdbcCampaignDao(jdbcTemplate);
         int campaignId = results.getInt("campaign_id");
         String campaignName = campaignDao.getCampaignNameById(campaignId).orElseThrow();
 

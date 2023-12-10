@@ -19,11 +19,9 @@ import java.util.Optional;
 @Component
 public class JdbcSpendRequestDao {
     private final JdbcTemplate jdbcTemplate;
-    private final JdbcCampaignDao jdbcCampaignDao;
 
-    public JdbcSpendRequestDao(JdbcTemplate jdbcTemplate, JdbcCampaignDao jdbcCampaignDao) {
+    public JdbcSpendRequestDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        this.jdbcCampaignDao = jdbcCampaignDao;
     }
 
     public Optional<SpendRequest> getSpendRequestById(int id) {
