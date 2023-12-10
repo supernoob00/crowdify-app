@@ -26,6 +26,7 @@
         </div>
       </div>
       <hr>
+      <p>{{ amountDisplay }}</p>
       <h3>{{ spendRequest.description }}</h3>
     </div>
   </div>
@@ -54,6 +55,9 @@ export default {
     },
     isManager() {
       return this.campaign.managers.filter(m => m.username === this.$store.state.user.username).length > 0;
+    },
+    amountDisplay() {
+      return `$${this.spendRequest.amount / 100}`;
     }
   },
   methods: {

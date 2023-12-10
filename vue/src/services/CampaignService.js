@@ -34,7 +34,8 @@ export default {
   },
 
   putSpendRequest(updateSpendRequestDto) {
-    return axios.put(`/spend-requests/${updateSpendRequestDto.id}`, updateSpendRequestDto);
+    return axios.put(`campaigns/${updateSpendRequestDto.campaignId}
+    /spend-requests/${updateSpendRequestDto.id}`, updateSpendRequestDto);
   },
 
   getSpendRequestsByCampaignId(id) {

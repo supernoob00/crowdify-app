@@ -37,6 +37,7 @@ export default {
       return this.campaign.donations.filter(d => d.donorId === this.currentUser.id).length > 0;
     },
     canViewSpendRequests() {
+      
       return (this.currentUser.id != undefined) && (this.isManager || this.isStakeHolder);
     }
   },

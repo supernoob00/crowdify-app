@@ -101,16 +101,16 @@ export default {
             })
           }
         } catch (error) {
-          campaignService.handleErrorResponse(this.$store, error, 'creating', 'campaign');
+          campaignService.handleErrorResponse(this.$store, error, 'creating', 'spendRequestF');
         } finally {
           this.isLoading = false;
         }
       } else {
         try {
-          const response = await campaignService.putSpendRequest(this.updateSpendRequestDto, this.editSpendRequest.id);
+          const response = await campaignService.putSpendRequest(this.updateSpendRequestDto);
           if (response.status === 200) {
             const updatedSpendRequest = response.data;
-            this.$store.commit('SET_NOTIFICATION', { message: 'Updated Campaign!', type: 'success' });
+            this.$store.commit('SET_NOTIFICATION', { message: 'Updated SpendRequest!', type: 'success' });
             this.resetAddForm();
             this.$router.push({
               name: 'SpendRequestView',
@@ -118,7 +118,7 @@ export default {
             })
           }
         } catch (error) {
-          campaignService.handleErrorResponse(this.$store, error, 'updating', 'campaign');
+          campaignService.handleErrorResponse(this.$store, error, 'updating', 'spendRequest');
         } finally {
           this.isLoading = false;
         }
