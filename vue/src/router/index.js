@@ -141,6 +141,7 @@ router.beforeEach((to) => {
   if (requiresAuth && store.state.token === '') {
     return { name: "login" };
   }
+  
   // Otherwise, do nothing and they'll go to their next destination
 });
 

@@ -25,9 +25,10 @@ public class User {
    public User() {
    }
 
-   public User(int id, String username, String password, String authorities) {
+   public User(int id, String username, String email, String password, String authorities) {
       this.id = id;
       this.username = username;
+      this.email = email;
       this.password = password;
       if (authorities != null) this.setAuthoritiesFromString(authorities);
       this.activated = true;
