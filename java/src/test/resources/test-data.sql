@@ -7,10 +7,10 @@ INSERT INTO users (username,email,password_hash,role) VALUES ('user3','user3@ema
 INSERT INTO users (username,email,password_hash,role) VALUES ('user4','user4@email.com','user4','ROLE_USER'); -- id 4
 
 -- USERS WHO ONLY DONATE/VOTE
-INSERT INTO users (username,password_hash,role) VALUES ('user5','user5','ROLE_USER'); -- id 5
-INSERT INTO users (username,password_hash,role) VALUES ('user6','user6','ROLE_USER'); -- id 6
-INSERT INTO users (username,password_hash,role) VALUES ('user7','user7','ROLE_USER'); -- id 7
-INSERT INTO users (username,password_hash,role) VALUES ('user8','user8','ROLE_USER'); -- id 8
+INSERT INTO users (username,email,password_hash,role) VALUES ('user5','user5@email.com','user5','ROLE_USER'); -- id 5
+INSERT INTO users (username,email,password_hash,role) VALUES ('user6','user6@email.com','user6','ROLE_USER'); -- id 6
+INSERT INTO users (username,email,password_hash,role) VALUES ('user7','user7@email.com','user7','ROLE_USER'); -- id 7
+INSERT INTO users (username,email,password_hash,role) VALUES ('user8','user8@email.com','user8','ROLE_USER'); -- id 8
 
 -- CAMPAIGN CREATION
 INSERT INTO campaign (campaign_name, description, funding_goal, start_date, end_date, locked, public, deleted) -- id 1
