@@ -14,9 +14,9 @@
       <div class="buttons manager-actions" v-if="isManager">
         <router-link class="button is-link" :to="{ name: 'EditCampaignView', params: { id: campaign.id } }">
           <i class="fa-solid fa-pen-to-square"></i></router-link>
-        <button class="button is-danger" @click="deleteCampaign"><i class="fa-solid fa-trash"></i></button>
+        <button class="button is-danger" v-if="isCreator" @click="deleteCampaign"><i class="fa-solid fa-trash"></i></button>
         <router-link class="button is-link" :to="{ name: 'CreateSpendRequestView', params: { id: campaign.id } }">
-          <i class="fa-solid fa-plus"></i>SpendRequest</router-link>
+          <i class="fa-solid fa-plus"></i>Add Spend Request</router-link>
       </div>
 
     </div>
@@ -33,13 +33,17 @@
     </div>
     <hr>
     <div class="side-info">
+      
       <section class="donations">
         <h2 class="block">Donations</h2>
         <router-link class="button is-link block"
-          :to="{ name: 'CreateDonationView', params: { id: campaign.id } }">Donate</router-link>
-        <donation-display v-for="donation in donationsSortedByAmount" :key="donation.id"
-          :donation="donation"></donation-display>
+          :to="{ name: 'CreateDonationView', params: { id: campaign.id } }">Donate
+        </router-link>
+        <donation-display 
+          v-for="donation in donationsSortedByAmount" :key="donation.id" :donation="donation">
+        </donation-display>
       </section>
+
       <section v-if="spendRequestsObj.canView">
         <h2 class="block">Spend Requests</h2>
         <p v-if="spendRequestsObj.list.length === 0">There are no spend requests created for this campaign yet.</p>
@@ -68,6 +72,12 @@ export default {
     }
   },
   computed: {
+    isPrivate() {
+      return this.campaign.private;
+    },
+    isLocked() {
+      return this.campaign.locked;
+    },
     totalDonated() {
       const totalDonated = this.campaign.donations.reduce((sum, d) => d.refunded ? 0 : sum + d.amount, 0);
       return totalDonated / 100;
@@ -84,6 +94,9 @@ export default {
     },
     isManager() {
       return this.campaign.managers.filter(m => m.username === this.$store.state.user.username).length > 0;
+    },
+    isCreator() {
+      return this.campaign.creator.username === this.$store.state.user.username;
     },
     nonCreatorManagerNames() {
       return this.campaign.managers
@@ -159,6 +172,10 @@ export default {
 }
 
 .campaign-creator {
+  font-weight: 600;
+}
+
+.campaign-other-owners {
   font-weight: 600;
 }
 
