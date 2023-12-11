@@ -1,5 +1,6 @@
 package com.techelevator.model;
 
+import org.hibernate.validator.constraints.Length;
 import org.springframework.lang.Nullable;
 
 import javax.validation.constraints.Max;
@@ -11,7 +12,7 @@ import java.time.LocalDateTime;
 public class UpdateDonationDto {
     @Min(1) @Max(50_000_000)
     private int amount;
-    @NotBlank
+    @Length(max = 10000)
     private String comment;
     private boolean refunded;
 

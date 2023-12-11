@@ -56,7 +56,7 @@ export default {
         dto.anonymous = true;
       }
       //TODO: add anonymous field to create donation form.
-      dto.comment = this.editDonation.comment;
+      dto.comment = this.editDonation.comment.trim();
       dto.amount = this.editDonation.amount * 100;
       return dto;
     }

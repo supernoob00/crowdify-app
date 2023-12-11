@@ -15,7 +15,7 @@ public class NewDonationDto {
     private int campaignId;
     @Min(1)
     private int amount;
-    @NotNull @NotBlank @Length(max = 10000)
+    @Length(max = 10000)
     private String comment;
     private boolean anonymous;
 
