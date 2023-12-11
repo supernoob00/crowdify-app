@@ -19,11 +19,11 @@
           <button class="button is-link" type="submit">Save</button>
         </div>
         <div class="control">
-          <button class="button is-light" @click="resetAddForm">Reset Form</button>
+          <button class="button is-light" @click.prevent="resetAddForm">Reset Form</button>
         </div>
         <div class="control">
           <button class="button is-danger"
-            @click="$router.push({ name: 'CampaignView', params: { id: campaignId } })">Cancel</button>
+            @click.prevent="$router.push({ name: 'CampaignView', params: { id: editDonation.campaignId } })">Cancel</button>
         </div>
       </div>
     </form>
@@ -45,15 +45,12 @@ export default {
     }
   },
   computed: {
-    campaignId() {
-      return parseInt(this.$route.params.id);
-    },
     currentUser() {
       return this.$store.state.user;
     },
     newDonationDto() {
       const dto = {}
-      dto.campaignId = this.campaignId;
+      dto.campaignId = this.editDonation.campaignId;
       dto.donorId = this.currentUser.id;
       if (dto.donorId === undefined) {
         dto.anonymous = true;
@@ -75,7 +72,7 @@ export default {
         if (response.status === 201) {
           this.$store.commit('SET_NOTIFICATION', { message: 'Created Donation!', type: 'success' })
           this.resetAddForm();
-          this.$router.push({ name: 'CampaignView', params: { id: this.campaignId } })
+          this.$router.push({ name: 'CampaignView', params: { id: this.editDonation.campaignId } })
         }
       } catch (error) {
         campaignService.handleErrorResponse(this.$store, error, 'creating', 'donation');

@@ -37,7 +37,6 @@ export default {
       return this.campaign.donations.filter(d => d.donor != null && d.donor.id === this.currentUser.id).length > 0;
     },
     canViewSpendRequests() {
-      console.log(this.isStakeHolder);
       return (this.currentUser.id != undefined) && (this.isManager || this.isStakeHolder);
     }
   },
@@ -63,6 +62,7 @@ export default {
     }
   },
   async created() {
+    //TODO: Bug here when logged in as Adi and it fails to pull Burn Pizza SR's
     await this.retrieveCampaign();
     if (this.canViewSpendRequests) {
       await this.getSpendRequestsForCampaign();
