@@ -13,14 +13,14 @@ INSERT INTO users (username,password_hash,role) VALUES ('user7','user7','ROLE_US
 INSERT INTO users (username,password_hash,role) VALUES ('user8','user8','ROLE_USER'); -- id 8
 
 -- CAMPAIGN CREATION
-INSERT INTO campaign (campaign_name, description, funding_goal, start_date, end_date, locked, public) -- id 1
-VALUES ('Fancy New Tech', 'We are making some cool new stuff using technology', 1000000, '2024-1-1', '2024-1-21', false, false);
-INSERT INTO campaign (campaign_name, description, funding_goal, start_date, end_date, locked, public) -- id 2
-VALUES ('Fancy New Robot', 'We are making some cool new stuff using a cool robot', 2000000, '2024-1-2', '2024-1-22', false, true);
-INSERT INTO campaign (campaign_name, description, funding_goal, start_date, end_date, locked, public) -- id 3
-VALUES ('Fancy New Computer', 'We are making some cool new stuff using a quantum computer', 3000000, '2024-1-3', '2024-1-23', true, false);
+INSERT INTO campaign (campaign_name, description, funding_goal, start_date, end_date, locked, public, deleted) -- id 1
+VALUES ('Fancy New Tech', 'We are making some cool new stuff using technology', 1000000, '2024-1-1', '2024-1-21', false, false, false);
+INSERT INTO campaign (campaign_name, description, funding_goal, start_date, end_date, locked, public, deleted) -- id 2
+VALUES ('Fancy New Robot', 'We are making some cool new stuff using a cool robot', 2000000, '2024-1-2', '2024-1-22', false, true, false);
+INSERT INTO campaign (campaign_name, description, funding_goal, start_date, end_date, locked, public, deleted) -- id 3
+VALUES ('Fancy New Computer', 'We are making some cool new stuff using a quantum computer', 3000000, '2024-1-3', '2024-1-23', true, false, false);
 INSERT INTO campaign (campaign_name, description, funding_goal, start_date, end_date, locked, public, deleted) -- id 4
-VALUES ('Doomed to Fail', 'Why do I even try', 100, '2024-1-3', '2024-1-23', true, false, true);
+VALUES ('Doomed to Fail', 'Why do I even try', 4000000, '2024-1-3', '2024-1-23', true, false, true);
 
 -- MANAGER ASSIGNMENT TO USERS 1, 2, 3
 INSERT INTO campaign_manager (campaign_id, manager_id, creator) VALUES (1, 1, true);
@@ -39,8 +39,8 @@ INSERT INTO donation (donor_id, campaign_id, donation_amount, donation_date, don
 VALUES (1, 2, 2000, '2024-1-11', 'Not bad!', true); -- id 4
 
 -- NON-MANAGER DONATIONS FOR VOTE TESTING PURPOSES
-INSERT INTO donation (donor_id, campaign_id, donation_amount, donation_date, donation_comment, anonymous)
-VALUES (5, 1, 1000, '2024-1-15', 'Nice!', false); -- id 5
+INSERT INTO donation (donor_id, campaign_id, donation_amount, donation_date, donation_comment, refunded, anonymous)
+VALUES (5, 1, 1000, '2024-1-15', 'Nice!', false, false); -- id 5
 
 
 -- SPEND REQUESTS FOR CAMPAIGNS 1 AND 2
