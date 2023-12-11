@@ -163,7 +163,7 @@ public class CampaignController {
         if (campaignToDelete.isDeleted()) {
             result.reject("Campaign has already been already deleted");
         }
-
+        //TODO: Create endpoint that allows me to check if a campaign can be deleted or not on the frontend side
         CampaignValidator validator = new CampaignValidator();
         campaignToDelete.setDeleted(true);
         validator.validate(campaignToDelete, result);

@@ -17,6 +17,10 @@ export default {
     return axios.put(`/campaigns/${id}`, updateCampaignDto);
   },
 
+  deleteCampaign(id) {
+    return axios.delete(`/campaigns/${id}`)
+  },
+
   createDonation(newDonationDto) {
     return axios.post('/donations', newDonationDto);
   },
@@ -41,13 +45,13 @@ export default {
   getSpendRequestsByCampaignId(id) {
     return axios.get(`/campaigns/${id}/spend-requests`);
   },
-  getVotesBySpendRequestId(sr) {
-    return axios.get(`/campaigns/${sr.campaignId}/spend-requests/${sr.id}/votes`);
+  getVotesBySpendRequestId(campaignId, spendRequestId) {
+    return axios.get(`/campaigns/${campaignId}/spend-requests/${spendRequestId}/votes`);
   },
-  createVote(spendRequestId, campaignId, newVoteDto) {
+  createVote(campaignId, spendRequestId, newVoteDto) {
     return axios.post(`/campaigns/${campaignId}/spend-requests/${spendRequestId}/votes`, newVoteDto);
   },
-  updateVote(spendRequestId, campaignId, newVoteDto) {
+  updateVote(campaignId, spendRequestId, newVoteDto) {
     return axios.put(`/campaigns/${campaignId}/spend-requests/${spendRequestId}/votes`, newVoteDto);
   },
 

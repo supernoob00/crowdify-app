@@ -13,6 +13,7 @@
       <dark-mode-toggle class="navbar-item"></dark-mode-toggle>
       <router-link class="navbar-item" :to="{ name: 'MyAccountView', params: { id: $store.state.user.id } }"
         v-if="$store.state.token != ''">My Account</router-link>
+      <div class="navbar-item">{{ $store.state.user.username }}</div>
       <div class="buttons">
         <div class="navbar-item">
           <router-link class="button is-primary" v-bind:to="{ name: 'register' }" v-if="$store.state.token === ''">Sign

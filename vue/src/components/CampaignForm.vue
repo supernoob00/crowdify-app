@@ -41,15 +41,24 @@
           </label>
         </div>
       </div>
+      <div class="field">
+        <div class="control">
+          <label class="checkbox">
+            <input type="checkbox" v-model="editCampaign.locked">
+            Lock Campaign
+          </label>
+        </div>
+      </div>
       <div class="field is-grouped">
         <div class="control">
           <button class="button is-link" type="submit">Save</button>
         </div>
         <div class="control">
-          <button class="button is-light" @click="resetAddForm">Reset Form</button>
+          <button class="button is-light" @click.prevent="resetAddForm">Reset Form</button>
         </div>
         <div class="control">
-          <button class="button is-danger" @click="$router.push({ name: 'home' })">Cancel</button>
+          <button class="button is-danger"
+            @click.prevent="$router.push({ name: 'CampaignView', params: { id: campaign.id } })">Cancel</button>
         </div>
       </div>
     </form>
@@ -75,6 +84,9 @@ export default {
   computed: {
     currentUser() {
       return this.$store.state.user;
+    },
+    isManager() {
+      return this.campaign.managers.filter(m => m.username === this.$store.state.user.username).length > 0;
     },
     newCampaignDto() {
       const dto = {};

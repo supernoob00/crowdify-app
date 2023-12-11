@@ -32,11 +32,11 @@
           <button class="button is-link" type="submit">Save</button>
         </div>
         <div class="control">
-          <button class="button is-light" @click="resetAddForm">Reset Form</button>
+          <button class="button is-light" @click.prevent="resetAddForm">Reset Form</button>
         </div>
         <div class="control">
           <button class="button is-danger"
-            @click="$router.push({ name: 'CampaignView', params: { id: editSpendRequest.campaignId } })">Cancel</button>
+            @click.prevent="$router.push({ name: 'CampaignView', params: { id: editSpendRequest.campaignId } })">Cancel</button>
         </div>
       </div>
     </form>

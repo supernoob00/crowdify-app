@@ -1,17 +1,17 @@
 <template>
-  <div class="content">
+  <loading-screen v-if="isLoading"></loading-screen>
+  <div v-else class="content">
     <div class="header">
       <div>
         <h1 id="campaign-name">{{ campaign.name }}</h1>
         <span>Created by </span>
         <span class="campaign-creator">{{ campaign.creator.username }}</span>
       </div>
-      <div class="buttons">
-        <router-link v-if="isManager" class="button is-link"
-          :to="{ name: 'EditCampaignView', params: { id: campaign.id } }">
+      <div class="buttons manager-actions" v-if="isManager">
+        <router-link class="button is-link" :to="{ name: 'EditCampaignView', params: { id: campaign.id } }">
           <i class="fa-solid fa-pen-to-square"></i></router-link>
-        <router-link v-if="isManager" class="button is-link"
-          :to="{ name: 'CreateSpendRequestView', params: { id: campaign.id } }">
+        <button class="button is-danger" @click="deleteCampaign"><i class="fa-solid fa-trash"></i></button>
+        <router-link class="button is-link" :to="{ name: 'CreateSpendRequestView', params: { id: campaign.id } }">
           <i class="fa-solid fa-plus"></i>SpendRequest</router-link>
       </div>
     </div>
@@ -37,6 +37,7 @@
       </section>
       <section v-if="spendRequestsObj.canView">
         <h2 class="block">Spend Requests</h2>
+        <p v-if="spendRequestsObj.list.length === 0">There are no spend requests created for this campaign yet.</p>
         <spend-request-display v-for="spendRequest in spendRequestsObj.list" :key="spendRequest.id"
           :spend-request="spendRequest"></spend-request-display>
       </section>
@@ -47,14 +48,18 @@
 <script>
 import DonationDisplay from './DonationDisplay.vue';
 import SpendRequestDisplay from './SpendRequestDisplay.vue';
+import campaignService from '../services/CampaignService';
+import LoadingScreen from './LoadingScreen.vue';
 export default {
   components: {
     DonationDisplay,
-    SpendRequestDisplay
+    SpendRequestDisplay,
+    LoadingScreen
   },
   props: ['campaign', 'spendRequestsObj'],
   data() {
     return {
+      isLoading: false
     }
   },
   computed: {
@@ -83,6 +88,25 @@ export default {
       }
     }
   },
+  methods: {
+    async deleteCampaign() {
+      this.isLoading = true;
+      try {
+        const response = await campaignService.deleteCampaign(this.campaign.id);
+        if (response.status === 204) {
+          this.$store.commit('SET_NOTIFICATION', {
+            message: 'Deleted Campaign! Any outstanding donations associated have been refunded to the donors',
+            type: 'success'
+          });
+          this.$router.push({ name: 'home' })
+        }
+      } catch (error) {
+        campaignService.handleErrorResponse(this.$store, error, 'deleting', 'campaign');
+      } finally {
+        this.isLoading = false;
+      }
+    }
+  }
 }
 </script>
 
@@ -97,7 +121,8 @@ export default {
   justify-content: space-between;
 }
 
-.header a {
+.header a,
+.header button {
   margin-top: 1em;
 }
 

@@ -19,6 +19,7 @@ export default {
     return {
       editDonation: {
         id: -1,
+        campaignId: parseInt(this.$route.params.id),
         comment: 'Test Comment',
         amount: 10
       },
