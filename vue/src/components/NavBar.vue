@@ -42,7 +42,7 @@ export default {
   computed: {
     buttonClass() {
       if (this.darkModeOn) {
-        return { 'is-warning': true }
+        return { 'is-dark': true }
       }
       return { 'is-light': true }
     }
@@ -54,16 +54,8 @@ export default {
   /* background-color: var(--navbar-background); */
   position: sticky;
   left: 0;
-  /* top left corner should start at leftmost spot */
   top: 0;
-  /* top left corner should start at topmost spot */
   width: 100vw;
-  /* take up the full browser width */
   z-index: 200;
-  /* high /z index so other content scrolls underneath */
 }
-
-/* .navbar .navbar-item {
-  color: white;
-} */
 </style>
