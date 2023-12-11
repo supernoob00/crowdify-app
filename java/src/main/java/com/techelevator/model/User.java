@@ -15,7 +15,7 @@ public class User {
    private String username;
    @Email @Nullable
    private String email;
-   @JsonIgnore @NotBlank @Min(6)
+   @JsonIgnore @NotBlank @Min(8)
    private String password;
    @JsonIgnore
    private boolean activated;
