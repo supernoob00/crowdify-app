@@ -2,9 +2,6 @@
   <div id="register" class="content">
     <form v-on:submit.prevent="register">
       <h1>Create Account</h1>
-      <div role="alert" v-if="registrationErrors">
-        {{ registrationErrorMsg }}
-      </div>
       <div class="field">
         <label class="label">Username</label>
         <div class="control">
@@ -49,32 +46,39 @@ export default {
   },
   methods: {
     register() {
-      if (this.user.password != this.user.confirmPassword) {
-        this.registrationErrors = true;
-        this.registrationErrorMsg = 'Password & Confirm Password do not match.';
-      } else {
-        authService
-          .register(this.user)
-          .then((response) => {
-            if (response.status == 201) {
-              this.$router.push({
-                path: '/login',
-                query: { registration: 'success' },
-              });
-            }
-          })
-          .catch((error) => {
-            const response = error.response;
-            this.registrationErrors = true;
-            if (response.status === 400) {
-              this.registrationErrorMsg = 'Bad Request: Validation Errors';
-            }
-          });
+      if (!this.validateRegisterForm()) {
+        return;
       }
+      authService
+        .register(this.user)
+        .then((response) => {
+          if (response.status == 201) {
+            this.$router.push({
+              path: '/login',
+              query: { registration: 'success' },
+            });
+          }
+        })
+        .catch((error) => {
+          const response = error.response;
+          if (response.status === 400) {
+            this.$store.commit('SET_NOTIFICATION', 'Bad Request: Validation Errors.');
+          }
+        });
     },
-    clearErrors() {
-      this.registrationErrors = false;
-      this.registrationErrorMsg = 'There were problems registering this user.';
+    validateRegisterForm() {
+      let msg = '';
+      if (this.user.password != this.user.confirmPassword) {
+        msg += 'Password & Confirm Password do not match. ';
+      }
+      if (this.user.password.length < 8) {
+        msg += 'Password must be at least 8 characters long. '
+      }
+      if (msg.length > 0) {
+        this.$store.commit('SET_NOTIFICATION', msg);
+        return false;
+      }
+      return true;
     },
   },
 };

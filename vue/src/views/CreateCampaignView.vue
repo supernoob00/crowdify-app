@@ -19,8 +19,8 @@ export default {
         name: 'Creation Test',
         description: 'test',
         public: false,
-        endDate: '2023-12-10',
-        startDate: '2023-12-07',
+        startDate: '2023-12-31',
+        endDate: '2024-01-31',
         fundingGoal: 2
       },
     }
