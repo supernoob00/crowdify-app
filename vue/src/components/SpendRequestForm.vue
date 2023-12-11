@@ -101,7 +101,7 @@ export default {
             })
           }
         } catch (error) {
-          campaignService.handleErrorResponse(this.$store, error, 'creating', 'spendRequestF');
+          campaignService.handleErrorResponse(this.$store, error, 'creating', 'spendRequest');
         } finally {
           this.isLoading = false;
         }

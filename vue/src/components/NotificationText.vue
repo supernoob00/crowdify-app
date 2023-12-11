@@ -36,6 +36,7 @@ export default {
   padding: 10px;
   margin-bottom: 10px;
   cursor: pointer;
+  color: black;
 }
 
 .status-message.success {
