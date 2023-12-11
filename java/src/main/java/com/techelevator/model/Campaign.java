@@ -1,6 +1,7 @@
 package com.techelevator.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import javax.validation.constraints.*;
@@ -23,6 +24,7 @@ public class Campaign {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime endDate;
     private boolean locked;
+    @JsonProperty("public")
     private boolean isPublic;
     @NotNull
     private List<Donation> donations = new ArrayList<>();

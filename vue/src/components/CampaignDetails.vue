@@ -4,29 +4,30 @@
 
     <div class="header">
       <div>
-          <h1 id="campaign-name">{{ campaign.name }}</h1>
+        <h1 id="campaign-name">{{ campaign.name }}</h1>
       </div>
       <!-- THIS DIV IS FOR MANAGERS -->
       <div class="buttons manager-actions" v-if="isManager">
         <router-link class="button is-link" :to="{ name: 'EditCampaignView', params: { id: campaign.id } }">
           <i class="fa-solid fa-pen-to-square"></i></router-link>
-        <button class="button is-danger" v-if="isCreator" @click="deleteCampaign"><i class="fa-solid fa-trash"></i></button>
+        <button class="button is-danger" v-if="isCreator" @click="deleteCampaign"><i
+            class="fa-solid fa-trash"></i></button>
         <router-link class="button is-link" :to="{ name: 'CreateSpendRequestView', params: { id: campaign.id } }">
           <i class="fa-solid fa-plus"></i>Add Spend Request</router-link>
       </div>
     </div>
 
     <div class="campaign-owner-info">
-        <div>
-          <span>Created by </span>
-          <span class="campaign-creator">{{ campaign.creator.username }}</span>
-        </div>
-        <div v-if="this.campaign.managers.length > 1">
-          <!--TODO: This is hideous, change it later to use flexbox-->
-          <span>&nbsp|&nbsp</span>
-          <span v-if="this.campaign.managers.length > 0">Other owners: </span>
-          <span class="campaign-other-owners">{{ nonCreatorManagerNames }}</span>
-        </div>
+      <div>
+        <span>Created by </span>
+        <span class="campaign-creator">{{ campaign.creator.username }}</span>
+      </div>
+      <div v-if="this.campaign.managers.length > 1">
+        <!--TODO: This is hideous, change it later to use flexbox-->
+        <span>&nbsp|&nbsp</span>
+        <span v-if="this.campaign.managers.length > 0">Other owners: </span>
+        <span class="campaign-other-owners">{{ nonCreatorManagerNames }}</span>
+      </div>
     </div>
 
     <hr>
@@ -43,14 +44,12 @@
     </div>
     <hr>
     <div class="side-info">
-      
+
       <section class="donations">
         <h2 class="block">Donations</h2>
-        <button :disabled="!isPublic || isLocked" class="button is-link block"
-          :on-click="goToCreateDonationView">Donate
-      </button>
-        <donation-display 
-          v-for="donation in donationsSortedByAmount" :key="donation.id" :donation="donation">
+        <button :disabled="isLocked" class="button is-link block" @click="goToCreateDonationView">Donate
+        </button>
+        <donation-display v-for="donation in donationsSortedByAmount" :key="donation.id" :donation="donation">
         </donation-display>
       </section>
 
@@ -83,7 +82,7 @@ export default {
   },
   computed: {
     isPublic() {
-      return this.campaign.isPublic;
+      return this.campaign.public;
     },
     isLocked() {
       return this.campaign.locked;
@@ -146,7 +145,7 @@ export default {
       }
     },
     goToCreateDonationView() {
-      if (this.isPublic && !this.isLocked) {
+      if (!this.isLocked) {
         this.$router.push({ name: 'CreateDonationView', params: { id: this.campaign.id } });
       }
     }
