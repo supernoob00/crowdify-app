@@ -17,7 +17,7 @@
           <p class="request-amount">{{ amountDisplay }}</p>
         </div>
         <div class="buttons">
-          <router-link v-if="canVote" class="button is-link" :to="{
+          <router-link v-if="isManager" class="button is-link" :to="{
             name: 'EditSpendRequestView',
             params: {
               campaignId: spendRequest.campaignId,
@@ -69,7 +69,6 @@
           </section>
         </div>
       </div>
-
       <!-- See below only for managers (?) -->
       <!-- <div v-for="(vote, index) in votes" :key="index">{{ vote }}</div> -->
     </div>
@@ -101,16 +100,14 @@ export default {
     campaignId() {
       return parseInt(this.$route.params.campaignId);
     },
-    isManager() {
-      return this.campaign.managers.filter(m => m.username === this.$store.state.user.username).length > 0;
-    },
     amountDisplay() {
       return displayMoney(this.spendRequest.amount);
     },
     donorList() {
       const uniqueDonors = new Set();
       this.campaign.donations.forEach(d => {
-        if (d.donor != null) {
+        if (d.donor != null &&
+          !this.campaign.managers.filter(m => m.username === d.donor.username).length > 0) {
           uniqueDonors.add(d.donor.username);
         }
       });
@@ -123,6 +120,9 @@ export default {
       return this.votes.filter(v => !v.approved);
     },
     approvalPercent() {
+      if ((this.approvedVotes.length + this.disapprovedVotes.length) === 0) {
+        return 0;
+      }
       return this.approvedVotes.length / (this.disapprovedVotes.length + this.approvedVotes.length) * 100
     },
     approvedButtonClass() {
@@ -133,6 +133,9 @@ export default {
     },
     hasVoted() {
       return this.votes.filter(v => v.user.id === this.$store.state.user.id).length > 0;
+    },
+    isManager() {
+      return this.campaign.managers.filter(m => m.username === this.$store.state.user.username).length > 0;
     },
     canVote() {
       return !this.isManager;
