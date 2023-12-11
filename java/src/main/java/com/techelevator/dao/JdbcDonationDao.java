@@ -109,16 +109,11 @@ public class JdbcDonationDao {
 
     public Donation updateDonation(UpdateDonationDto updateDonationDto, int donationId) {
 
-        if (updateDonationDto.isRefunded()) {
-            updateDonationDto.setAmount(0);
-        }
-
         String sql = "UPDATE donation SET " +
                 "donation_amount = ?, " +
                 "donation_comment = ?, " +
                 "refunded = ? " +
                 "WHERE donation_id = ?;";
-
         try {
             jdbcTemplate.update(sql,
                     updateDonationDto.getAmount(),
@@ -130,10 +125,19 @@ public class JdbcDonationDao {
         } catch (DataIntegrityViolationException e) {
             throw new DaoException("Data integrity violation", e);
         }
-
         return getDonationById(donationId).orElseThrow();
+    }
 
-
+    public void refundDonations(int campaignId) {
+        String sql = "UPDATE donation SET refunded = true WHERE campaign_id =" +
+                " ?;";
+        try {
+            jdbcTemplate.update(sql, campaignId);
+        } catch (CannotGetJdbcConnectionException e) {
+            throw new DaoException("Unable to connect to server or database", e);
+        } catch (DataIntegrityViolationException e) {
+            throw new DaoException("Data integrity violation", e);
+        }
     }
 
     public Donation mapRowToDonation(SqlRowSet results) {
