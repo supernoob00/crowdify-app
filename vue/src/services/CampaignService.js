@@ -17,6 +17,10 @@ export default {
     return axios.put(`/campaigns/${id}`, updateCampaignDto);
   },
 
+  deleteCampaign(id) {
+    return axios.delete(`/campaigns/${id}`)
+  },
+
   createDonation(newDonationDto) {
     return axios.post('/donations', newDonationDto);
   },

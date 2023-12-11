@@ -152,7 +152,6 @@ export default {
     await this.getCampaign();
     await this.getSpendRequest();
     await this.getVotes();
-    console.log(this.votes);
     this.isLoading = false;
   },
   methods: {

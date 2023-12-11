@@ -88,7 +88,8 @@ public class SpendRequestController {
         Campaign requestCampaign = jdbcCampaignDao.getCampaignById(campaignId).orElseThrow();
 
         for (Campaign campaign : donorCampaigns) {
-            if (campaignId != campaign.getId() && !requestCampaign.containsManager(userId)) {
+            if (campaignId != campaign.getId() && !requestCampaign.containsManager(userId)
+                    && !requestCampaign.containsDonor(userId)) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are " +
                         "not authorized to view this campaign.");
             }
