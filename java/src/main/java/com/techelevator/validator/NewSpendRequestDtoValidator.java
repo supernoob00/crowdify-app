@@ -37,10 +37,6 @@ public class NewSpendRequestDtoValidator implements Validator<NewSpendRequestDto
                 errorResult.reject("Campaign must not be locked or deleted");
             }
 
-            if (!campaign.isGoalMet()) {
-                errorResult.reject("Campaign goal must have been met");
-            }
-
             if (dto.getAmount() > campaignDao.getTotalFunds(dto.getCampaignId())) {
                 errorResult.reject("Must have enough funds for spend request");
             }

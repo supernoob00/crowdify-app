@@ -19,7 +19,7 @@ export default {
 
 <style>
 :root {
-  --navbar-background: #fb8500;
+  --navbar-background: rgb(236, 236, 236);
   --user-is-manager-public: pink;
   --user-is-manager-private: lightcoral;
   --campaign-card-background: lightgray;
@@ -34,7 +34,7 @@ export default {
   --link-color: #0a86da;
   --link-white-color: #bdbab8;
   --bg-color: #333;
-  --navbar-background: darkgrey;
+  --navbar-background: rgb(4, 71, 71);
   --campaign-card-background: black;
   --user-is-manager-public: teal;
   --user-is-manager-private: rgba(12, 88, 95, 0.374);

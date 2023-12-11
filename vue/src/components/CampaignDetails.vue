@@ -1,26 +1,37 @@
 <template>
   <loading-screen v-if="isLoading"></loading-screen>
   <div v-else class="content">
+
     <div class="header">
       <div>
         <h1 id="campaign-name">{{ campaign.name }}</h1>
-        <span>Created by </span>
-        <span class="campaign-creator">{{ campaign.creator.username }}</span>
-        <span>Other owners </span>
-        <span class="campaign-other-owners">{{ nonCreatorManagerNames }}</span>
       </div>
-
       <!-- THIS DIV IS FOR MANAGERS -->
       <div class="buttons manager-actions" v-if="isManager">
         <router-link class="button is-link" :to="{ name: 'EditCampaignView', params: { id: campaign.id } }">
           <i class="fa-solid fa-pen-to-square"></i></router-link>
-        <button class="button is-danger" @click="deleteCampaign"><i class="fa-solid fa-trash"></i></button>
+        <button class="button is-danger" v-if="isCreator" @click="deleteCampaign"><i
+            class="fa-solid fa-trash"></i></button>
         <router-link class="button is-link" :to="{ name: 'CreateSpendRequestView', params: { id: campaign.id } }">
-          <i class="fa-solid fa-plus"></i>SpendRequest</router-link>
+          <i class="fa-solid fa-plus"></i>Add Spend Request</router-link>
       </div>
-
     </div>
+
+    <div class="campaign-owner-info">
+      <div>
+        <span>Created by </span>
+        <span class="campaign-creator">{{ campaign.creator.username }}</span>
+      </div>
+      <div v-if="this.campaign.managers.length > 1">
+        <!--TODO: This is hideous, change it later to use flexbox-->
+        <span>&nbsp|&nbsp</span>
+        <span v-if="this.campaign.managers.length > 0">Other owners: </span>
+        <span class="campaign-other-owners">{{ nonCreatorManagerNames }}</span>
+      </div>
+    </div>
+
     <hr>
+
     <div id="campaign-description" class="block">{{ campaign.description }}</div>
     <h6>From {{ viewDates.startDate }} to {{ viewDates.endDate }}</h6>
     <div class="progress-container">
@@ -33,13 +44,15 @@
     </div>
     <hr>
     <div class="side-info">
+
       <section class="donations">
         <h2 class="block">Donations</h2>
-        <router-link class="button is-link block"
-          :to="{ name: 'CreateDonationView', params: { id: campaign.id } }">Donate</router-link>
-        <donation-display v-for="donation in donationsSortedByAmount" :key="donation.id"
-          :donation="donation"></donation-display>
+        <button :disabled="isLocked" class="button is-link block" @click="goToCreateDonationView">Donate
+        </button>
+        <donation-display v-for="donation in donationsSortedByAmount" :key="donation.id" :donation="donation">
+        </donation-display>
       </section>
+
       <section v-if="spendRequestsObj.canView">
         <h2 class="block">Spend Requests</h2>
         <p v-if="spendRequestsObj.list.length === 0">There are no spend requests created for this campaign yet.</p>
@@ -68,6 +81,12 @@ export default {
     }
   },
   computed: {
+    isPublic() {
+      return this.campaign.public;
+    },
+    isLocked() {
+      return this.campaign.locked;
+    },
     totalDonated() {
       const totalDonated = this.campaign.donations.reduce((sum, d) => d.refunded ? 0 : sum + d.amount, 0);
       return totalDonated / 100;
@@ -85,10 +104,18 @@ export default {
     isManager() {
       return this.campaign.managers.filter(m => m.username === this.$store.state.user.username).length > 0;
     },
+    isCreator() {
+      return this.campaign.creator.username === this.$store.state.user.username;
+    },
     nonCreatorManagerNames() {
-      return this.campaign.managers
+      const names = this.campaign.managers
         .map(m => m.username)
         .filter(name => name !== this.campaign.creator.username);
+      let list = "";
+      for (const name of names) {
+        list += name + " ";
+      }
+      return list;
     },
     viewDates() {
       const uptoDateIndex = 10;
@@ -116,6 +143,11 @@ export default {
       } finally {
         this.isLoading = false;
       }
+    },
+    goToCreateDonationView() {
+      if (!this.isLocked) {
+        this.$router.push({ name: 'CreateDonationView', params: { id: this.campaign.id } });
+      }
     }
   }
 }
@@ -141,6 +173,10 @@ export default {
   margin-right: 10px;
 }
 
+.campaign-owner-info {
+  display: flex;
+}
+
 .progress-container {
   max-width: 500px;
 }
@@ -159,6 +195,10 @@ export default {
 }
 
 .campaign-creator {
+  font-weight: 600;
+}
+
+.campaign-other-owners {
   font-weight: 600;
 }
 

@@ -63,10 +63,9 @@ public class DonationController {
                         newDonationDto.getCampaignId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Campaign not found."));
 
-        // check if campaign is locked, private, or DTO donor id does not
+        // check if campaign is locked, or DTO donor id does not
         // match current user
         if (campaign.isLocked()
-                || !campaign.isPublic()
                 || !donationDtoMatchesPrincipal(principal, newDonationDto)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not authorized create this donation.");
         }
