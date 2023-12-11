@@ -154,9 +154,6 @@ public class CampaignController {
         int creatorId = creator.getId();
 
         if (creatorId == userId) {
-            jdbcCampaignDao.markCampaignDeletedById(id);
-
-        } else {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are " +
                     "not authorized to delete this campaign.");
         }
@@ -175,6 +172,10 @@ public class CampaignController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     result.getCauses().toString());
         }
+
+        // refund all associated donations
+        jdbcDonationDao.refundDonations(id);
+        jdbcCampaignDao.markCampaignDeletedById(id);
     }
 
     /* Gets all campaigns user is a manager for */
