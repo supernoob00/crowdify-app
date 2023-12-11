@@ -24,9 +24,10 @@ public class SpendRequest {
     public SpendRequest() {
     }
 
-    public SpendRequest(int id, int campaignId, int amount, String description, boolean approved, LocalDateTime endDate) {
+    public SpendRequest(int id, int campaignId, String requestName, int amount, String description, boolean approved, LocalDateTime endDate) {
         this.id = id;
         this.campaignId = campaignId;
+        this.requestName = requestName;
         this.amount = amount;
         this.description = description;
         this.approved = approved;
