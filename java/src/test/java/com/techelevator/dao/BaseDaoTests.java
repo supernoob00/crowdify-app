@@ -75,7 +75,7 @@ public abstract class BaseDaoTests {
         CAMPAIGN_1.setManagers(List.of(USER_1));
         CAMPAIGN_2.setManagers(List.of(USER_2));
         CAMPAIGN_3.setManagers(List.of(USER_3));
-        CAMPAIGN_1.setDonations(List.of(DONATION_1));
+        CAMPAIGN_1.setDonations(List.of(DONATION_1, DONATION_5));
         CAMPAIGN_2.setDonations(List.of(DONATION_2, DONATION_4));
         CAMPAIGN_3.setDonations(List.of(DONATION_3));
     }
