@@ -2,9 +2,6 @@
   <div id="register" class="content">
     <form v-on:submit.prevent="register">
       <h1>Create Account</h1>
-      <div role="alert" v-if="registrationErrors">
-        {{ registrationErrorMsg }}
-      </div>
       <div class="field">
         <label class="label">Username</label>
         <div class="control">
@@ -51,7 +48,9 @@ export default {
     register() {
       if (this.user.password != this.user.confirmPassword) {
         this.registrationErrors = true;
-        this.registrationErrorMsg = 'Password & Confirm Password do not match.';
+        this.$store.commit('SET_NOTIFICATION', 'Password & Confirm Password do not match.');
+      } else if (this.user.password.length < 8) {
+        this.$store.commit('SET_NOTIFICATION', 'Password must be at least 8 characters long.');
       } else {
         authService
           .register(this.user)
@@ -65,9 +64,8 @@ export default {
           })
           .catch((error) => {
             const response = error.response;
-            this.registrationErrors = true;
             if (response.status === 400) {
-              this.registrationErrorMsg = 'Bad Request: Validation Errors';
+              this.$store.commit('SET_NOTIFICATION', 'Bad Request: Validation Errors.');
             }
           });
       }
