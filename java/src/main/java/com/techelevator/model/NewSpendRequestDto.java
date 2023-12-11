@@ -2,6 +2,7 @@ package com.techelevator.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.*;
 import java.time.LocalDateTime;
@@ -10,7 +11,8 @@ import java.util.Objects;
 public class NewSpendRequestDto {
     @Min(1)
     private int campaignId;
-    @NotNull @NotBlank @JsonProperty("name")
+    @NotNull @NotBlank @Length(max = 30)
+    @JsonProperty("name")
     private String requestName;
     @Positive
     private int amount;

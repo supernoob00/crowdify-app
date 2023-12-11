@@ -34,7 +34,6 @@ public class EmailController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email " +
                     "is not correct or does not exist");
         }
-
         emailService.sendForgotPasswordMail(user);
     }
 }

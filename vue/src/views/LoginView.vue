@@ -1,6 +1,7 @@
 <template>
   <div id="login" class="content">
     <form v-on:submit.prevent="login">
+      <!--TODO: This is hard to see in dark mode-->
       <h1>Please Sign In</h1>
       <div role="alert" v-if="invalidCredentials">
         Invalid username and password!
