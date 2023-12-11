@@ -7,12 +7,9 @@
 
 <script setup>
 import { useDark, useToggle } from '@vueuse/core';
-const isDark = useDark({
-  selector: "body",
-  attribute: "theme",
-  valueDark: "custom-dark",
-  valueLight: "custom-light",
-});
+import { useStore } from 'vuex';
+const store = useStore();
+const isDark = useDark(store.state.darkModeSettings);
 const toggleDark = useToggle(isDark);
 </script> 
 

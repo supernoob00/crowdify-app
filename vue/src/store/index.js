@@ -7,7 +7,13 @@ export function createStore(currentToken, currentUser) {
     state: {
       token: currentToken || '',
       user: currentUser || {},
-      notification: null
+      notification: null,
+      darkModeSettings: {
+        selector: "body",
+        attribute: "theme",
+        valueDark: "custom-dark",
+        valueLight: "custom-light",
+      }
     },
     mutations: {
       SET_AUTH_TOKEN(state, token) {
