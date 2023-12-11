@@ -109,10 +109,6 @@ public class JdbcDonationDao {
 
     public Donation updateDonation(UpdateDonationDto updateDonationDto, int donationId) {
 
-        if (updateDonationDto.isRefunded()) {
-            updateDonationDto.setAmount(0);
-        }
-
         String sql = "UPDATE donation SET " +
                 "donation_amount = ?, " +
                 "donation_comment = ?, " +

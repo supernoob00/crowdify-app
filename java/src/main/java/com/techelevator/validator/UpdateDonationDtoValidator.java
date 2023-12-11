@@ -49,6 +49,10 @@ public class UpdateDonationDtoValidator implements Validator<UpdateDonationDto> 
                         "in user to update");
             }
 
+            if (dto.isRefunded() && dto.getAmount() != donation.getAmount()) {
+                errorResult.reject("Cannot set donation to refunded while changing donation amount");
+            }
+
             Campaign campaign = campaignDao.getCampaignById(donation.getCampaignId()).orElseThrow();
             if (campaign.isDeleted()) {
                 errorResult.reject("Cannot update donation to deleted " +
