@@ -1,6 +1,7 @@
 <template>
   <div class="content">
     <h1>My Account</h1>
+    <h3>{{ $store.state.user.username }}</h3>
     <loading-screen v-if="isLoading"></loading-screen>
     <div v-else>
       <div class="donations">

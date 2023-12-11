@@ -40,13 +40,14 @@ export default {
   --user-is-manager-private: rgba(12, 88, 95, 0.374);
 }
 
-html,
-body {
+body,
+html {
   color: var(--font-color);
   background: var(--bg-color);
   margin: 0;
   padding: 0;
   height: 100%;
+  overflow-y: auto;
 }
 
 hr {

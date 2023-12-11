@@ -6,7 +6,11 @@
         <h1 id="campaign-name">{{ campaign.name }}</h1>
         <span>Created by </span>
         <span class="campaign-creator">{{ campaign.creator.username }}</span>
+        <span>Other owners </span>
+        <span class="campaign-other-owners">{{ nonCreatorManagerNames }}</span>
       </div>
+
+      <!-- THIS DIV IS FOR MANAGERS -->
       <div class="buttons manager-actions" v-if="isManager">
         <router-link class="button is-link" :to="{ name: 'EditCampaignView', params: { id: campaign.id } }">
           <i class="fa-solid fa-pen-to-square"></i></router-link>
@@ -14,6 +18,7 @@
         <router-link class="button is-link" :to="{ name: 'CreateSpendRequestView', params: { id: campaign.id } }">
           <i class="fa-solid fa-plus"></i>SpendRequest</router-link>
       </div>
+
     </div>
     <hr>
     <div id="campaign-description" class="block">{{ campaign.description }}</div>
@@ -64,27 +69,33 @@ export default {
   },
   computed: {
     totalDonated() {
-      return this.campaign.donations.reduce((sum, currDonation) => sum += currDonation.amount, 0) / 100;
+      const totalDonated = this.campaign.donations.reduce((sum, d) => d.refunded ? 0 : sum + d.amount, 0);
+      return totalDonated / 100;
     },
     fundingGoal() {
       return this.campaign.fundingGoal / 100;
     },
     numberOfDonations() {
-      return this.campaign.donations.length;
+      return this.campaign.donations.filter(donation => !donation.refunded).length;
     },
     donationsSortedByAmount() {
-      const donationsCopy = [...this.campaign.donations]
+      const donationsCopy = [...this.campaign.donations].filter(donation => !donation.refunded);
       return donationsCopy.sort((d1, d2) => d2.amount - d1.amount);
     },
     isManager() {
       return this.campaign.managers.filter(m => m.username === this.$store.state.user.username).length > 0;
+    },
+    nonCreatorManagerNames() {
+      return this.campaign.managers
+        .map(m => m.username)
+        .filter(name => name !== this.campaign.creator.username);
     },
     viewDates() {
       const uptoDateIndex = 10;
       const uptoTimeIndex = 16;
       return {
         startDate: this.campaign.startDate.slice(0, uptoDateIndex),
-        endDate: this.campaign.endDate.slice(0, uptoTimeIndex)
+        endDate: this.campaign.endDate.slice(0, uptoTimeIndex) // TODO: change slice index
       }
     }
   },
