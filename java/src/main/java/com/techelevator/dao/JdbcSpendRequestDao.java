@@ -79,7 +79,7 @@ public class JdbcSpendRequestDao {
         }
     }
 
-    public SpendRequest updateSpendRequest (UpdateSpendRequestDto updateSpendRequestDto, int spendRequestId) {
+    public SpendRequest updateSpendRequest(UpdateSpendRequestDto updateSpendRequestDto, int spendRequestId) {
         String sql = "UPDATE spend_request SET " +
                 "request_amount = ?, " +
                 "request_description = ?, " +
@@ -87,12 +87,13 @@ public class JdbcSpendRequestDao {
                 "end_date = ? " +
                 "WHERE request_id = ?;";
 
-        try {jdbcTemplate.update(sql,
-                updateSpendRequestDto.getAmount(),
-                updateSpendRequestDto.getDescription(),
-                updateSpendRequestDto.isApproved(),
-                updateSpendRequestDto.getEndDate(),
-                spendRequestId);
+        try {
+            jdbcTemplate.update(sql,
+                    updateSpendRequestDto.getAmount(),
+                    updateSpendRequestDto.getDescription(),
+                    updateSpendRequestDto.isApproved(),
+                    updateSpendRequestDto.getEndDate(),
+                    spendRequestId);
 
             return getSpendRequestById(spendRequestId).orElseThrow();
 
@@ -103,15 +104,15 @@ public class JdbcSpendRequestDao {
         }
     }
 
-    public int approvedTotalByCampaignId(int campaignId) {
+    public Integer approvedTotalByCampaignId(int campaignId) {
         String sql = "SELECT SUM (request_amount) FROM spend_request WHERE " +
-                "campaign_id = ? AND approved";
+                "campaign_id = ? AND request_approved";
         try {
             // should throw an NullPointerException if campaign id is invalid;
             // if needed, validating the campaign id should be done beforehand
             // by the caller using the getCampaignById() method
-            return Objects.requireNonNull(jdbcTemplate.queryForObject(sql,
-                    Integer.class, campaignId));
+            return Objects.requireNonNullElse(jdbcTemplate.queryForObject(sql,
+                    Integer.class, campaignId), 0);
         } catch (CannotGetJdbcConnectionException e) {
             throw new DaoException("Unable to connect to server or database", e);
         }
