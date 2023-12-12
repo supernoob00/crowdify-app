@@ -69,4 +69,25 @@ hr {
   margin-top: 0.5em;
   color: var(--font-color)
 }
+
+.tooltip-button::after{
+  content: attr(data-title);
+  position: absolute;
+  background: #444;
+  color: #fff;
+  left: 0;
+  top: 100%;
+  font-size: 12px;
+  width: 100px;
+  padding: 5px;
+  border-radius: 4px;
+  transition: 300ms;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(15px);
+}
+.tooltip-button:hover::after{
+  opacity: 1;
+  transform: translateY(5px);
+}
 </style>

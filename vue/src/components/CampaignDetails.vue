@@ -46,7 +46,9 @@
 
       <section class="donations">
         <h2 class="block">Donations</h2>
-        <button :disabled="isLocked" class="button is-link block" @click="goToCreateDonationView">Donate
+        <button :disabled="isLocked" :class="{ 'tooltip-button': isLocked }" class="button is-link block"
+          @click="goToCreateDonationView">
+          Donate
         </button>
         <donation-display v-for="donation in donationsSortedByAmount" :key="donation.id" :donation="donation">
         </donation-display>
