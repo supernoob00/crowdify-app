@@ -147,4 +147,13 @@ public class JdbcCampaignDaoTests extends BaseDaoTests {
         Assert.assertEquals(CAMPAIGN_2, myCampaigns4.get(1));
     }
 
+    @Test
+    public void getTotalFunds_returns_sum_of_donations_given_valid_id() {
+        int sumCampaign1 = sut.getTotalFunds(CAMPAIGN_1.getId());
+        Assert.assertEquals(CAMPAIGN_1.getDonationTotal(), sumCampaign1);
+
+        int sumCampaign2 = sut.getTotalFunds(CAMPAIGN_2.getId());
+        Assert.assertEquals(CAMPAIGN_2.getDonationTotal(), sumCampaign2);
+    }
+
 }
