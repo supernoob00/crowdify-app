@@ -1,7 +1,7 @@
 <template>
   <article class="message">
     <div class="message-body">
-      <span class="amount">${{ Util.formatToMoney(donation.amount) }}</span>
+      <span class="amount">${{ donationAmount }}</span>
       <span> to </span>
       <router-link :to="{ name: 'CampaignView', params: { id: donation.campaignId } }" class="campaign-name">
         {{ donation.campaignName }}</router-link>
@@ -14,7 +14,12 @@
 import Util from '../services/Util';
 
 export default {
-  props: ['donation']
+  props: ['donation'],
+  computed: {
+    donationAmount() {
+      return Util.formatToMoney(this.donation.amount);
+    }
+  }
 }
 </script>
 
