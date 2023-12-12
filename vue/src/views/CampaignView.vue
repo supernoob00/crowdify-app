@@ -1,6 +1,9 @@
 <template>
   <div>
     <loading-screen v-if="isLoading"></loading-screen>
+    <div v-else-if="campaign.deleted">
+      <deleted-campaign-details :campaign="campaign" :spend-requests-obj="spendRequestObj"></deleted-campaign-details>
+    </div>
     <div v-else>
       <campaign-details :campaign="campaign" :spend-requests-obj="spendRequestObj"></campaign-details>
     </div>
@@ -11,10 +14,12 @@
 import CampaignDetails from '../components/CampaignDetails.vue';
 import campaignService from '../services/CampaignService';
 import LoadingScreen from '../components/LoadingScreen.vue';
+import DeletedCampaignDetails from '../components/DeletedCampaignDetails.vue';
 export default {
   components: {
     CampaignDetails,
     LoadingScreen,
+    DeletedCampaignDetails
   },
   data() {
     return {

@@ -1,19 +1,8 @@
 <template>
-  <loading-screen v-if="isLoading"></loading-screen>
-  <div v-else class="content">
+  <div class="content">
     <div class="header">
       <div>
         <h1 id="campaign-name">{{ campaign.name }}</h1>
-      </div>
-      <!-- THIS DIV IS FOR MANAGERS -->
-      <div class="buttons manager-actions" v-if="isManager">
-        <router-link class="button is-link" :to="{ name: 'EditCampaignView', params: { id: campaign.id } }">
-          <i class="fa-solid fa-pen-to-square"></i></router-link>
-        <button data-title="This campaign must be locked to delete it" :disabled="!isLocked" class="button is-danger"
-          :class="{ 'tooltip-button': !isLocked }" v-if="isCreator" @click="deleteCampaign"><i
-            class="fa-solid fa-trash"></i></button>
-        <router-link class="button is-link" :to="{ name: 'CreateSpendRequestView', params: { id: campaign.id } }">
-          <i class="fa-solid fa-plus"></i>Add Spend Request</router-link>
       </div>
     </div>
 
@@ -57,7 +46,7 @@
         </donation-display>
       </section>
 
-      <section v-if="spendRequestsObj.canView">
+      <section>
         <h2 class="block">Spend Requests</h2>
         <p v-if="spendRequestsObj.list.length === 0">There are no spend requests created for this campaign yet.</p>
         <spend-request-display v-for="spendRequest in spendRequestsObj.list" :key="spendRequest.id"
@@ -70,29 +59,15 @@
 <script>
 import DonationDisplay from './DonationDisplay.vue';
 import SpendRequestDisplay from './SpendRequestDisplay.vue';
-import campaignService from '../services/CampaignService';
-import LoadingScreen from './LoadingScreen.vue';
 import Util from '../services/Util';
 
 export default {
   components: {
     DonationDisplay,
     SpendRequestDisplay,
-    LoadingScreen
   },
   props: ['campaign', 'spendRequestsObj'],
-  data() {
-    return {
-      isLoading: false
-    }
-  },
   computed: {
-    isPublic() {
-      return this.campaign.public;
-    },
-    isLocked() {
-      return this.campaign.locked;
-    },
     totalDonated() {
       const totalDonated = this.campaign.donations.reduce((sum, d) => d.refunded ? 0 : sum + d.amount, 0);
       return Util.formatToMoney(totalDonated);
@@ -106,12 +81,6 @@ export default {
     donationsSortedByAmount() {
       const donationsCopy = [...this.campaign.donations].filter(donation => !donation.refunded);
       return donationsCopy.sort((d1, d2) => d2.amount - d1.amount);
-    },
-    isManager() {
-      return this.campaign.managers.filter(m => m.username === this.$store.state.user.username).length > 0;
-    },
-    isCreator() {
-      return this.campaign.creator.username === this.$store.state.user.username;
     },
     nonCreatorManagerNames() {
       const names = this.campaign.managers
@@ -132,30 +101,6 @@ export default {
       }
     }
   },
-  methods: {
-    async deleteCampaign() {
-      this.isLoading = true;
-      try {
-        const response = await campaignService.deleteCampaign(this.campaign.id);
-        if (response.status === 204) {
-          this.$store.commit('SET_NOTIFICATION', {
-            message: 'Deleted Campaign! Any outstanding donations associated have been refunded to the donors',
-            type: 'success'
-          });
-          this.$router.push({ name: 'home' })
-        }
-      } catch (error) {
-        campaignService.handleErrorResponse(this.$store, error, 'deleting', 'campaign');
-      } finally {
-        this.isLoading = false;
-      }
-    },
-    goToCreateDonationView() {
-      if (!this.isLocked) {
-        this.$router.push({ name: 'CreateDonationView', params: { id: this.campaign.id } });
-      }
-    }
-  }
 }
 </script>
 
