@@ -2,6 +2,7 @@ package com.techelevator.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -13,9 +14,9 @@ import java.util.Objects;
 public class UpdateCampaignDto {
     @JsonProperty("id")
     private int campaignId; // TODO: delete this
-    @NotNull @NotBlank @Max(50)
+    @NotNull @NotBlank @Length(max=50)
     private String name;
-    @NotBlank @Max(500)
+    @NotBlank @Length(max=500)
     private String description;
     @Min(100)
     private int fundingGoal;
