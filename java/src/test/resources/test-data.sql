@@ -41,7 +41,10 @@ VALUES (1, 2, 2000, '2024-1-11', 'Not bad!', true); -- id 4
 -- NON-MANAGER DONATIONS FOR VOTE TESTING PURPOSES
 INSERT INTO donation (donor_id, campaign_id, donation_amount, donation_date, donation_comment, refunded, anonymous)
 VALUES (5, 1, 1000, '2024-1-15', 'Nice!', false, false); -- id 5
-
+INSERT INTO donation (donor_id, campaign_id, donation_amount, donation_date, donation_comment, refunded, anonymous)
+VALUES (4, 2, 1000, '2024-1-15', 'Nicer!', false, false); -- id 6
+INSERT INTO donation (donor_id, campaign_id, donation_amount, donation_date, donation_comment, refunded, anonymous)
+VALUES (5, 3, 1000, '2024-1-15', 'Nicest!', false, false); -- id 7
 
 -- SPEND REQUESTS FOR CAMPAIGNS 1 AND 2
 INSERT INTO spend_request (campaign_id, request_name, request_amount, request_description, request_approved, end_date)
