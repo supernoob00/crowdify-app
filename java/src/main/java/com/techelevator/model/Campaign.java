@@ -2,6 +2,7 @@ package com.techelevator.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.*;
 import java.time.LocalDateTime;
@@ -12,9 +13,9 @@ import java.util.Objects;
 public class Campaign {
     @Min(1)
     private int id;
-    @NotBlank
+    @NotBlank @Length(max=50)
     private String name;
-    @NotBlank
+    @NotBlank @Length(max=500)
     private String description;
     @Min(100)
     private int fundingGoal;

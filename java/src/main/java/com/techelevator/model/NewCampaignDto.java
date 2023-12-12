@@ -1,7 +1,9 @@
 package com.techelevator.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import org.hibernate.validator.constraints.Length;
 
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -9,9 +11,9 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class NewCampaignDto {
-    @NotNull @NotBlank
+    @NotNull @NotBlank @Length(max=50)
     private String name;
-    @NotNull @NotBlank
+    @NotNull @NotBlank @Length(max=500)
     private String description;
     @Min(100)
     private int fundingGoal;

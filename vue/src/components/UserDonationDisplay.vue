@@ -5,7 +5,7 @@
       <span> to </span>
       <router-link :to="{ name: 'CampaignView', params: { id: donation.campaignId } }" class="campaign-name">
         {{ donation.campaignName }}</router-link>
-      <p class="comment">{{ donation.comment }}</p>
+      <p class="comment title is-6 has-text-weight-normal mt-4">{{ donation.comment }}</p>
     </div>
   </article>
 </template>

@@ -100,8 +100,8 @@ public class JdbcDonationDao {
         String sql = "SELECT SUM (donation_amount) FROM donation WHERE " +
                 "NOT refunded AND campaign_id = ?;";
         try {
-            return Objects.requireNonNull(
-                    jdbcTemplate.queryForObject(sql, Integer.class, campaignId));
+            Integer sum = jdbcTemplate.queryForObject(sql, Integer.class, campaignId);
+            return sum == null ? 0 : sum;
         } catch (CannotGetJdbcConnectionException e) {
             throw new DaoException("Unable to connect to server or database", e);
         }

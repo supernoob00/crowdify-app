@@ -1,13 +1,15 @@
 <template>
   <router-link :to="{ name: 'CampaignView', params: { id: campaign.id } }">
     <div class="campaign" :class="campaignClass">
-      <p>{{ campaign.name }}</p>
-      <p class="fund-percent">{{ `${campaignPercentage}% funded` }}</p>
+      <p class="has-text-weight-medium">{{ campaign.name }}</p>
+      <p>${{ campaignFundingGoal }} Goal</p>
+      <p class="is-italic fund-percent">{{ `${campaignPercentage}% funded` }}</p>
     </div>
   </router-link>
 </template>
 
 <script>
+import Util from '../services/Util';
 export default {
   props: ['campaign'],
   computed: {
@@ -17,6 +19,9 @@ export default {
     isManager() {
       return this.campaign.managers.filter(m => m.username === this.currentUser.username).length > 0;
     },
+    campaignFundingGoal() {
+      return Util.formatToMoney(this.campaign.fundingGoal);
+    },
     campaignClass() {
       if (this.campaign.public && this.isManager) {
         return { 'managed-public': true }
@@ -25,6 +30,9 @@ export default {
         return { 'managed-private': true }
       }
       return {}
+    },
+    campaignDonationTotal() {
+      return this.campaign.donations.reduce((sum, currDonation) => sum += currDonation.amount, 0);
     },
     campaignPercentage() {
       const totalDonated = this.campaign.donations.reduce((sum, currDonation) => sum += currDonation.amount, 0);

@@ -71,7 +71,7 @@ hr {
   color: var(--font-color)
 }
 
-.tooltip-button::after{
+.tooltip-button::after {
   content: attr(data-title);
   position: absolute;
   background: #444;
@@ -79,7 +79,7 @@ hr {
   left: 0;
   top: 100%;
   font-size: 12px;
-  width: 100px;
+  width: fit-content;
   padding: 5px;
   border-radius: 4px;
   transition: 300ms;
@@ -87,7 +87,8 @@ hr {
   pointer-events: none;
   transform: translateY(15px);
 }
-.tooltip-button:hover::after{
+
+.tooltip-button:hover::after {
   opacity: 1;
   transform: translateY(5px);
 }

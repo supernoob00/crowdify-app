@@ -1,11 +1,11 @@
 <template>
-  <article class="message">
+  <article class="message" :class="{ 'is-danger': donation.refunded }">
     <div class="message-header">
       <p id="donor-name">{{ donorUsername }} </p>
     </div>
     <div class="message-body">
       <span id="amount">${{ donationAmount }}</span>
-      <p id="comment">{{ donation.comment }}</p>
+      <p class="title is-6 mt-3" id="comment" :class="{ 'has-text-danger': donation.refunded }">{{ donation.comment }}</p>
     </div>
   </article>
 </template>

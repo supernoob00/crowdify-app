@@ -1,21 +1,21 @@
 <template>
-  <div class="campaigns block">
+  <div class="campaigns block campaign-collection">
     <campaign-card v-for="campaign in publicNotOwnedCampaigns" :key="campaign.id" :campaign="campaign"></campaign-card>
   </div>
 
-  <div v-if="currentUser.username !== undefined">
+  <div class="campaign-collection" v-if="currentUser.username !== undefined">
     <h3>My Public Campaigns</h3>
     <div class="campaigns block">
       <campaign-card v-for="campaign in publicOwnedCampaigns" :key="campaign.id" :campaign="campaign"></campaign-card>
-      <span v-if="publicOwnedCampaigns.length === 0">You have no public campaigns</span>
+      <span v-if="publicOwnedCampaigns.length === 0">You have no public campaigns.</span>
     </div>
   </div>
 
-  <div v-if="currentUser.username !== undefined">
+  <div class="campaign-collection" v-if="currentUser.username !== undefined">
     <h3>My Private Campaigns</h3>
     <div class="campaigns block">
       <campaign-card v-for="campaign in privateOwnedCampaigns" :key="campaign.id" :campaign="campaign"></campaign-card>
-      <span v-if="privateOwnedCampaigns.length === 0">You have no private campaigns</span>
+      <span v-if="privateOwnedCampaigns.length === 0">You have no private campaigns.</span>
     </div>
   </div>
 </template>
@@ -63,6 +63,10 @@ export default {
   row-gap: 25px;
   justify-content: flex-start;
   align-items: center;
+}
+
+.campaign-collection {
+  margin-bottom: 36px;
 }
 
 .managed-private {

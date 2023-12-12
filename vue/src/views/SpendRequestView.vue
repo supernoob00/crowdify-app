@@ -191,6 +191,9 @@ export default {
       }
     },
     async deleteSpendRequest() {
+      if (!confirm("Are you sure you want to delete this spend request?")) {
+        return;
+      }
       try {
         const response = await campaignService.deleteSpendRequestById(this.campaignId, this.spendRequestId);
         if (response.status === 204) {

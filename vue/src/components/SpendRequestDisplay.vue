@@ -1,13 +1,13 @@
 <template>
   <div class="box">
-    <router-link class="is-size-5" :to="{
+    <router-link class="is-size-5" :class="{ 'disabled-button': campaign.deleted }" :to="{
       name: 'SpendRequestView',
       params: { campaignId: spendRequest.campaignId, spendRequestId: spendRequest.id }
     }">
       {{ spendRequest.name }}
     </router-link>
     <h4> {{ amountDisplay }}</h4>
-    <p class="is-italic">{{ spendRequest.description }}</p>
+    <p class="is-italic title is-6 has-text-weight-normal">{{ spendRequest.description }}</p>
     <p>{{ "(" + status + ")" }}</p>
   </div>
 </template>
@@ -18,11 +18,11 @@ import campaignService from '../services/CampaignService';
 import Util from '../services/Util';
 
 const props = defineProps(['spendRequest']);
-const campaign = ref({});
 
 const amountDisplay = computed(() => `$${Util.formatToMoney(props.spendRequest.amount)}`)
 const status = computed(() => props.spendRequest.approved ? 'Approved' : 'Pending')
 
+const campaign = ref({});
 async function getCampaign() {
   try {
     const response = await campaignService.getCampaign(props.spendRequest.campaignId);
@@ -39,4 +39,9 @@ onBeforeMount(async () => {
 
 </script>
 
-<style scoped></style>
+<style scoped>
+.disabled-button {
+  pointer-events: none;
+  color: var(--font-color);
+}
+</style>

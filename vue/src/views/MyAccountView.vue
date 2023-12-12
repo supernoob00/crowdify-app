@@ -1,16 +1,15 @@
 <template>
   <div class="content">
     <h1>My Account</h1>
-    <h3>{{ $store.state.user.username }}</h3>
     <loading-screen v-if="isLoading"></loading-screen>
     <div class="body" v-else>
       <section class="donations">
-        <h3>Donations</h3>
+        <h3>My Donations</h3>
         <user-donation-display v-for="donation in donations" :key="donation.id"
           :donation="donation"></user-donation-display>
       </section>
       <section class="campaigns-section">
-        <div>
+        <div class="campaign-collection">
           <h3>My Public Campaigns</h3>
           <div class="campaigns block">
             <campaign-card v-for="campaign in publicOwnedCampaigns" :key="campaign.id"
@@ -18,7 +17,7 @@
             <span v-if="publicOwnedCampaigns.length === 0">You have no public campaigns</span>
           </div>
         </div>
-        <div>
+        <div class="campaign-collection">
           <h3>My Private Campaigns</h3>
           <div class="campaigns block">
             <campaign-card v-for="campaign in privateOwnedCampaigns" :key="campaign.id"
@@ -97,9 +96,13 @@ export default {
   align-items: center;
 }
 
+.campaign-collection {
+  margin-bottom: 40px;
+}
+
 .body {
   display: flex;
-  max-width: 800px;
+  max-width: 1000px;
 }
 
 .body section {
