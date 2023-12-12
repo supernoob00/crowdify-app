@@ -42,7 +42,7 @@ public class ChartController {
         this.jdbcVoteDao = jdbcVoteDao;
     }
 
-    @PostMapping(value = "/spend-requests/{requestId}/chart", produces = MediaType.IMAGE_PNG_VALUE)
+    @GetMapping(value = "/spend-requests/{requestId}/chart", produces = MediaType.IMAGE_PNG_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public byte[] getChartByVotes(@PathVariable int requestId) {
 
