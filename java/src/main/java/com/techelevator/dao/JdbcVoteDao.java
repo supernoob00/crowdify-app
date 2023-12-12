@@ -35,7 +35,7 @@ public class JdbcVoteDao {
             while (results.next()) {
                 voteList.add(mapRowtoVote(results));
             }
-        } catch(CannotGetJdbcConnectionException e){
+        } catch (CannotGetJdbcConnectionException e) {
             throw new DaoException("Unable to connect to server or database", e);
         }
         return voteList;
@@ -53,9 +53,9 @@ public class JdbcVoteDao {
             while (results.next()) {
                 voteList.add(mapRowtoVote(results));
             }
-        } catch(CannotGetJdbcConnectionException e){
-        throw new DaoException("Unable to connect to server or database", e);
-    }
+        } catch (CannotGetJdbcConnectionException e) {
+            throw new DaoException("Unable to connect to server or database", e);
+        }
         return voteList;
     }
 
@@ -72,8 +72,7 @@ public class JdbcVoteDao {
             while (results.next()) {
                 campaignVotes.add(mapRowtoVote(results));
             }
-        }
-        catch (CannotGetJdbcConnectionException e) {
+        } catch (CannotGetJdbcConnectionException e) {
             throw new DaoException("Unable to connect to server or database", e);
         }
         return campaignVotes;
@@ -112,11 +111,11 @@ public class JdbcVoteDao {
         try {
             SqlRowSet result = jdbcTemplate.queryForRowSet(sql, donorId, requestId);
 
-        if (result.next()) {
-            return Optional.of(mapRowtoVote(result));
+            if (result.next()) {
+                return Optional.of(mapRowtoVote(result));
 
-        }
-        }catch (CannotGetJdbcConnectionException e) {
+            }
+        } catch (CannotGetJdbcConnectionException e) {
             throw new DaoException("Unable to connect to server or database", e);
         } catch (DataIntegrityViolationException e) {
             throw new DaoException("Data integrity violation", e);
@@ -146,6 +145,16 @@ public class JdbcVoteDao {
         }
 
         return getVoteByDonorAndRequestId(updateVoteDto.getUserId(), updateVoteDto.getRequestId()).orElseThrow();
+    }
+
+    public boolean deleteVoteById(int userId, int requestId) {
+        String sql = "DELETE FROM vote where donor_id = ? and request_id = ?";
+        try {
+            int rowsAffected = jdbcTemplate.update(sql, userId, requestId);
+            return rowsAffected != 0;
+        } catch (CannotGetJdbcConnectionException e) {
+            throw new DaoException("Unable to connect to server or database", e);
+        }
     }
 
     private Vote mapRowtoVote(SqlRowSet rowSet) {

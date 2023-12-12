@@ -54,6 +54,9 @@ export default {
   updateVote(campaignId, spendRequestId, newVoteDto) {
     return axios.put(`/campaigns/${campaignId}/spend-requests/${spendRequestId}/votes`, newVoteDto);
   },
+  deleteVote(campaignId, spendRequestId) {
+    return axios.delete(`/campaigns/${campaignId}/spend-requests/${spendRequestId}/votes`);
+  },
 
   handleErrorResponse(store, error, verb, object) {
     if (error.response) {

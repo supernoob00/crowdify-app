@@ -51,13 +51,11 @@
           <section class="modal-card-body">
             <form @submit.prevent="submitForm">
               <div class="field">
-                <div class="field is-grouped">
-                  <div class="control">
-                    <button :class="approvedButtonClass" @click.prevent="editVote.approved = true">Approve</button>
-                  </div>
-                  <div class="control">
-                    <button :class="rejectedButtonClass" @click.prevent="editVote.approved = false">Reject</button>
-                  </div>
+                <div class="buttons has-addons">
+                  <button :class="approvedButtonClass" @click.prevent="editVote.approved = true">Approve</button>
+                  <button :class="abstainButtonClass" @click.prevent="editVote.approved = null"
+                    v-if="hasVoted">Abstain</button>
+                  <button :class="rejectedButtonClass" @click.prevent="editVote.approved = false">Reject</button>
                 </div>
               </div>
               <div class="field is-grouped">
@@ -79,6 +77,7 @@
 import campaignService from '../services/CampaignService';
 import LoadingScreen from '../components/LoadingScreen.vue';
 import { displayMoney } from '../services/Utilities';
+import _default from 'vuex';
 export default {
   components: {
     LoadingScreen,
@@ -126,10 +125,13 @@ export default {
       return this.approvedVotes.length / (this.disapprovedVotes.length + this.approvedVotes.length) * 100
     },
     approvedButtonClass() {
-      return this.editVote.approved === undefined ? { button: true } : { button: true, 'is-success': this.editVote.approved };
+      return { button: true, 'is-success': this.editVote.approved };
     },
     rejectedButtonClass() {
-      return this.editVote.approved === undefined ? { button: true } : { button: true, 'is-danger': !this.editVote.approved };
+      return { button: true, 'is-danger': !this.editVote.approved && this.editVote.approved != null };
+    },
+    abstainButtonClass() {
+      return { button: true, 'is-info': this.editVote.approved === null }
     },
     hasVoted() {
       return this.votes.filter(v => v.user.id === this.$store.state.user.id).length > 0;
@@ -193,7 +195,16 @@ export default {
       this.editVote = {};
     },
     async submitForm() {
-      if (this.hasVoted) {
+      if (this.hasVoted && this.editVote.approved === null) {
+        try {
+          const response = await campaignService.deleteVote(this.campaignId, this.spendRequestId);
+          if (response.status === 204) {
+            this.$store.commit('SET_NOTIFICATION', { message: 'Deleted Vote!', type: 'success' })
+          }
+        } catch (error) {
+          campaignService.handleErrorResponse(this.$store, error, 'deleting', 'vote');
+        }
+      } else if (this.hasVoted) {
         try {
           const response = await campaignService.updateVote(this.campaignId, this.spendRequestId, this.newVoteDto);
           if (response.status === 200) {
