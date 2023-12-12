@@ -3,13 +3,21 @@
   <div class="campaigns block">
     <campaign-card v-for="campaign in publicNotOwnedCampaigns" :key="campaign.id" :campaign="campaign"></campaign-card>
   </div>
-  <h3>My Public Campaigns</h3>
-  <div class="campaigns block">
-    <campaign-card v-for="campaign in publicOwnedCampaigns" :key="campaign.id" :campaign="campaign"></campaign-card>
+
+  <div v-if="currentUser.username !== undefined">
+    <h3>My Public Campaigns</h3>
+    <div class="campaigns block">
+      <campaign-card v-for="campaign in publicOwnedCampaigns" :key="campaign.id" :campaign="campaign"></campaign-card>
+      <span v-if="publicOwnedCampaigns.length === 0">You have no public campaigns</span>
+    </div>
   </div>
-  <h3>My Private Campaigns</h3>
-  <div class="campaigns block">
-    <campaign-card v-for="campaign in privateOwnedCampaigns" :key="campaign.id" :campaign="campaign"></campaign-card>
+
+  <div v-if="currentUser.username !== undefined">
+    <h3>My Private Campaigns</h3>
+    <div class="campaigns block">
+      <campaign-card v-for="campaign in privateOwnedCampaigns" :key="campaign.id" :campaign="campaign"></campaign-card>
+      <span v-if="privateOwnedCampaigns.length === 0">You have no private campaigns</span>
+    </div>
   </div>
 </template>
 
