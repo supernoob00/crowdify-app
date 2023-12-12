@@ -50,7 +50,8 @@
         <header class="donation-header">
           <h2 class="block">Donations</h2>
           <button data-title="This campaign is locked for further donations." :disabled="isLocked"
-            :class="{ 'tooltip-button': isLocked }" class="donate-button button is-link block" @click="goToCreateDonationView">
+            :class="{ 'tooltip-button': isLocked }" class="donate-button button is-link block"
+            @click="goToCreateDonationView">
             Donate
           </button>
         </header>
@@ -135,6 +136,9 @@ export default {
   },
   methods: {
     async deleteCampaign() {
+      if (!confirm("Are you sure you want to delete this campaign?")) {
+        return;
+      }
       this.isLoading = true;
       try {
         const response = await campaignService.deleteCampaign(this.campaign.id);

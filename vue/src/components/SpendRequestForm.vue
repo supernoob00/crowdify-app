@@ -15,7 +15,7 @@
             v-model="editSpendRequest.description"></textarea>
         </div>
       </div>
-      <div class="field">
+      <div v-if="editSpendRequest.id === -1" class="field">
         <label class="label">Amount ($)</label>
         <div class="control">
           <input type="Number" class="input" placeholder="$1 Minimum" v-model="editSpendRequest.amount">

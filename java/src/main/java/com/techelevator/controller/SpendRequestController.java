@@ -157,7 +157,8 @@ public class SpendRequestController {
         if (!requestCampaign.containsManager(userId)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You're not allowed to delete this spend request");
         }
-        if (!jdbcVoteDao.deleteVoteBySpendRequestId(requestId)
+        if ((!jdbcVoteDao.getVotesBySpendRequestId(requestId).isEmpty() &&
+                !jdbcVoteDao.deleteVoteBySpendRequestId(requestId))
                 || !jdbcSpendRequestDao.deleteSpendRequestById(requestId)) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "There was an error deleting this spend request");
         }
