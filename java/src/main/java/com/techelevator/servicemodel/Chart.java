@@ -24,4 +24,12 @@ public class Chart {
     public void setData(Data data) {
         this.data = data;
     }
+
+    @Override
+    public String toString() {
+        return "Chart{" +
+                "type='" + type + '\'' +
+                ", data=" + data +
+                '}';
+    }
 }

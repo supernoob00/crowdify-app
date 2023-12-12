@@ -1,8 +1,12 @@
 package com.techelevator.servicemodel;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.List;
 
 public class Data {
+
+    @JsonProperty("datasets")
     private List<DataSet> dataSets;
     private List<String> labels;
 
@@ -25,5 +29,13 @@ public class Data {
 
     public void setLabels(List<String> labels) {
         this.labels = labels;
+    }
+
+    @Override
+    public String toString() {
+        return "Data{" +
+                "dataSets=" + dataSets +
+                ", labels=" + labels +
+                '}';
     }
 }

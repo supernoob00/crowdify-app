@@ -1,12 +1,12 @@
 package com.techelevator.servicemodel;
 
 public class ChartObject {
-    private String version = "2";
-    private String backgroundColor = "transparent";
+    private String version;
+    private String backgroundColor;
     private String width;
     private String height;
-    private double devicePixelRatio = 1.0;
-    private String format = "png";
+    private double devicePixelRatio;
+    private String format;
     private Chart chart;
 
     public ChartObject(String version, String backgroundColor, String width, String height, double devicePixelRatio, String format, Chart chart) {
@@ -73,5 +73,18 @@ public class ChartObject {
 
     public void setChart(Chart chart) {
         this.chart = chart;
+    }
+
+    @Override
+    public String toString() {
+        return "ChartObject{" +
+                "version='" + version + '\'' +
+                ", backgroundColor='" + backgroundColor + '\'' +
+                ", width='" + width + '\'' +
+                ", height='" + height + '\'' +
+                ", devicePixelRatio=" + devicePixelRatio +
+                ", format='" + format + '\'' +
+                ", chart=" + chart +
+                '}';
     }
 }

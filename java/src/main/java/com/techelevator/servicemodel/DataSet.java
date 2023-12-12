@@ -36,4 +36,13 @@ public class DataSet {
     public void setLabel(String label) {
         this.label = label;
     }
+
+    @Override
+    public String toString() {
+        return "DataSet{" +
+                "data=" + data +
+                ", backgroundColor=" + backgroundColor +
+                ", label='" + label + '\'' +
+                '}';
+    }
 }
