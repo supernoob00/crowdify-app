@@ -6,14 +6,15 @@
         <h1 id="campaign-name">{{ campaign.name }}</h1>
       </div>
       <!-- THIS DIV IS FOR MANAGERS -->
-      <div class="buttons manager-actions" v-if="isManager">
+      <div v-if="isManager" class="buttons manager-actions">
         <router-link class="button is-link" :to="{ name: 'EditCampaignView', params: { id: campaign.id } }">
           <i class="fa-solid fa-pen-to-square"></i></router-link>
-        <button data-title="This campaign must be locked to delete it" :disabled="!isLocked" class="button is-danger"
-          :class="{ 'tooltip-button': !isLocked }" v-if="isCreator" @click="deleteCampaign"><i
-            class="fa-solid fa-trash"></i></button>
-        <router-link class="button is-link" :to="{ name: 'CreateSpendRequestView', params: { id: campaign.id } }">
-          <i class="fa-solid fa-plus"></i>Add Spend Request</router-link>
+        <button v-if="isCreator" class="button is-danger" @click="deleteCampaign" :disabled="!isLocked"
+          :class="{ 'tooltip-button': !isLocked }" data-title="Campaign must be locked to delete it">
+          <i class="fa-solid fa-trash"></i></button>
+        <button class="button is-link" @click="goToCreateSpendRequestView" :disabled="!isLocked"
+          :class="{ 'tooltip-button': !isLocked }" data-title="Campaign must be locked to create a spend request">
+          <i class="fa-solid fa-plus"></i>Add Spend Request</button>
       </div>
     </div>
 
@@ -154,6 +155,9 @@ export default {
       if (!this.isLocked) {
         this.$router.push({ name: 'CreateDonationView', params: { id: this.campaign.id } });
       }
+    },
+    goToCreateSpendRequestView() {
+      this.$router.push({ name: 'CreateSpendRequestView', params: { id: this.campaign.id } })
     }
   }
 }
