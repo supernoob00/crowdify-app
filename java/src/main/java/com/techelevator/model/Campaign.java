@@ -2,7 +2,6 @@ package com.techelevator.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import javax.validation.constraints.*;
 import java.time.LocalDateTime;
@@ -186,6 +185,15 @@ public class Campaign {
             }
         }
         return false;
+    }
+
+    public boolean areAllDonationsRefunded() {
+        for (Donation donation : donations) {
+            if (!donation.isRefunded()) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override

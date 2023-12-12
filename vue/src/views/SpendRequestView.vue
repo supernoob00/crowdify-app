@@ -25,6 +25,8 @@
             }
           }">
             <i class="fa-solid fa-pen-to-square"></i></router-link>
+          <button class="button is-danger" v-if="isManager" @click="deleteSpendRequest">
+            <i class="fa-solid fa-trash"></i></button>
         </div>
       </div>
       <hr>
@@ -51,16 +53,16 @@
           <section class="modal-card-body">
             <form @submit.prevent="submitForm">
               <div class="field">
-                <div class="buttons has-addons">
+                <div class="buttons has-addons is-centered">
                   <button :class="approvedButtonClass" @click.prevent="editVote.approved = true">Approve</button>
                   <button :class="abstainButtonClass" @click.prevent="editVote.approved = null"
                     v-if="hasVoted">Abstain</button>
                   <button :class="rejectedButtonClass" @click.prevent="editVote.approved = false">Reject</button>
                 </div>
               </div>
-              <div class="field is-grouped">
-                <div class="control">
-                  <button class="button is-link" type="submit">Submit</button>
+              <div class="control">
+                <div class="buttons is-centered">
+                  <button class="button is-link is-centered" type="submit">Submit</button>
                 </div>
               </div>
             </form>
@@ -188,6 +190,17 @@ export default {
         campaignService.handleErrorResponse(this.$store, error, 'getting', 'votes');
       }
     },
+    async deleteSpendRequest() {
+      try {
+        const response = await campaignService.deleteSpendRequestById(this.campaignId, this.spendRequestId);
+        if (response.status === 204) {
+          this.$store.commit("SET_NOTIFICATION", { message: 'Deleted SpendRequest!', type: 'success' });
+          this.$router.push({ name: 'CampaignView', params: { id: this.campaignId } });
+        }
+      } catch (error) {
+        campaignService.handleErrorResponse(this.$store, error, 'deleting', 'spendRequest');
+      }
+    },
     closeForm() {
       this.showModal = false;
       this.editVote = {};
@@ -240,12 +253,8 @@ export default {
   justify-content: space-between;
 }
 
-.sr-header a {
+.sr-header .buttons>* {
   margin-top: 1em;
-}
-
-.sr-header .buttons .fa-plus {
-  margin-right: 10px;
 }
 
 .campaign-name {

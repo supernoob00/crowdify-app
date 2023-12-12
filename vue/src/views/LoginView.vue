@@ -21,9 +21,10 @@
           <input type="password" class="input" v-model="user.password" required />
         </div>
       </div>
-      <div class="control">
+      <div class="sign-in-button control">
         <button class="button is-link" type="submit">Sign in</button>
       </div>
+      <br/>
       <p>
         <router-link v-bind:to="{ name: 'register' }">Need an account? Sign up.</router-link>
       </p>
@@ -71,5 +72,8 @@ export default {
 <style scoped>
 input {
   max-width: 150px;
+}
+.sign-in-button {
+  margin-top: 24px;
 }
 </style>

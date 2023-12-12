@@ -1,5 +1,4 @@
 <template>
-  <h3>Public Campaigns</h3>
   <div class="campaigns block">
     <campaign-card v-for="campaign in publicNotOwnedCampaigns" :key="campaign.id" :campaign="campaign"></campaign-card>
   </div>
@@ -51,6 +50,11 @@ export default {
 </script>
 
 <style scoped>
+.content {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
 .campaigns {
   display: flex;
   margin-right: 20px;

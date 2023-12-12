@@ -15,10 +15,12 @@
 <script setup>
 import { defineProps, onBeforeMount, ref, computed } from 'vue';
 import campaignService from '../services/CampaignService';
+import Util from '../services/Util';
+
 const props = defineProps(['spendRequest']);
 const campaign = ref({});
 
-const amountDisplay = computed(() => `$${props.spendRequest.amount / 100}`)
+const amountDisplay = computed(() => `$${Util.formatToMoney(props.spendRequest.amount)}`)
 const status = computed(() => props.spendRequest.approved ? 'Approved' : 'Pending')
 
 async function getCampaign() {
