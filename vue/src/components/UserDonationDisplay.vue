@@ -1,5 +1,5 @@
 <template>
-  <article class="message">
+  <article class="message" :class="{ 'is-danger': donation.refunded }">
     <div class="message-body">
       <span class="amount">${{ donationAmount }}</span>
       <span> to </span>

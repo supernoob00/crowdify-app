@@ -53,16 +53,16 @@
           <section class="modal-card-body">
             <form @submit.prevent="submitForm">
               <div class="field">
-                <div class="buttons has-addons">
+                <div class="buttons has-addons is-centered">
                   <button :class="approvedButtonClass" @click.prevent="editVote.approved = true">Approve</button>
                   <button :class="abstainButtonClass" @click.prevent="editVote.approved = null"
                     v-if="hasVoted">Abstain</button>
                   <button :class="rejectedButtonClass" @click.prevent="editVote.approved = false">Reject</button>
                 </div>
               </div>
-              <div class="field is-grouped">
-                <div class="control">
-                  <button class="button is-link" type="submit">Submit</button>
+              <div class="control">
+                <div class="buttons is-centered">
+                  <button class="button is-link is-centered" type="submit">Submit</button>
                 </div>
               </div>
             </form>

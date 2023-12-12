@@ -43,7 +43,7 @@ public class JdbcCampaignDao {
         List<Campaign> managersCampaigns = new ArrayList<>();
 
         String sql = "SELECT * FROM campaign_manager INNER JOIN campaign using (campaign_id)" +
-                "WHERE manager_id = ?;";
+                "WHERE manager_id = ? and deleted = false;";
 
         try {
             SqlRowSet results = jdbcTemplate.queryForRowSet(sql, userId);
@@ -87,12 +87,12 @@ public class JdbcCampaignDao {
     }
 
     public List<Campaign> getCampaignsByDonorId (int id) {
-        List campaignList = new ArrayList<>();
+        List<Campaign> campaignList = new ArrayList<>();
         String sql = "SELECT * from " +
                 "campaign " +
                 "JOIN donation using (campaign_id) " +
                 "JOIN users on donor_id = user_id " +
-                "WHERE user_id = ?;";
+                "WHERE user_id = ? and deleted = false;";
 
         try {
             SqlRowSet results = jdbcTemplate.queryForRowSet(sql, id);
@@ -172,8 +172,7 @@ public class JdbcCampaignDao {
                 "?;";
 
         try {
-            List<Donation> donations = markedCampaign.getDonations();
-            if (!markedCampaign.isLocked() || !donations.isEmpty()) {
+            if (!markedCampaign.isLocked() || !markedCampaign.areAllDonationsRefunded()) {
                 throw new DataIntegrityViolationException("Donation cannot be " +
                         "deleted because it is not locked or has unreturned " +
                         "donations.");

@@ -50,7 +50,7 @@ public class CampaignController {
         for (Campaign campaign : jdbcCampaignDao.getCampaignList()) {
             if (campaign.isPublic()
                     || (loggedInUser.isPresent()
-                        && campaign.getManagers().contains(loggedInUser.get()))) {
+                    && campaign.getManagers().contains(loggedInUser.get()))) {
                 campaigns.add(campaign);
             }
         }
@@ -144,29 +144,25 @@ public class CampaignController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @RequestMapping(path = "/campaigns/{id}", method = RequestMethod.DELETE)
     public void deleteCampaign(@PathVariable int id, Principal principal) {
-        Campaign campaignToDelete = jdbcCampaignDao.getCampaignById(id).orElseThrow(
+        Campaign campaign = jdbcCampaignDao.getCampaignById(id).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                         "Campaign not found."));
 
         int userId = AuthenticationController.getUserIdFromPrincipal(principal, jdbcUserDao);
 
-        User creator = campaignToDelete.getCreator();
-        int creatorId = creator.getId();
-
-        if (creatorId == userId) {
+        if (campaign.getCreator().getId() != userId) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are " +
                     "not authorized to delete this campaign.");
         }
 
         ErrorResult result = new ErrorResult();
 
-        if (campaignToDelete.isDeleted()) {
+        if (campaign.isDeleted()) {
             result.reject("Campaign has already been already deleted");
         }
         //TODO: Create endpoint that allows me to check if a campaign can be deleted or not on the frontend side
         CampaignValidator validator = new CampaignValidator();
-        campaignToDelete.setDeleted(true);
-        validator.validate(campaignToDelete, result);
+        validator.validate(campaign, result);
 
         if (result.hasErrors()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
