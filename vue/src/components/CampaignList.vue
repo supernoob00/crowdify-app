@@ -1,5 +1,5 @@
 <template>
-  <div class="campaigns block">
+  <div class="campaigns block campaign-collection">
     <campaign-card v-for="campaign in publicNotOwnedCampaigns" :key="campaign.id" :campaign="campaign"></campaign-card>
   </div>
 
@@ -66,8 +66,7 @@ export default {
 }
 
 .campaign-collection {
-  margin-top: 40px;
-  margin-bottom: 40px;
+  margin-bottom: 36px;
 }
 
 .managed-private {

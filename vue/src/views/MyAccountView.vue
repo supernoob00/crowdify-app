@@ -10,7 +10,7 @@
           :donation="donation"></user-donation-display>
       </section>
       <section class="campaigns-section">
-        <div>
+        <div class="campaign-collection">
           <h3>My Public Campaigns</h3>
           <div class="campaigns block">
             <campaign-card v-for="campaign in publicOwnedCampaigns" :key="campaign.id"
@@ -18,7 +18,7 @@
             <span v-if="publicOwnedCampaigns.length === 0">You have no public campaigns</span>
           </div>
         </div>
-        <div>
+        <div class="campaign-collection">
           <h3>My Private Campaigns</h3>
           <div class="campaigns block">
             <campaign-card v-for="campaign in privateOwnedCampaigns" :key="campaign.id"
@@ -95,6 +95,10 @@ export default {
   row-gap: 25px;
   justify-content: flex-start;
   align-items: center;
+}
+
+.campaign-collection {
+  margin-bottom: 40px;
 }
 
 .body {
