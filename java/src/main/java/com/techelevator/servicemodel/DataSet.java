@@ -1,5 +1,8 @@
 package com.techelevator.servicemodel;
 
+import com.techelevator.model.Vote;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class DataSet {
@@ -36,7 +39,6 @@ public class DataSet {
     public void setLabel(String label) {
         this.label = label;
     }
-
     @Override
     public String toString() {
         return "DataSet{" +
@@ -45,4 +47,6 @@ public class DataSet {
                 ", label='" + label + '\'' +
                 '}';
     }
+
+
 }

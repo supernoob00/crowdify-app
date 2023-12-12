@@ -1,5 +1,5 @@
 <template>
-  <article class="message">
+  <article class="message" :class="{ 'is-danger': donation.refunded }">
     <div class="message-header">
       <p id="donor-name">{{ donorUsername }} </p>
     </div>

@@ -2,6 +2,7 @@
   <div class="content">
     <div class="header">
       <div>
+        <h3 class="has-text-danger">This campaign was deleted.</h3>
         <h1 id="campaign-name">{{ campaign.name }}</h1>
       </div>
     </div>
@@ -37,34 +38,30 @@
       <section class="donations">
         <header class="donation-header">
           <h2 class="block">Donations</h2>
-          <button data-title="This campaign is locked for further donations." :disabled="isLocked"
-            :class="{ 'tooltip-button': isLocked }" class="button is-link block" @click="goToCreateDonationView">
-            Donate
-          </button>
         </header>
         <donation-display v-for="donation in donationsSortedByAmount" :key="donation.id" :donation="donation">
         </donation-display>
       </section>
 
-      <section>
+      <!-- <section>
         <h2 class="block">Spend Requests</h2>
         <p v-if="spendRequestsObj.list.length === 0">There are no spend requests created for this campaign yet.</p>
         <spend-request-display v-for="spendRequest in spendRequestsObj.list" :key="spendRequest.id"
           :spend-request="spendRequest"></spend-request-display>
-      </section>
+      </section> -->
     </div>
   </div>
 </template>
 
 <script>
 import DonationDisplay from './DonationDisplay.vue';
-import SpendRequestDisplay from './SpendRequestDisplay.vue';
+// import SpendRequestDisplay from './SpendRequestDisplay.vue';
 import Util from '../services/Util';
 
 export default {
   components: {
     DonationDisplay,
-    SpendRequestDisplay,
+    // SpendRequestDisplay,
   },
   props: ['campaign', 'spendRequestsObj'],
   computed: {
@@ -76,10 +73,10 @@ export default {
       return this.campaign.fundingGoal / 100;
     },
     numberOfDonations() {
-      return this.campaign.donations.filter(donation => !donation.refunded).length;
+      return this.campaign.donations.length;
     },
     donationsSortedByAmount() {
-      const donationsCopy = [...this.campaign.donations].filter(donation => !donation.refunded);
+      const donationsCopy = [...this.campaign.donations];
       return donationsCopy.sort((d1, d2) => d2.amount - d1.amount);
     },
     nonCreatorManagerNames() {
