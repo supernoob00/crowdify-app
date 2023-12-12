@@ -1,10 +1,7 @@
 package com.techelevator.dao;
 
 import com.techelevator.exception.DaoException;
-import com.techelevator.model.NewSpendRequestDto;
-import com.techelevator.model.RegisterUserDto;
-import com.techelevator.model.SpendRequest;
-import com.techelevator.model.User;
+import com.techelevator.model.*;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -129,6 +126,23 @@ public class JdbcSpendRequestDaoTests extends BaseDaoTests {
         Optional <SpendRequest> retrievedRequest = sut2.getSpendRequestById(createdRequest.getId());
         Assert.assertTrue(retrievedRequest.isPresent());
         Assert.assertEquals(retrievedRequest.orElseThrow(), createdRequest);
+    }
+
+    @Test
+    public void updateSpendRequest_updates_a_spend_request() {
+        UpdateSpendRequestDto requestToUpdate = new UpdateSpendRequestDto(
+                3,
+                1000,
+                "Mo Money!",
+                true,
+                LocalDateTime.of(2024, 2, 4, 0, 0)
+        );
+
+        SpendRequest updatedRequest = sut2.updateSpendRequest(requestToUpdate, 3);
+        Assert.assertNotNull(updatedRequest);
+
+        Optional<SpendRequest> retrievedRequest = sut2.getSpendRequestById(updatedRequest.getId());
+        Assert.assertEquals(retrievedRequest.orElseThrow(), updatedRequest);
 
     }
 }
