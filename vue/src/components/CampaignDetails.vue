@@ -46,7 +46,7 @@
 
       <section class="donations">
         <h2 class="block">Donations</h2>
-        <button data-title="This campaign is locked for further donations." :disabled="isLocked" :class="{ 'tooltip-button': isLocked }" class="button is-link block"
+        <button data-title="This campaign is locked for further donations" :disabled="isLocked" :class="{ 'tooltip-button': isLocked }" class="button is-link block"
           @click="goToCreateDonationView">
           Donate
         </button>
