@@ -1,11 +1,10 @@
 <template>
   <div class="content">
     <h1>My Account</h1>
-    <h3>{{ $store.state.user.username }}</h3>
     <loading-screen v-if="isLoading"></loading-screen>
     <div class="body" v-else>
       <section class="donations">
-        <h3>Donations</h3>
+        <h3>My Donations</h3>
         <user-donation-display v-for="donation in donations" :key="donation.id"
           :donation="donation"></user-donation-display>
       </section>
