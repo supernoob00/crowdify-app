@@ -29,7 +29,7 @@
         <h3 class="amount-raised">${{ totalDonated }}</h3>
         <span class="goal-text"> raised of ${{ fundingGoal }} Goal</span>
       </div>
-      <progress class="progress is-success is-small" :value="totalDonated" :max="fundingGoal"></progress>
+      <progress class="progress is-danger is-small" :value="totalDonated" :max="fundingGoal"></progress>
       <div class="num-donations">{{ numberOfDonations }} donations</div>
     </div>
     <hr>
@@ -66,7 +66,7 @@ export default {
   props: ['campaign', 'spendRequestsObj'],
   computed: {
     totalDonated() {
-      const totalDonated = this.campaign.donations.reduce((sum, d) => d.refunded ? 0 : sum + d.amount, 0);
+      const totalDonated = this.campaign.donations.reduce((sum, d) => sum + d.amount, 0);
       return Util.formatToMoney(totalDonated);
     },
     fundingGoal() {

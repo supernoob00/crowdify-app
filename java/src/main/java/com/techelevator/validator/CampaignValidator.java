@@ -24,11 +24,6 @@ public class CampaignValidator implements Validator<Campaign> {
             errors.reject("End date before start date");
         }
 
-        // validate private if deleted
-        if (campaign.isPublic() && campaign.isDeleted()) {
-            errors.reject("Campaign must be private if deleted");
-        }
-
         // validate locked if deleted
         if (!campaign.isLocked() && campaign.isDeleted()) {
             errors.reject("Campaign must be locked if deleted");
