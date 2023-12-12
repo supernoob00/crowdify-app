@@ -5,7 +5,8 @@
       <div class="field">
         <label class="label">Campaign Name</label>
         <div class="control">
-          <input type="text" maxlength="50" class="input" placeholder="e.g Solving World Hunger!" v-model="editCampaign.name">
+          <input type="text" maxlength="50" class="input" placeholder="e.g Solving World Hunger!"
+            v-model="editCampaign.name">
         </div>
       </div>
       <div class="field">

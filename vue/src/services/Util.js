@@ -8,6 +8,10 @@ export default {
             money = "0" + money;
         }
 
-        return money.substring(0, money.length - 2) + "." + money.substring(money.length - 2);
+        const formattedMoney = money.substring(0, money.length - 2) + "." + money.substring(money.length - 2)
+        if (formattedMoney.endsWith('.00')) {
+            return formattedMoney.substring(0, formattedMoney.length - 3)
+        }
+        return formattedMoney;
     }
 }
