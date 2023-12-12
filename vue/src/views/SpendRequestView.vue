@@ -25,6 +25,8 @@
             }
           }">
             <i class="fa-solid fa-pen-to-square"></i></router-link>
+          <button class="button is-danger" v-if="isManager" @click="deleteSpendRequest">
+            <i class="fa-solid fa-trash"></i></button>
         </div>
       </div>
       <hr>
@@ -188,6 +190,17 @@ export default {
         campaignService.handleErrorResponse(this.$store, error, 'getting', 'votes');
       }
     },
+    async deleteSpendRequest() {
+      try {
+        const response = await campaignService.deleteSpendRequestById(this.campaignId, this.spendRequestId);
+        if (response.status === 204) {
+          this.$store.commit("SET_NOTIFICATION", { message: 'Deleted SpendRequest!', type: 'success' });
+          this.$router.push({ name: 'CampaignView', params: { id: this.campaignId } });
+        }
+      } catch (error) {
+        campaignService.handleErrorResponse(this.$store, error, 'deleting', 'spendRequest');
+      }
+    },
     closeForm() {
       this.showModal = false;
       this.editVote = {};
@@ -240,12 +253,8 @@ export default {
   justify-content: space-between;
 }
 
-.sr-header a {
+.sr-header .buttons>* {
   margin-top: 1em;
-}
-
-.sr-header .buttons .fa-plus {
-  margin-right: 10px;
 }
 
 .campaign-name {

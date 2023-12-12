@@ -118,6 +118,16 @@ public class JdbcSpendRequestDao {
         }
     }
 
+    public boolean deleteSpendRequestById(int spendRequestId) {
+        String sql = "DELETE FROM spend_request where request_id = ?;";
+        try {
+            int rowsAffected = jdbcTemplate.update(sql, spendRequestId);
+            return rowsAffected != 0;
+        } catch (CannotGetJdbcConnectionException e) {
+            throw new DaoException("Unable to connect to server or database", e);
+        }
+    }
+
     public SpendRequest mapRowToSpendRequest(SqlRowSet rowSet) {
         SpendRequest request = new SpendRequest();
 

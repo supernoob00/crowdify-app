@@ -105,7 +105,6 @@ public class JdbcVoteDao {
     }
 
     public Optional<Vote> getVoteByDonorAndRequestId(int donorId, int requestId) {
-        Vote thisVote;
         String sql = "SELECT * FROM vote WHERE donor_id = ? and request_id = ?;";
 
         try {
@@ -157,10 +156,19 @@ public class JdbcVoteDao {
         }
     }
 
+    public boolean deleteVoteBySpendRequestId(int requestId) {
+        String sql = "DELETE FROM vote where request_id = ?;";
+        try {
+            int rowsAffected = jdbcTemplate.update(sql, requestId);
+            return rowsAffected != 0;
+        } catch (CannotGetJdbcConnectionException e) {
+            throw new DaoException("Unable to connect to server or database", e);
+        }
+    }
+
     private Vote mapRowtoVote(SqlRowSet rowSet) {
         JdbcUserDao userDao = new JdbcUserDao(jdbcTemplate);
         Vote vote = new Vote();
-
         User user = userDao.getUserById(rowSet.getInt("donor_id")).orElseThrow();
         vote.setUser(user);
         vote.setRequestId(rowSet.getInt("request_id"));

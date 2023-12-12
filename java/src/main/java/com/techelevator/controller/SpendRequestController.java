@@ -5,6 +5,7 @@ import com.techelevator.model.*;
 import com.techelevator.validator.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -46,6 +47,10 @@ public class SpendRequestController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Spend request not found.");
         });
 
+        if (spendRequest.getCampaignId() != campaignId) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid path.");
+        }
+
         Campaign requestCampaign = jdbcCampaignDao.getCampaignById(campaignId).orElseThrow(() -> {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Campaign not found");
         });
@@ -54,10 +59,6 @@ public class SpendRequestController {
         if (!requestCampaign.containsDonor(userId) && !requestCampaign.containsManager(userId)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are " +
                     "not authorized to view this spend request.");
-        }
-
-        if (spendRequest.getCampaignId() != campaignId) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid path.");
         }
 
         return spendRequest;
@@ -136,6 +137,31 @@ public class SpendRequestController {
                     result.getCauses().toString());
         }
         return jdbcSpendRequestDao.updateSpendRequest(updateSpendRequestDto, requestId);
+    }
+
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @DeleteMapping("/campaigns/{campaignId}/spend-requests/{requestId}")
+    public boolean deleteSpendRequest(Principal principal,
+                                      @PathVariable int campaignId,
+                                      @PathVariable int requestId) {
+        SpendRequest spendRequest = jdbcSpendRequestDao.getSpendRequestById(requestId).orElseThrow(() -> {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Spend request not found.");
+        });
+        if (spendRequest.getCampaignId() != campaignId) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid path.");
+        }
+        Campaign requestCampaign = jdbcCampaignDao.getCampaignById(campaignId).orElseThrow(() -> {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Campaign not found");
+        });
+        int userId = AuthenticationController.getUserIdFromPrincipal(principal, userDao);
+        if (!requestCampaign.containsManager(userId)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You're not allowed to delete this spend request");
+        }
+        if (!jdbcVoteDao.deleteVoteBySpendRequestId(requestId)
+                || !jdbcSpendRequestDao.deleteSpendRequestById(requestId)) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "There was an error deleting this spend request");
+        }
+        return true;
     }
 
     // **************************************** vote handling *******************************************
