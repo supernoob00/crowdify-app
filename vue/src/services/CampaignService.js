@@ -54,6 +54,10 @@ export default {
     return axios.get(`/campaigns/${campaignId}/spend-requests/${spendRequestId}/votes`);
   },
 
+  deleteSpendRequestById(campaignId, spendRequestId) {
+    return axios.delete(`/campaigns/${campaignId}/spend-requests/${spendRequestId}`);
+  },
+
   createVote(campaignId, spendRequestId, newVoteDto) {
     return axios.post(`/campaigns/${campaignId}/spend-requests/${spendRequestId}/votes`, newVoteDto);
   },

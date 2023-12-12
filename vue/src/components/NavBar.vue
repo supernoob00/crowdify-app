@@ -36,12 +36,12 @@ export default {
   },
   data() {
     return {
-      darkModeOn: useDark(this.$store.state.darkModeSettings)
+      isDark: useDark(this.$store.state.darkModeSettings)
     }
   },
   computed: {
     buttonClass() {
-      if (this.darkModeOn) {
+      if (this.isDark) {
         return { 'is-dark': true }
       }
       return { 'is-light': true }
