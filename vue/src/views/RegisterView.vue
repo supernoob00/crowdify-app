@@ -21,8 +21,9 @@
         </div>
       </div>
       <div class="control">
-        <button class="button is-link" type="submit">Create Account</button>
+        <button class="sign-in-button button is-link" type="submit">Create Account</button>
       </div>
+      <br/>
       <p><router-link v-bind:to="{ name: 'login' }">Already have an account? Log in.</router-link></p>
     </form>
   </div>
@@ -69,7 +70,7 @@ export default {
     validateRegisterForm() {
       let msg = '';
       if (this.user.password != this.user.confirmPassword) {
-        msg += 'Password & Confirm Password do not match. ';
+        msg += 'Password and Confirm Password do not match. ';
       }
       if (this.user.password.length < 8) {
         msg += 'Password must be at least 8 characters long. '
@@ -87,5 +88,8 @@ export default {
 <style scoped>
 input {
   max-width: 150px;
+}
+.sign-in-button {
+  margin-top: 24px;
 }
 </style>

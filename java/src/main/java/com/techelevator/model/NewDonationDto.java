@@ -9,7 +9,7 @@ import javax.validation.constraints.*;
 import java.util.Objects;
 
 public class NewDonationDto {
-    @Min(1) @Nullable
+    @Nullable
     private Integer donorId;
     @Min(1)
     private int campaignId;
