@@ -72,12 +72,14 @@
       <!-- See below only for managers (?) -->
       <!-- <div v-for="(vote, index) in votes" :key="index">{{ vote }}</div> -->
     </div>
+    <img class="chart" :src="chartImg">
   </div>
 </template>
 
 <script>
 import campaignService from '../services/CampaignService';
 import LoadingScreen from '../components/LoadingScreen.vue';
+import ChartService from '../services/ChartService';
 export default {
   components: {
     LoadingScreen,
@@ -90,6 +92,7 @@ export default {
       isLoading: true,
       editVote: { id: -1 },
       showModal: false,
+      chartImg: {}
     }
   },
   computed: {
@@ -157,9 +160,18 @@ export default {
     await this.getCampaign();
     await this.getSpendRequest();
     await this.getVotes();
+    this.getImage();
+    // this.chartImg = new Image(response.data);
     this.isLoading = false;
   },
   methods: {
+    getImage() {
+      ChartService.getSpendRequestChart(this.spendRequestId, this.$store.state.token)
+        .then(response => response.blob())
+        .then(blob => {
+          this.chartImg = URL.createObjectURL(blob);
+        })
+    },
     async getCampaign() {
       try {
         const response = await campaignService.getCampaign(this.campaignId);
