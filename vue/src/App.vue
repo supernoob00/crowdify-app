@@ -79,7 +79,7 @@ hr {
   left: 0;
   top: 100%;
   font-size: 12px;
-  width: 100px;
+  width: fit-content;
   padding: 5px;
   border-radius: 4px;
   transition: 300ms;
