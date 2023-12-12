@@ -7,7 +7,7 @@
       {{ spendRequest.name }}
     </router-link>
     <h4> {{ amountDisplay }}</h4>
-    <p class="is-italic">{{ spendRequest.description }}</p>
+    <p class="is-italic title is-6 has-text-weight-normal">{{ spendRequest.description }}</p>
     <p>{{ "(" + status + ")" }}</p>
   </div>
 </template>

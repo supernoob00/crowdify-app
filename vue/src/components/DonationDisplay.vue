@@ -5,7 +5,7 @@
     </div>
     <div class="message-body">
       <span id="amount">${{ donationAmount }}</span>
-      <p id="comment">{{ donation.comment }}</p>
+      <p class="title is-6" id="comment">{{ donation.comment }}</p>
     </div>
   </article>
 </template>
