@@ -1,8 +1,9 @@
 <template>
   <router-link :to="{ name: 'CampaignView', params: { id: campaign.id } }">
     <div class="campaign" :class="campaignClass">
-      <p>{{ campaign.name }}</p>
-      <p class="fund-percent">{{ `${campaignPercentage}% funded` }}</p>
+      <p class="has-text-weight-medium">{{ campaign.name }}</p>
+      <p>{{ `$${campaign.fundingGoal} Goal` }}</p>
+      <p class="is-italic fund-percent">{{ `${campaignPercentage}% funded` }}</p>
     </div>
   </router-link>
 </template>
@@ -25,6 +26,9 @@ export default {
         return { 'managed-private': true }
       }
       return {}
+    },
+    campaignDonationTotal() {
+      return this.campaign.donations.reduce((sum, currDonation) => sum += currDonation.amount, 0);
     },
     campaignPercentage() {
       const totalDonated = this.campaign.donations.reduce((sum, currDonation) => sum += currDonation.amount, 0);
