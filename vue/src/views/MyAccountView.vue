@@ -99,7 +99,7 @@ export default {
 
 .body {
   display: flex;
-  max-width: 800px;
+  max-width: 1000px;
 }
 
 .body section {
