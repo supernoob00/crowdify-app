@@ -3,6 +3,7 @@ package com.techelevator.dao;
 import com.techelevator.exception.DaoException;
 import com.techelevator.model.Campaign;
 import com.techelevator.model.NewCampaignDto;
+import com.techelevator.model.UpdateCampaignDto;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -101,6 +102,28 @@ public class JdbcCampaignDaoTests extends BaseDaoTests {
         Assert.assertEquals(CAMPAIGN_1, myCampaigns2.get(0));
         Assert.assertEquals(CAMPAIGN_4, myCampaigns2.get(1));
 
+    }
+
+    @Test
+    public void updateCampaign_updates_a_campaign() {
+        UpdateCampaignDto campaignToUpdate = new UpdateCampaignDto(
+                3,
+                "Test Name",
+                "Test Description",
+                5000000,
+                LocalDateTime.of(2024, 1, 8, 0, 0),
+                LocalDateTime.of(2024, 1, 18, 0, 0),
+                false,
+                true
+        );
+
+
+        Optional<Campaign> updatedCampaign = sut.updateCampaign(campaignToUpdate);
+        Assert.assertNotNull(updatedCampaign);
+        Assert.assertTrue(updatedCampaign.isPresent());
+
+        Optional<Campaign> retrievedCampaign = sut.getCampaignById(updatedCampaign.get().getId());
+        Assert.assertEquals(retrievedCampaign.orElseThrow(), updatedCampaign.orElseThrow());
     }
 
 }
