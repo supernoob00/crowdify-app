@@ -1,7 +1,6 @@
 <template>
   <loading-screen v-if="isLoading"></loading-screen>
   <div v-else class="content">
-
     <div class="header">
       <div>
         <h1 id="campaign-name">{{ campaign.name }}</h1>

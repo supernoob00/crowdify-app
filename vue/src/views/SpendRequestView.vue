@@ -76,8 +76,6 @@
 <script>
 import campaignService from '../services/CampaignService';
 import LoadingScreen from '../components/LoadingScreen.vue';
-import { displayMoney } from '../services/Utilities';
-import _default from 'vuex';
 export default {
   components: {
     LoadingScreen,
@@ -100,7 +98,7 @@ export default {
       return parseInt(this.$route.params.campaignId);
     },
     amountDisplay() {
-      return displayMoney(this.spendRequest.amount);
+      return `$${this.spendRequest.amount / 100}`
     },
     donorList() {
       const uniqueDonors = new Set();

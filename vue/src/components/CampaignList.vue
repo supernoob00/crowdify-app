@@ -61,15 +61,6 @@ export default {
   align-items: center;
 }
 
-.campaign {
-  min-width: 150px;
-  border-radius: 10px;
-  padding: 20px;
-  text-align: center;
-  background-color: var(--campaign-card-background);
-  color: var(--font-color);
-}
-
 .managed-private {
   background-color: var(--user-is-manager-private);
   border: none;

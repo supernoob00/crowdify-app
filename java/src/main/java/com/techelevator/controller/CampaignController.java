@@ -179,7 +179,7 @@ public class CampaignController {
     }
 
     /* Gets all campaigns user is a manager for */
-    @PreAuthorize("isAuthenticated")
+    @PreAuthorize("isAuthenticated()")
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/users/{id}/campaigns")
     public List<Campaign> getUserCampaigns(Principal principal, @PathVariable int id) {
