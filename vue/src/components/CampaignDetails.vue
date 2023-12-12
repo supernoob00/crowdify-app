@@ -9,7 +9,8 @@
       <div class="buttons manager-actions" v-if="isManager">
         <router-link class="button is-link" :to="{ name: 'EditCampaignView', params: { id: campaign.id } }">
           <i class="fa-solid fa-pen-to-square"></i></router-link>
-        <button class="button is-danger" v-if="isCreator" @click="deleteCampaign"><i
+        <button data-title="This campaigns must be locked to delete it" :disabled="!isLocked" class="button is-danger"
+          :class="{ 'tooltip-button': !isLocked }" v-if="isCreator" @click="deleteCampaign"><i
             class="fa-solid fa-trash"></i></button>
         <router-link class="button is-link" :to="{ name: 'CreateSpendRequestView', params: { id: campaign.id } }">
           <i class="fa-solid fa-plus"></i>Add Spend Request</router-link>
