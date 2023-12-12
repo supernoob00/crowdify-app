@@ -4,18 +4,23 @@
       <p id="donor-name">{{ donorUsername }} </p>
     </div>
     <div class="message-body">
-      <span id="amount">${{ donation.amount / 100 }}</span>
+      <span id="amount">${{ donationAmount }}</span>
       <p id="comment">{{ donation.comment }}</p>
     </div>
   </article>
 </template>
 
 <script>
+import Util from '../services/Util';
+
 export default {
   props: ['donation'],
   computed: {
     donorUsername() {
       return this.donation.donor === null ? 'Anonymous Donor' : this.donation.donor.username;
+    },
+    donationAmount() {
+      return Util.formatToMoney(this.donation.amount);
     }
   }
 }
