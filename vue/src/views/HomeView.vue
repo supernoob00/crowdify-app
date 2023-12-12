@@ -2,10 +2,12 @@
   <div class="home">
     <loading-screen v-if="isLoading"></loading-screen>
     <div v-else class="content">
-      <h1>Campaigns</h1>
+      <header class="header">
+        <h1>Campaigns</h1>
+        <router-link :to="{ name: 'CreateCampaignView' }" class="button is-link"><i
+            class="fa-solid fa-plus"></i>Campaign</router-link>
+      </header>
       <campaign-list :campaigns="campaigns"></campaign-list>
-      <router-link :to="{ name: 'CreateCampaignView' }" class="button is-link"><i
-          class="fa-solid fa-plus"></i>Campaign</router-link>
     </div>
   </div>
 </template>
@@ -21,15 +23,7 @@ export default {
   },
   data() {
     return {
-      campaigns: [{
-        name: 'Poop',
-        id: 1,
-        public: true,
-        managers: [
-          {
-            id: 3, username: "adi", authorities: [{ name: "ROLE_USER" }]
-          }]
-      }],
+      campaigns: [],
       isLoading: true
     }
   },
@@ -56,8 +50,8 @@ export default {
   align-items: center;
 }
 
-.header h1 {
-  margin-right: 10px;
+.header * {
+  margin-right: 30px;
 }
 
 .fa-plus {

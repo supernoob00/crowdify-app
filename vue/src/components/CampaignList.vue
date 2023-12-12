@@ -1,37 +1,51 @@
 <template>
+  <h3>Public Campaigns</h3>
   <div class="campaigns block">
-    <router-link v-for="campaign in campaigns" :key="campaign.id"
-      :to="{ name: 'CampaignView', params: { id: campaign.id } }">
-      <div class="campaign" :class="campaignClass(campaign)">
-        <p>{{ campaign.name }}</p>
-        <p class="fund-percent">{{ `${campaignPercentage(campaign)}% funded` }}</p>
-      </div>
-    </router-link>
+    <campaign-card v-for="campaign in publicNotOwnedCampaigns" :key="campaign.id" :campaign="campaign"></campaign-card>
+  </div>
+
+  <div v-if="currentUser.username !== undefined">
+    <h3>My Public Campaigns</h3>
+    <div class="campaigns block">
+      <campaign-card v-for="campaign in publicOwnedCampaigns" :key="campaign.id" :campaign="campaign"></campaign-card>
+      <span v-if="publicOwnedCampaigns.length === 0">You have no public campaigns</span>
+    </div>
+  </div>
+
+  <div v-if="currentUser.username !== undefined">
+    <h3>My Private Campaigns</h3>
+    <div class="campaigns block">
+      <campaign-card v-for="campaign in privateOwnedCampaigns" :key="campaign.id" :campaign="campaign"></campaign-card>
+      <span v-if="privateOwnedCampaigns.length === 0">You have no private campaigns</span>
+    </div>
   </div>
 </template>
 
 <script>
+import CampaignCard from './CampaignCard.vue';
 export default {
+  components: {
+    CampaignCard
+  },
   props: ['campaigns'],
   computed: {
     currentUser() {
       return this.$store.state.user;
+    },
+    publicNotOwnedCampaigns() {
+      return this.campaigns.filter(c => c.public && !this.isManager(c));
+    },
+    privateOwnedCampaigns() {
+      return this.campaigns.filter(c => !c.public && this.isManager(c));
+    },
+    publicOwnedCampaigns() {
+      return this.campaigns.filter(c => c.public && this.isManager(c));
     }
   },
   methods: {
-    campaignClass(c) {
-      if (c.public && c.managers.filter(m => m.username === this.currentUser.username).length > 0) {
-        return { 'managed-public': true }
-      }
-      if ((!c.public && c.managers.filter(m => m.username === this.currentUser.username).length > 0)) {
-        return { 'managed-private': true }
-      }
-      return {}
-    },
-    campaignPercentage(c) {
-      const totalDonated = c.donations.reduce((sum, currDonation) => sum += currDonation.amount, 0);
-      return Math.trunc(totalDonated / c.fundingGoal * 100);
-    },
+    isManager(c) {
+      return c.managers.filter(m => m.username === this.currentUser.username).length > 0;
+    }
   }
 }
 </script>
@@ -45,15 +59,6 @@ export default {
   row-gap: 25px;
   justify-content: flex-start;
   align-items: center;
-}
-
-.campaign {
-  min-width: 150px;
-  border-radius: 10px;
-  padding: 20px;
-  text-align: center;
-  background-color: var(--campaign-card-background);
-  color: var(--font-color);
 }
 
 .managed-private {

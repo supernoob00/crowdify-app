@@ -1,14 +1,14 @@
 <template>
-  <div>
-    <router-link :to="{
+  <div class="box">
+    <router-link class="is-size-5" :to="{
       name: 'SpendRequestView',
       params: { campaignId: spendRequest.campaignId, spendRequestId: spendRequest.id }
     }">
-      {{ spendRequest.name }}</router-link>
+      {{ spendRequest.name }}
+    </router-link>
     <h4> {{ amountDisplay }}</h4>
-    <hr>
-    <p>{{ spendRequest.description }}</p>
-    <p>{{ status }}</p>
+    <p class="is-italic">{{ spendRequest.description }}</p>
+    <p>{{ "(" + status + ")" }}</p>
   </div>
 </template>
 

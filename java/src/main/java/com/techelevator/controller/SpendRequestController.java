@@ -1,28 +1,22 @@
 package com.techelevator.controller;
 
 import com.techelevator.dao.*;
-import com.techelevator.exception.DaoException;
 import com.techelevator.model.*;
 import com.techelevator.validator.*;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.data.relational.core.sql.Update;
 import org.springframework.http.HttpStatus;
-import org.springframework.jdbc.CannotGetJdbcConnectionException;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import java.security.Principal;
-import java.sql.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @RestController
 @CrossOrigin
+@PreAuthorize("isAuthenticated()")
 public class SpendRequestController {
 
     private final UserDao userDao;
@@ -52,11 +46,9 @@ public class SpendRequestController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Spend request not found.");
         });
 
-        if (principal == null) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are " +
-                    "not authorized to view this spend request.");
-        }
-        Campaign requestCampaign = jdbcCampaignDao.getCampaignById(campaignId).orElseThrow();
+        Campaign requestCampaign = jdbcCampaignDao.getCampaignById(campaignId).orElseThrow(() -> {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Campaign not found");
+        });
         int userId = AuthenticationController.getUserIdFromPrincipal(principal, userDao);
 
         if (!requestCampaign.containsDonor(userId) && !requestCampaign.containsManager(userId)) {
@@ -103,34 +95,23 @@ public class SpendRequestController {
                                    @PathVariable int campaignId,
                                    Principal principal) {
         newSpendRequestDto.setCampaignId(campaignId);
-
-        boolean isManager = false;
-        List<User> managerList = userDao.getManagersByCampaignId(campaignId);
-        int userId = AuthenticationController.getUserIdFromPrincipal(principal, userDao);
-
-        for (int i = 0; i < managerList.size(); i++) {
-
-            if (userId == managerList.get(i).getId()) {
-                isManager = true;
-                break;
-            }
+        Campaign campaign = jdbcCampaignDao.getCampaignById(campaignId).orElseThrow(() -> {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Campaign not found");
+        });
+        int loggedInUserId = AuthenticationController.getUserIdFromPrincipal(principal, userDao);
+        if (!campaign.containsManager(loggedInUserId)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not authorized to update a spend request.");
         }
-        if (!isManager) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not authorized to create a spend request.");
-        }
-
         ErrorResult result = new ErrorResult();
-        Validator validator = new NewSpendRequestDtoValidator(jdbcCampaignDao);
+        Validator<NewSpendRequestDto> validator = new NewSpendRequestDtoValidator(jdbcCampaignDao);
         validator.validate(newSpendRequestDto, result);
 
         if (result.hasErrors()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    result.getCauses().toString());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, result.getCauses().toString());
         }
         return jdbcSpendRequestDao.createSpendRequest(newSpendRequestDto);
     }
 
-    @PreAuthorize("isAuthenticated()")
     @ResponseStatus(HttpStatus.OK)
     @PutMapping("campaigns/{campaignId}/spend-requests/{requestId}")
     public SpendRequest updateSpendRequest(@Valid @RequestBody UpdateSpendRequestDto updateSpendRequestDto,
@@ -138,25 +119,15 @@ public class SpendRequestController {
                                            @PathVariable int requestId,
                                            Principal principal) {
 
-        Campaign requestCampaign = jdbcCampaignDao.getCampaignById(campaignId).orElseThrow();
-
-        boolean isManager = false;
-        List<User> managerList = userDao.getManagersByCampaignId(campaignId);
-        int userId = AuthenticationController.getUserIdFromPrincipal(principal, userDao);
-
-        for (int i = 0; i < managerList.size(); i++) {
-
-            if (userId == managerList.get(i).getId()) {
-                isManager = true;
-                break;
-            }
-        }
-        if (!isManager) {
+        Campaign campaign = jdbcCampaignDao.getCampaignById(campaignId).orElseThrow(() -> {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Campaign not found");
+        });
+        int loggedInUserId = AuthenticationController.getUserIdFromPrincipal(principal, userDao);
+        if (!campaign.containsManager(loggedInUserId)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not authorized to update a spend request.");
         }
-
         ErrorResult result = new ErrorResult();
-        Validator validator = new UpdateSpendRequestDtoValidator(requestId,
+        Validator<UpdateSpendRequestDto> validator = new UpdateSpendRequestDtoValidator(requestId,
                 jdbcSpendRequestDao, jdbcCampaignDao, jdbcVoteDao);
         validator.validate(updateSpendRequestDto, result);
 
@@ -168,78 +139,63 @@ public class SpendRequestController {
     }
 
     // **************************************** vote handling *******************************************
-        @GetMapping("campaigns/{campaignId}/spend-requests/{requestId}/votes")
-        @ResponseStatus(HttpStatus.OK)
-        public List<Vote> getVotesBySpendReq (Principal principal,
-                                              @PathVariable int campaignId,
-                                              @PathVariable int requestId) {
-            Optional<User> loggedInUser = userDao.getUserByUsername(principal.getName());
+    @GetMapping("campaigns/{campaignId}/spend-requests/{requestId}/votes")
+    @ResponseStatus(HttpStatus.OK)
+    public List<Vote> getVotesBySpendReq(Principal principal,
+                                         @PathVariable int campaignId,
+                                         @PathVariable int requestId) {
+        Optional<User> loggedInUser = userDao.getUserByUsername(principal.getName());
 
-            return new ArrayList<>(jdbcVoteDao.getVotesBySpendRequestId(requestId));
-        }
+        return new ArrayList<>(jdbcVoteDao.getVotesBySpendRequestId(requestId));
+    }
 
 // get votes by user id ??
 
 // create vote
 
-    @PreAuthorize("isAuthenticated()")
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping ("/campaigns/{campaignId}/spend-requests/{requestId}/votes")
+    @PostMapping("/campaigns/{campaignId}/spend-requests/{requestId}/votes")
 
-    public Vote createVote (@Valid @RequestBody NewVoteDto newvoteDto,
-                            Principal principal,
-                            @PathVariable int campaignId,
-                            @PathVariable int requestId) {
-
-        boolean isDonor = false;
+    public Vote createVote(@Valid @RequestBody NewVoteDto newvoteDto,
+                           Principal principal,
+                           @PathVariable int campaignId,
+                           @PathVariable int requestId) {
         int loggedInUserId = AuthenticationController.getUserIdFromPrincipal(principal, userDao);
-        List<Campaign> campaignList = jdbcCampaignDao.getCampaignsByDonorId(loggedInUserId);
-
-        for (int i = 0; i < campaignList.size() ; i++) {
-            if (campaignId == campaignList.get(i).getId()) {
-                isDonor = true;
-                break;
-            }
-        }
-        if (!isDonor) {
+        Campaign campaign = jdbcCampaignDao.getCampaignById(campaignId).orElseThrow(() -> {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Campaign not found");
+        });
+        if (!campaign.containsDonor(loggedInUserId) &&
+                !campaign.containsManager(loggedInUserId)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not authorized to vote in this campaign.");
         }
 
         ErrorResult result = new ErrorResult();
-        Validator validator = new NewVoteDtoValidator(jdbcUserDao,
+        Validator<NewVoteDto> validator = new NewVoteDtoValidator(jdbcUserDao,
                 jdbcSpendRequestDao, jdbcCampaignDao);
         validator.validate(newvoteDto, result);
 
         if (result.hasErrors()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    result.getCauses().toString());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, result.getCauses().toString());
         }
-
         return jdbcVoteDao.createVote(newvoteDto);
     }
 
 // update vote
 
-    @PreAuthorize("isAuthenticated()")
     @ResponseStatus(HttpStatus.OK)
     @PutMapping("/campaigns/{campaignId}/spend-requests/{requestId}/votes")
 
-    public Vote updateVote (@Valid @RequestBody UpdateVoteDto updateVoteDto,
-                            Principal principal,
-                            @PathVariable int campaignId,
-                            @PathVariable int requestId) {
+    public Vote updateVote(@Valid @RequestBody UpdateVoteDto updateVoteDto,
+                           Principal principal,
+                           @PathVariable int campaignId,
+                           @PathVariable int requestId) {
 
-        boolean isDonor = false;
         int loggedInUserId = AuthenticationController.getUserIdFromPrincipal(principal, userDao);
-        List<Campaign> campaignList = jdbcCampaignDao.getCampaignsByDonorId(loggedInUserId);
-
-        for (int i = 0; i < campaignList.size(); i++) {
-            if (campaignId == campaignList.get(i).getId()) {
-                isDonor = true;
-                break;
-            }
-        }
-        if (!isDonor) {
+        Campaign campaign = jdbcCampaignDao.getCampaignById(campaignId).orElseThrow(() -> {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Campaign not found");
+        });
+        if (!campaign.containsDonor(loggedInUserId) &&
+                !campaign.containsManager(loggedInUserId)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not authorized to vote in this campaign.");
         }
 
@@ -261,6 +217,15 @@ public class SpendRequestController {
         }
 
         return jdbcVoteDao.changeVote(updateVoteDto);
+    }
+
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @DeleteMapping("/campaigns/{campaignId}/spend-requests/{requestId}/votes")
+    public boolean deleteVote(Principal principal,
+                              @PathVariable int campaignId,
+                              @PathVariable int requestId) {
+        int loggedInUserId = AuthenticationController.getUserIdFromPrincipal(principal, userDao);
+        return jdbcVoteDao.deleteVoteById(loggedInUserId, requestId);
     }
 
     public boolean isCorrectUser(Principal principal, NewDonationDto newDonationDto) {
