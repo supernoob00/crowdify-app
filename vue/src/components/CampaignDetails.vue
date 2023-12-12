@@ -9,7 +9,7 @@
       <div class="buttons manager-actions" v-if="isManager">
         <router-link class="button is-link" :to="{ name: 'EditCampaignView', params: { id: campaign.id } }">
           <i class="fa-solid fa-pen-to-square"></i></router-link>
-        <button data-title="This campaigns must be locked to delete it" :disabled="!isLocked" class="button is-danger"
+        <button data-title="This campaign must be locked to delete it" :disabled="!isLocked" class="button is-danger"
           :class="{ 'tooltip-button': !isLocked }" v-if="isCreator" @click="deleteCampaign"><i
             class="fa-solid fa-trash"></i></button>
         <router-link class="button is-link" :to="{ name: 'CreateSpendRequestView', params: { id: campaign.id } }">
@@ -46,11 +46,13 @@
     <div class="side-info">
 
       <section class="donations">
-        <h2 class="block">Donations</h2>
-        <button data-title="This campaign is locked for further donations" :disabled="isLocked" :class="{ 'tooltip-button': isLocked }" class="button is-link block"
-          @click="goToCreateDonationView">
-          Donate
-        </button>
+        <header class="donation-header">
+          <h2 class="block">Donations</h2>
+          <button data-title="This campaign is locked for further donations." :disabled="isLocked"
+            :class="{ 'tooltip-button': isLocked }" class="button is-link block" @click="goToCreateDonationView">
+            Donate
+          </button>
+        </header>
         <donation-display v-for="donation in donationsSortedByAmount" :key="donation.id" :donation="donation">
         </donation-display>
       </section>
@@ -212,5 +214,14 @@ export default {
 
 .side-info>section {
   width: 50%;
+}
+
+.donation-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.donation-header>* {
+  margin-right: 10px;
 }
 </style>
