@@ -32,16 +32,20 @@
     </div>
 
     <hr>
-
-    <div id="campaign-description" class="block">{{ campaign.description }}</div>
+    <div id="campaign-description" class="block box">
+      <h5>Description</h5>
+      <hr width="120px">
+      {{ campaign.description }}
+    </div>
     <h6>From {{ viewDates.startDate }} to {{ viewDates.endDate }}</h6>
-    <div class="progress-container">
+    <div class="progress-container box">
       <div class="block" id="progress-meter-heading">
         <h3 class="amount-raised">${{ totalDonated }}</h3>
         <span class="goal-text"> raised of ${{ fundingGoal }} Goal</span>
       </div>
       <progress class="progress is-success is-small" :value="totalDonated" :max="fundingGoal"></progress>
       <div class="num-donations">{{ numberOfDonations }} donations</div>
+      <div v-if="spendRequestsObj.canView">{{ `Funds Remaining: ${totalFunds}` }}</div>
     </div>
     <hr>
     <div class="side-info">
@@ -98,6 +102,15 @@ export default {
     totalDonated() {
       const totalDonated = this.campaign.donations.reduce((sum, d) => d.refunded ? 0 : sum + d.amount, 0);
       return Util.formatToMoney(totalDonated);
+    },
+    totalApprovedRequestAmount() {
+      return this.spendRequestsObj.list
+              .filter(req => req.approved)
+              .map(req => req.amount)
+              .reduce((a, b) => a + b, 0);
+    },
+    totalFunds() {
+      return this.totalDonated - this.totalApprovedRequestAmount;
     },
     fundingGoal() {
       return this.campaign.fundingGoal / 100;
