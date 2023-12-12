@@ -5,17 +5,17 @@
       <div class="field">
         <label class="label">Name</label>
         <div class="control">
-          <input type="text" class="input" placeholder="" v-model="editSpendRequest.name">
+          <input type="text" maxlength="50" class="input" placeholder="" v-model="editSpendRequest.name">
         </div>
       </div>
       <div class="field">
         <label class="label">Description</label>
         <div class="control">
-          <textarea class="textarea" placeholder="e.g Super easy way to save the world!"
+          <textarea class="textarea" maxlength="500" placeholder="e.g Super easy way to save the world!"
             v-model="editSpendRequest.description"></textarea>
         </div>
       </div>
-      <div class="field">
+      <div v-if="editSpendRequest.id === -1" class="field">
         <label class="label">Amount ($)</label>
         <div class="control">
           <input type="Number" class="input" placeholder="$1 Minimum" v-model="editSpendRequest.amount">

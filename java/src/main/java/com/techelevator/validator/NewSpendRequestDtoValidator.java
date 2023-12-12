@@ -33,8 +33,8 @@ public class NewSpendRequestDtoValidator implements Validator<NewSpendRequestDto
         if (campaign == null) {
             errorResult.reject("Spend request must be for a valid campaign");
         } else {
-            if (campaign.isLocked() || campaign.isDeleted()) {
-                errorResult.reject("Campaign must not be locked or deleted");
+            if (campaign.isDeleted()) {
+                errorResult.reject("Campaign must not be deleted");
             }
 
             if (dto.getAmount() > campaignDao.getTotalFunds(dto.getCampaignId())) {
