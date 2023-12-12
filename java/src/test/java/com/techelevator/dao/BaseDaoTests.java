@@ -68,6 +68,8 @@ public abstract class BaseDaoTests {
             LocalDateTime.of(2024, 1, 24, 0,0));
     protected static final SpendRequest REQUEST_2 = new SpendRequest(2, 2, "All the Money", 10000, "Robot Arms", false,
             LocalDateTime.of(2024, 1, 24, 0,0));
+    protected static final SpendRequest REQUEST_3 = new SpendRequest(3, 2, "No Money", 100, "Robot Legs", false,
+            LocalDateTime.of(2024, 1, 25, 0,0));
 
     protected static final Vote VOTE_1 = new Vote(USER_1, 2, false);
 

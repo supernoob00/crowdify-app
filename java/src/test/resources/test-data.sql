@@ -48,6 +48,8 @@ INSERT INTO spend_request (campaign_id, request_name, request_amount, request_de
 VALUES (1, 'More Money', 5000, 'Extra Awesome Tech Stuff', false, '2024-1-24'); -- id 1
 INSERT INTO spend_request (campaign_id, request_name, request_amount, request_description, request_approved, end_date)
 VALUES (2, 'All the Money', 10000, 'Robot Arms', false, '2024-1-24'); -- id 2
+INSERT INTO spend_request (campaign_id, request_name, request_amount, request_description, request_approved, end_date)
+VALUES (2, 'No Money', 100, 'Robot Legs', false, '2024-1-25'); -- id 3
 
 
 INSERT INTO vote (donor_id, request_id, vote_approved)
