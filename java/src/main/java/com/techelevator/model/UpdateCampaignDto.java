@@ -3,6 +3,7 @@ package com.techelevator.model;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -12,9 +13,9 @@ import java.util.Objects;
 public class UpdateCampaignDto {
     @JsonProperty("id")
     private int campaignId; // TODO: delete this
-    @NotNull @NotBlank
+    @NotNull @NotBlank @Max(50)
     private String name;
-    @NotBlank
+    @NotBlank @Max(500)
     private String description;
     @Min(100)
     private int fundingGoal;

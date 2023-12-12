@@ -12,9 +12,9 @@ import java.util.Objects;
 public class Campaign {
     @Min(1)
     private int id;
-    @NotBlank
+    @NotBlank @Max(50)
     private String name;
-    @NotBlank
+    @NotBlank @Max(500)
     private String description;
     @Min(100)
     private int fundingGoal;

@@ -5,13 +5,13 @@
       <div class="field">
         <label class="label">Campaign Name</label>
         <div class="control">
-          <input type="text" class="input" placeholder="e.g Solving World Hunger!" v-model="editCampaign.name">
+          <input type="text" maxlength="50" class="input" placeholder="e.g Solving World Hunger!" v-model="editCampaign.name">
         </div>
       </div>
       <div class="field">
         <label class="label">Description</label>
         <div class="control">
-          <textarea class="textarea" placeholder="e.g Super easy way to save the world!"
+          <textarea maxlength="500" class="textarea" placeholder="e.g Super easy way to save the world!"
             v-model="editCampaign.description"></textarea>
         </div>
       </div>
