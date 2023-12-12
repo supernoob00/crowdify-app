@@ -69,6 +69,8 @@ import DonationDisplay from './DonationDisplay.vue';
 import SpendRequestDisplay from './SpendRequestDisplay.vue';
 import campaignService from '../services/CampaignService';
 import LoadingScreen from './LoadingScreen.vue';
+import Util from '../services/Util';
+
 export default {
   components: {
     DonationDisplay,
@@ -90,7 +92,7 @@ export default {
     },
     totalDonated() {
       const totalDonated = this.campaign.donations.reduce((sum, d) => d.refunded ? 0 : sum + d.amount, 0);
-      return totalDonated / 100;
+      return Util.formatToMoney(totalDonated);
     },
     fundingGoal() {
       return this.campaign.fundingGoal / 100;
