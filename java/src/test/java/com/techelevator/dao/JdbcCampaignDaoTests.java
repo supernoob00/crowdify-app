@@ -126,4 +126,25 @@ public class JdbcCampaignDaoTests extends BaseDaoTests {
         Assert.assertEquals(retrievedCampaign.orElseThrow(), updatedCampaign.orElseThrow());
     }
 
+    @Test
+    public void getCampaignsByDonorId_returns_a_list_of_campaigns_given_a_valid_id() {
+        //Non manager, one donation
+        List<Campaign> myCampaigns = sut.getCampaignsByDonorId(USER_4.getId());
+        Assert.assertEquals(CAMPAIGN_2, myCampaigns.get(0));
+
+        //Non manager, multiple donations
+        List<Campaign> myCampaigns2 = sut.getCampaignsByDonorId(USER_5.getId());
+        Assert.assertEquals(CAMPAIGN_1, myCampaigns2.get(0));
+        Assert.assertEquals(CAMPAIGN_3, myCampaigns2.get(1));
+
+        //Manager, one donation
+        List<Campaign> myCampaigns3 = sut.getCampaignsByDonorId(USER_2.getId());
+        Assert.assertEquals(CAMPAIGN_2, myCampaigns3.get(0));
+
+        //Manager, multiple donations
+        List<Campaign> myCampaigns4 = sut.getCampaignsByDonorId(USER_1.getId());
+        Assert.assertEquals(CAMPAIGN_1, myCampaigns4.get(0));
+        Assert.assertEquals(CAMPAIGN_2, myCampaigns4.get(1));
+    }
+
 }
