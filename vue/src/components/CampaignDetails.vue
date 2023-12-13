@@ -45,7 +45,7 @@
       <progress class="progress is-success is-small" :value="totalDonated" :max="fundingGoal"></progress>
       <div class="num-donations">{{ numberOfDonations }} donations</div>
       <!--TODO: broken if not allowed to view-->
-      <div v-if="spendRequestsObj.canView">{{ `Funds Remaining: ${totalFunds}` }}</div>
+      
     </div>
     <!--TODO: format these dates-->
     <h5>From {{ viewDates.startDate }} to {{ viewDates.endDate }}</h5>
@@ -67,6 +67,8 @@
 
       <section class="spend-requests" v-if="spendRequestsObj.canView">
         <h3 class="block">Spend Requests</h3>
+        <div v-if="spendRequestsObj.canView">{{ `Funds Remaining: ${totalFunds}` }}</div>
+        <br>
         <p v-if="spendRequestsObj.list.length === 0">There are no spend requests created for this campaign yet.</p>
         <spend-request-display v-for="spendRequest in spendRequestsObj.list" :key="spendRequest.id"
           :spend-request="spendRequest"></spend-request-display>
