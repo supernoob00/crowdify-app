@@ -159,8 +159,4 @@ export default {
 }
 </script>
 
-<style scoped>
-.content {
-  max-width: 500px;
-}
-</style>
+<style scoped></style>

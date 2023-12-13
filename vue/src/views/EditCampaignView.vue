@@ -1,8 +1,8 @@
 <template>
-  <div class="content">
+  <div class="content container">
     <h1>Edit Campaign</h1>
     <loading-screen v-if="isLoading"></loading-screen>
-    <campaign-form v-else :campaign="campaign" class="form"></campaign-form>
+    <campaign-form v-else :campaign="campaign"></campaign-form>
   </div>
 </template>
 
@@ -48,7 +48,7 @@ export default {
 </script>
 
 <style scoped>
-.form {
-  max-width: 500px;
+.content {
+  max-width: var(--standard-form-width);
 }
 </style>

@@ -1,34 +1,36 @@
 <template>
-  <div id="login" class="content">
-    <form v-on:submit.prevent="login">
-      <!--TODO: This is hard to see in dark mode-->
-      <h1>Please Sign In</h1>
-      <div role="alert" v-if="invalidCredentials">
-        Invalid username and password!
-      </div>
-      <div role="alert" v-if="this.$route.query.registration">
-        Thank you for registering, please sign in.
-      </div>
-      <div class="field">
-        <label class="label">Username</label>
-        <div class="control">
-          <input type="text" class="input" v-model="user.username" required autofocus />
+  <div id="login" class="content container">
+    <div>
+      <form v-on:submit.prevent="login">
+        <!--TODO: This is hard to see in dark mode-->
+        <h1>Please Sign In</h1>
+        <div role="alert" v-if="invalidCredentials">
+          Invalid username and password!
         </div>
-      </div>
-      <div class="field">
-        <label class="label">Password</label>
-        <div class="control">
-          <input type="password" class="input" v-model="user.password" required />
+        <div role="alert" v-if="this.$route.query.registration">
+          Thank you for registering, please sign in.
         </div>
-      </div>
-      <div class="sign-in-button control">
-        <button class="button is-link" type="submit">Sign in</button>
-      </div>
-      <br/>
-      <p>
-        <router-link v-bind:to="{ name: 'register' }">Need an account? Sign up.</router-link>
-      </p>
-    </form>
+        <div class="field">
+          <label class="label">Username</label>
+          <div class="control">
+            <input type="text" class="input" v-model="user.username" required autofocus />
+          </div>
+        </div>
+        <div class="field">
+          <label class="label">Password</label>
+          <div class="control">
+            <input type="password" class="input" v-model="user.password" required />
+          </div>
+        </div>
+        <div class="sign-in-button control">
+          <button class="button is-link" type="submit">Sign in</button>
+        </div>
+        <br />
+        <p>
+          <router-link v-bind:to="{ name: 'register' }">Need an account? Sign up.</router-link>
+        </p>
+      </form>
+    </div>
   </div>
 </template>
 
@@ -59,7 +61,6 @@ export default {
         })
         .catch(error => {
           const response = error.response;
-
           if (response.status === 401) {
             this.invalidCredentials = true;
           }
@@ -69,10 +70,11 @@ export default {
 };
 </script>
 
-<style scoped>
-input {
-  max-width: 150px;
+<style scoped>  
+.content {
+  max-width: var(--login-form-width);
 }
+
 .sign-in-button {
   margin-top: 24px;
 }

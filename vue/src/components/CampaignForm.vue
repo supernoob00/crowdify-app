@@ -1,69 +1,67 @@
 <template>
-  <div>
-    <loading-screen v-if="isLoading"></loading-screen>
-    <form v-else @submit.prevent="submitForm">
-      <div class="field">
-        <label class="label">Campaign Name</label>
-        <div class="control">
-          <input type="text" maxlength="50" class="input" placeholder="e.g Solving World Hunger!"
-            v-model="editCampaign.name">
-        </div>
+  <loading-screen v-if="isLoading"></loading-screen>
+  <form v-else @submit.prevent="submitForm">
+    <div class="field">
+      <label class="label">Campaign Name</label>
+      <div class="control">
+        <input type="text" maxlength="50" class="input" placeholder="e.g Solving World Hunger!"
+          v-model="editCampaign.name">
       </div>
-      <div class="field">
-        <label class="label">Description</label>
-        <div class="control">
-          <textarea maxlength="500" class="textarea" placeholder="e.g Super easy way to save the world!"
-            v-model="editCampaign.description"></textarea>
-        </div>
+    </div>
+    <div class="field">
+      <label class="label">Description</label>
+      <div class="control">
+        <textarea maxlength="500" class="textarea" placeholder="e.g Super easy way to save the world!"
+          v-model="editCampaign.description"></textarea>
       </div>
-      <div class="field">
-        <label class="label">Funding Goal ($)</label>
-        <div class="control">
-          <input type="Number" class="input" placeholder="$1 Minimum" v-model="editCampaign.fundingGoal">
-        </div>
+    </div>
+    <div class="field">
+      <label class="label">Funding Goal ($)</label>
+      <div class="control">
+        <input type="Number" class="input" placeholder="$1 Minimum" v-model="editCampaign.fundingGoal">
       </div>
-      <div class="field" v-if="campaign.id === -1">
-        <label class="label">Start Date</label>
-        <div class="control">
-          <input type="date" class="input" :min="minStartDate" placeholder="Start Date" v-model="editCampaign.startDate">
-        </div>
+    </div>
+    <div class="field" v-if="campaign.id === -1">
+      <label class="label">Start Date</label>
+      <div class="control">
+        <input type="date" class="input" :min="minStartDate" placeholder="Start Date" v-model="editCampaign.startDate">
       </div>
-      <div class="field">
-        <label class="label">End Date</label>
-        <div class="control">
-          <input type="date" class="input" :min="minEndDate" placeholder="End Date" v-model="editCampaign.endDate">
-        </div>
+    </div>
+    <div class="field">
+      <label class="label">End Date</label>
+      <div class="control">
+        <input type="date" class="input" :min="minEndDate" placeholder="End Date" v-model="editCampaign.endDate">
       </div>
-      <div class="field">
-        <div class="control">
-          <label class="checkbox">
-            <input type="checkbox" v-model="editCampaign.public">
-            Make Public
-          </label>
-        </div>
+    </div>
+    <div class="field">
+      <div class="control">
+        <label class="checkbox">
+          <input type="checkbox" v-model="editCampaign.public">
+          Make Public
+        </label>
       </div>
-      <div class="field">
-        <div class="control">
-          <label class="checkbox">
-            <input type="checkbox" v-model="editCampaign.locked">
-            Lock Campaign
-          </label>
-        </div>
+    </div>
+    <div class="field">
+      <div class="control">
+        <label class="checkbox">
+          <input type="checkbox" v-model="editCampaign.locked">
+          Lock Campaign
+        </label>
       </div>
-      <div class="field is-grouped">
-        <div class="control">
-          <button class="button is-link" type="submit">Save</button>
-        </div>
-        <div class="control">
-          <button class="button is-light" @click.prevent="resetAddForm">Reset Form</button>
-        </div>
-        <div class="control">
-          <button class="button is-danger"
-            @click.prevent="$router.push({ name: 'CampaignView', params: { id: campaign.id } })">Cancel</button>
-        </div>
+    </div>
+    <div class="field is-grouped">
+      <div class="control">
+        <button class="button is-link" type="submit">Save</button>
       </div>
-    </form>
-  </div>
+      <div class="control">
+        <button class="button is-light" @click.prevent="resetAddForm">Reset Form</button>
+      </div>
+      <div class="control">
+        <button class="button is-danger"
+          @click.prevent="$router.push({ name: 'CampaignView', params: { id: campaign.id } })">Cancel</button>
+      </div>
+    </div>
+  </form>
 </template>
 
 <script>
