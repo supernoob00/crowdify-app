@@ -2,7 +2,7 @@
   <div class="block box donation">
     <p class="header">
       <span class="title is-6" id="donor-name">{{ donorUsername }} </span>
-      <span class="has-text-grey" id="amount">&nbsp; ${{ donationAmount }}</span>
+      <span class="has-text-grey" id="amount">&nbsp;|&nbsp;${{ donationAmount }}</span>
     </p>
     <p class="is-italic" id="comment"> {{ donation.comment }}</p>
   </div>
