@@ -32,23 +32,29 @@
     </div>
 
     <hr>
-
-    <div id="campaign-description" class="block">{{ campaign.description }}</div>
-    <h6>From {{ viewDates.startDate }} to {{ viewDates.endDate }}</h6>
-    <div class="progress-container">
+    <div id="campaign-description" class="block box">
+      <h5>Description</h5>
+      <hr width="120px">
+      {{ campaign.description }}
+    </div>
+    <div class="progress-container box">
       <div class="block" id="progress-meter-heading">
         <h3 class="amount-raised">${{ totalDonated }}</h3>
         <span class="goal-text"> raised of ${{ fundingGoal }} Goal</span>
       </div>
       <progress class="progress is-success is-small" :value="totalDonated" :max="fundingGoal"></progress>
       <div class="num-donations">{{ numberOfDonations }} donations</div>
+      <!--TODO: broken if not allowed to view-->
+      <div v-if="spendRequestsObj.canView">{{ `Funds Remaining: ${totalFunds}` }}</div>
     </div>
+    <!--TODO: format these dates-->
+    <h5>From {{ viewDates.startDate }} to {{ viewDates.endDate }}</h5>
     <hr>
     <div class="side-info">
 
       <section class="donations">
         <header class="donation-header">
-          <h2 class="block">Donations</h2>
+          <h3 class="block">Donations</h3>
           <button data-title="This campaign is locked for further donations." :disabled="isLocked"
             :class="{ 'tooltip-button': isLocked }" class="donate-button button is-link block"
             @click="goToCreateDonationView">
@@ -59,8 +65,8 @@
         </donation-display>
       </section>
 
-      <section v-if="spendRequestsObj.canView">
-        <h2 class="block">Spend Requests</h2>
+      <section class="spend-requests" v-if="spendRequestsObj.canView">
+        <h3 class="block">Spend Requests</h3>
         <p v-if="spendRequestsObj.list.length === 0">There are no spend requests created for this campaign yet.</p>
         <spend-request-display v-for="spendRequest in spendRequestsObj.list" :key="spendRequest.id"
           :spend-request="spendRequest"></spend-request-display>
@@ -98,6 +104,15 @@ export default {
     totalDonated() {
       const totalDonated = this.campaign.donations.reduce((sum, d) => d.refunded ? 0 : sum + d.amount, 0);
       return Util.formatToMoney(totalDonated);
+    },
+    totalApprovedRequestAmount() {
+      return this.spendRequestsObj.list
+        .filter(req => req.approved)
+        .map(req => req.amount)
+        .reduce((a, b) => a + b, 0);
+    },
+    totalFunds() {
+      return this.totalDonated - this.totalApprovedRequestAmount;
     },
     fundingGoal() {
       return this.campaign.fundingGoal / 100;
@@ -169,7 +184,7 @@ export default {
 
 <style scoped>
 .content {
-  max-width: 800px;
+  /* max-width: 800px; */
   margin: 10px;
 }
 
@@ -236,5 +251,9 @@ export default {
 
 .donate-button {
   margin-left: 20px;
+}
+
+.spend-requests>h2 {
+  margin-bottom: 41px;
 }
 </style>

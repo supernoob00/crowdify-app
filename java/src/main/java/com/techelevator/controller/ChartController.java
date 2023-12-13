@@ -30,7 +30,8 @@ public class ChartController {
     public static final String APPROVE_VOTE_COLOR = "rgb(19, 240, 41)";
     public static final String REJECT_VOTE_COLOR = "rgb(242, 1, 1)";
     public static final String NO_VOTE_COLOR = "rgb(164, 159, 159)";
-    public static final List<String> COLORLIST = new ArrayList<>(Arrays.asList(APPROVE_VOTE_COLOR, REJECT_VOTE_COLOR));
+    public static final List<String> COLOR_LIST =
+            new ArrayList<>(Arrays.asList(APPROVE_VOTE_COLOR, REJECT_VOTE_COLOR));
     public static final String PIE_CHART = "pie";
     public static final List<String> VOTE_LABELS = new ArrayList<>(Arrays.asList("Yes", "No"));
     public static final List<String> NO_VOTE_LABEL = new ArrayList<>(Arrays.asList("No Votes"));
@@ -42,19 +43,21 @@ public class ChartController {
         this.jdbcVoteDao = jdbcVoteDao;
     }
 
-    @PostMapping(value = "/spend-requests/{requestId}/chart", produces = MediaType.IMAGE_PNG_VALUE)
+    @GetMapping(value = "/spend-requests/{requestId}/chart", produces = MediaType.IMAGE_PNG_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public byte[] getChartByVotes(@PathVariable int requestId) {
 
         //  create the datalist
         List<Vote> voteList = jdbcVoteDao.getVotesBySpendRequestId(requestId);
         List<Integer> voteValues = getVoteData(voteList);
-        if (voteValues.isEmpty()) {
-            colorList.add(NO_VOTE_COLOR);
-        } else {
+
+        if (!voteValues.isEmpty()) {
             colorList.add(APPROVE_VOTE_COLOR);
             colorList.add(REJECT_VOTE_COLOR);
+        } else {
+            colorList.add(NO_VOTE_COLOR);
         }
+
         String label = "Spend Request Votes";
         List<DataSet> dataSets = List.of(new DataSet(voteValues, colorList, label));
 
@@ -114,7 +117,8 @@ public class ChartController {
         for (Vote vote : voteList) {
             if (vote.isApproved()) {
                 yesVotes++;
-            } else { noVotes++;
+            } else {
+                noVotes++;
             }
         }
         newVoteList.add(yesVotes);

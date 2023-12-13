@@ -30,10 +30,13 @@
         </div>
       </div>
       <hr>
-      <p>{{ spendRequest.description }}</p>
-      <hr>
-      <div class="sr-header">
-        <h5>votes</h5>
+      <div id="spend-request-description" class="block box">
+        <h5>Description</h5>
+        <hr width="120px">
+        {{ spendRequest.description }}
+      </div>
+      <div class="sr-header block">
+        <h3>Votes</h3>
         <div v-if="canVote" class="buttons">
           <button class="button is-link" @click="showModal = true">{{ voteText }}</button>
         </div>
@@ -72,12 +75,14 @@
       <!-- See below only for managers (?) -->
       <!-- <div v-for="(vote, index) in votes" :key="index">{{ vote }}</div> -->
     </div>
+    <img class="chart" :src="chartImg">
   </div>
 </template>
 
 <script>
 import campaignService from '../services/CampaignService';
 import LoadingScreen from '../components/LoadingScreen.vue';
+import ChartService from '../services/ChartService';
 export default {
   components: {
     LoadingScreen,
@@ -90,6 +95,7 @@ export default {
       isLoading: true,
       editVote: { id: -1 },
       showModal: false,
+      chartImg: {}
     }
   },
   computed: {
@@ -157,9 +163,18 @@ export default {
     await this.getCampaign();
     await this.getSpendRequest();
     await this.getVotes();
+    this.getImage();
+    // this.chartImg = new Image(response.data);
     this.isLoading = false;
   },
   methods: {
+    getImage() {
+      ChartService.getSpendRequestChart(this.spendRequestId, this.$store.state.token)
+        .then(response => response.blob())
+        .then(blob => {
+          this.chartImg = URL.createObjectURL(blob);
+        })
+    },
     async getCampaign() {
       try {
         const response = await campaignService.getCampaign(this.campaignId);
@@ -239,6 +254,7 @@ export default {
       }
       this.closeForm();
       this.getVotes();
+      this.getImage();
     }
   }
 }
@@ -247,7 +263,7 @@ export default {
 
 <style scoped>
 .content {
-  max-width: 75%;
+  /* max-width: 75%; */
   margin: 10px;
 }
 
