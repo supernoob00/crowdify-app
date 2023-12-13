@@ -26,13 +26,10 @@ export default {
   --font-color: #000;
   --link-color: #1C75B9;
   --link-white-color: #fff;
-<<<<<<< HEAD
-  --bg-color: linear-gradient(120deg, #00d1b2, #FFFFFF);;
-=======
-  --bg-color: white;
+  --bg-color: linear-gradient(120deg, #00d1b2, #FFFFFF);
+
   --standard-form-width: 600px;
   --login-form-width: 300px;
->>>>>>> 0571c23dfaeaa8d151645cf1fa84cd1f2fa70a80
 }
 
 [theme="custom-dark"] {
@@ -99,12 +96,11 @@ hr {
   transform: translateY(5px);
 }
 
-<<<<<<< HEAD
 .box {
   background-color: #F5F5F5;
-=======
+}
+
 .label {
   color: var(--font-color);
->>>>>>> 0571c23dfaeaa8d151645cf1fa84cd1f2fa70a80
 }
 </style>

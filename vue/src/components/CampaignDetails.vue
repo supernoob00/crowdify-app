@@ -34,7 +34,7 @@
     <h5>From {{ viewDates.startDate }} to {{ viewDates.endDate }}</h5>
 
     <hr>
-    <div class="columns">
+    <div class="columns mt-2">
       <div id="camp-desc-box" class="box column mr-3 mb-0">
         <h5>Description</h5>
         <hr width="120px">
