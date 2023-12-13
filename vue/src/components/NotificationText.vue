@@ -29,7 +29,6 @@ export default {
 <style scoped>
 .status-message {
   display: block;
-  border-radius: 5px;
   font-weight: bold;
   font-size: 1rem;
   text-align: center;
@@ -40,7 +39,7 @@ export default {
 }
 
 .status-message.success {
-  background-color: #90ee90;
+  background-color: #30e36c;
 }
 
 .status-message.error {
