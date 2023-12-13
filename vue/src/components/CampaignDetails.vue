@@ -30,7 +30,7 @@
         <span class="campaign-other-owners">{{ nonCreatorManagerNames }}</span>
       </div>
     </div>
-    
+
     <h5>From {{ viewDates.startDate }} to {{ viewDates.endDate }}</h5>
 
     <hr>
@@ -56,7 +56,7 @@
       <header class="column is-flex is-align-items-center">
         <h3>Donations</h3>
         <button data-title="This campaign is locked for further donations." :disabled="isLocked"
-          :class="{ 'tooltip-button': isLocked }" class="donate-button button is-link block"
+          :class="{ 'tooltip-button': isLocked }" class="donate-button button is-link block ml-4"
           @click="goToCreateDonationView">
           Donate
         </button>
@@ -241,10 +241,6 @@ export default {
 
 .donation-header>* {
   margin-right: 10px;
-}
-
-.donate-button {
-  margin-left: 20px;
 }
 
 .spend-requests>h2 {
