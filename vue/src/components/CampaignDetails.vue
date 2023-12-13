@@ -25,7 +25,7 @@
       </div>
       <div v-if="this.campaign.managers.length > 1">
         <!--TODO: This is hideous, change it later to use flexbox-->
-        <span>&nbsp|&nbsp</span>
+        <span>&nbsp;|&nbsp;</span>
         <span v-if="this.campaign.managers.length > 0">Other owners: </span>
         <span class="campaign-other-owners">{{ nonCreatorManagerNames }}</span>
       </div>
