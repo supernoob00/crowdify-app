@@ -59,10 +59,21 @@ public abstract class BaseDaoTests {
             4, USER_1, 2, "Fancy New Robot", 2000,
             LocalDateTime.of(2024, 1, 11, 0, 0),
             "Not bad!", false, true);
+
+    //NON CAMPAIGN MANAGER DONATIONS
     protected static final  Donation DONATION_5 = new Donation(
             5, USER_5,1, "Fancy New Tech", 1000,
             LocalDateTime.of(2024, 1,15, 0, 0),
             "Nice!", false, false);
+    protected static final  Donation DONATION_6 = new Donation(
+            6, USER_4,2, "Fancy New Robot", 1000,
+            LocalDateTime.of(2024, 1,15, 0, 0),
+            "Nicer!", false, false);
+    protected static final  Donation DONATION_7 = new Donation(
+            7, USER_5,3, "Fancy New Computer", 1000,
+            LocalDateTime.of(2024, 1,15, 0, 0),
+            "Nicest!", false, false);
+
 
     protected static final SpendRequest REQUEST_1 = new SpendRequest(1, 1, "More Money", 5000, "Extra Awesome Tech Stuff", false,
             LocalDateTime.of(2024, 1, 24, 0,0));
@@ -78,8 +89,8 @@ public abstract class BaseDaoTests {
         CAMPAIGN_2.setManagers(List.of(USER_2));
         CAMPAIGN_3.setManagers(List.of(USER_3));
         CAMPAIGN_1.setDonations(List.of(DONATION_1, DONATION_5));
-        CAMPAIGN_2.setDonations(List.of(DONATION_2, DONATION_4));
-        CAMPAIGN_3.setDonations(List.of(DONATION_3));
+        CAMPAIGN_2.setDonations(List.of(DONATION_2, DONATION_4, DONATION_6));
+        CAMPAIGN_3.setDonations(List.of(DONATION_3, DONATION_7));
     }
 
     @Autowired
