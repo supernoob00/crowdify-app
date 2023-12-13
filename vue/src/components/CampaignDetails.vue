@@ -52,7 +52,7 @@
 
       <section class="donations">
         <header class="donation-header">
-          <h2 class="block">Donations</h2>
+          <h3 class="block">Donations</h3>
           <button data-title="This campaign is locked for further donations." :disabled="isLocked"
             :class="{ 'tooltip-button': isLocked }" class="donate-button button is-link block"
             @click="goToCreateDonationView">
@@ -64,7 +64,7 @@
       </section>
 
       <section class="spend-requests" v-if="spendRequestsObj.canView">
-        <h2 class="block">Spend Requests</h2>
+        <h3 class="block">Spend Requests</h3>
         <p v-if="spendRequestsObj.list.length === 0">There are no spend requests created for this campaign yet.</p>
         <spend-request-display v-for="spendRequest in spendRequestsObj.list" :key="spendRequest.id"
           :spend-request="spendRequest"></spend-request-display>

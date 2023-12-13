@@ -1,6 +1,6 @@
 <template>
   <router-link :to="{ name: 'CampaignView', params: { id: campaign.id } }">
-    <div class="campaign" :class="campaignClass">
+    <div class="box" :class="campaignClass">
       <p class="has-text-weight-medium">{{ campaign.name }}</p>
       <p>${{ campaignFundingGoal }} Goal</p>
       <p class="is-italic fund-percent">{{ `${campaignPercentage}% funded` }}</p>
@@ -46,22 +46,19 @@ export default {
 <style scoped>
 .campaign {
   min-width: 150px;
-  border-radius: 10px;
   padding: 20px;
   text-align: center;
   background-color: var(--campaign-card-background);
   color: var(--font-color);
 }
 
-.managed-private {
+/* .managed-private {
   background-color: var(--user-is-manager-private);
-  border: none;
 }
 
 .managed-public {
   background-color: var(--user-is-manager-public);
-  border: none;
-}
+} */
 
 a:link,
 a:visited {
