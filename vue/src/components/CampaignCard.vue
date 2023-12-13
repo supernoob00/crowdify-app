@@ -52,6 +52,7 @@ export default {
   color: var(--font-color);
 }
 
+
 /* .managed-private {
   background-color: var(--user-is-manager-private);
 }
