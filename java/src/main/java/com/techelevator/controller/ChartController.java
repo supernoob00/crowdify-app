@@ -97,17 +97,17 @@ public class ChartController {
         return chartService.getChartImg(chartObject);
     }
 
-    @GetMapping(value = "/campaigns/{campaignId}/chart", produces = MediaType.IMAGE_PNG_VALUE)
-    @ResponseStatus(HttpStatus.CREATED)
-    public byte[] getLineChartByCampaign(@PathVariable int campaignId) {
-        Campaign campaign =
-        List<Integer> xAxis = new ArrayList<>();
-        int numOfDays;
-
-        if ()
-
-        for ()
-    }
+//    @GetMapping(value = "/campaigns/{campaignId}/chart", produces = MediaType.IMAGE_PNG_VALUE)
+//    @ResponseStatus(HttpStatus.CREATED)
+//    public byte[] getLineChartByCampaign(@PathVariable int campaignId) {
+//        Campaign campaign =
+//        List<Integer> xAxis = new ArrayList<>();
+//        int numOfDays;
+//
+//        if ()
+//
+//        for ()
+//    }
 
     private List<Integer> getVoteData (List<Vote>voteList) {
         List<Integer> newVoteList = new ArrayList<>();

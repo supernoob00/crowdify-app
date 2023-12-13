@@ -34,11 +34,14 @@
         <div id="sr-desc-box" class="box column mr-5 mb-0">
           <h3>Description</h3>
           <hr width="120px">
-          {{ spendRequest.description }}
+          <p>{{ spendRequest.description }}</p>
         </div>
         <div id="vote-box" class="column box">
           <div class="sr-header block">
-            <h3>Votes</h3>
+            <div>
+              <h3>Votes</h3>
+              <hr width="120px">
+            </div>
             <div v-if="canVote" class="buttons">
               <button class="button is-link" @click="showModal = true">{{ voteText }}</button>
             </div>

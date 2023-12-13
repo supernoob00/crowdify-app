@@ -1,8 +1,9 @@
 <template>
   <div class="block box donation">
     <p class="header">
-      <span class="title is-6" id="donor-name">{{ donorUsername }} </span>
-      <span class="has-text-grey" id="amount">&nbsp;|&nbsp;${{ donationAmount }}</span>
+      <span class="title is-6" id="donor-name">{{ donorUsername }}&nbsp;</span>
+      <span>|</span>
+      <span :class="amountColor" id="amount">&nbsp;${{ donationAmount }}</span>
     </p>
     <p class="is-italic" id="comment"> {{ donation.comment }}</p>
   </div>
@@ -19,41 +20,27 @@
 
 <script>
 import Util from '../services/Util';
+import { useDark } from '@vueuse/core';
 
 export default {
   props: ['donation'],
+  data() {
+    return {
+      isDark: useDark(this.$store.state.darkModeSettings)
+    }
+  },
   computed: {
     donorUsername() {
       return this.donation.donor === null ? 'Anonymous Donor' : this.donation.donor.username;
     },
     donationAmount() {
       return Util.formatToMoney(this.donation.amount);
+    },
+    amountColor() {
+      return this.isDark ? { 'has-text-grey-lighter': true } : { 'has-text-grey': true };
     }
   }
 }
 </script>
 
-<style scoped>
-article {
-  margin-right: 80px;
-  /* max-width: 300px; */
-}
-
-
-.donation {
-  margin-right: 40px;
-}
-
-.message-body {
-  padding: 1em;
-}
-
-/* #donor-name {
-  margin-bottom: 0;
-  font-weight: 600;
-}
-
-#amount {
-  color: grey;
-} */
-</style>
+<style scoped></style>

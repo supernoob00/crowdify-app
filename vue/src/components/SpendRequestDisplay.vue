@@ -44,4 +44,7 @@ onBeforeMount(async () => {
   pointer-events: none;
   color: var(--font-color);
 }
+a {
+  color: var(--link-color)
+}
 </style>

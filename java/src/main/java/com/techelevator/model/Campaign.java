@@ -13,9 +13,11 @@ import java.util.Objects;
 public class Campaign {
     @Min(1)
     private int id;
-    @NotBlank @Length(max=50)
+    @NotBlank
+    @Length(max = 50)
     private String name;
-    @NotBlank @Length(max=500)
+    @NotBlank
+    @Length(max = 500)
     private String description;
     @Min(100)
     private int fundingGoal;
@@ -29,7 +31,8 @@ public class Campaign {
     @NotNull
     private List<Donation> donations = new ArrayList<>();
     // TODO: this should be a set of managers, instead of a list
-    @NotNull @NotEmpty
+    @NotNull
+    @NotEmpty
     private List<User> managers = new ArrayList<>(); // contains creator
     @NotNull
     private User creator;
@@ -181,7 +184,7 @@ public class Campaign {
 
     public boolean containsDonor(int userId) {
         for (Donation donation : donations) {
-            if (donation.getDonor().getId() == userId) {
+            if (donation.getDonor() != null && donation.getDonor().getId() == userId) {
                 return true;
             }
         }

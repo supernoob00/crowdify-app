@@ -51,7 +51,7 @@ export default {
 </script>
 <style scoped>
 .navbar {
-  background-color: var(--navbar-background);
+  /* background-color: var(--navbar-background); */
   position: sticky;
   left: 0;
   top: 0;
