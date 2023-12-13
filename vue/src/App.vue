@@ -1,7 +1,7 @@
 <template>
   <nav-bar></nav-bar>
   <notification-text class="header"></notification-text>
-  <div id="capstone-app" class="container">
+  <div id="capstone-app">
     <router-view></router-view>
   </div>
 </template>
@@ -54,7 +54,7 @@ hr {
   margin: 1rem 0;
 }
 
-.container {
+#capstone-app {
   width: 100%;
   max-width: 1120px;
   margin: 0 auto;
