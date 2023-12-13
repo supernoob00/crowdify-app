@@ -2,6 +2,7 @@ package com.techelevator.servicemodel;
 
 public class Chart {
     private String type;
+    private ChartOptions options;
     private Data data;
 
     public Chart(String type, Data data) {
@@ -15,6 +16,14 @@ public class Chart {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public ChartOptions getOptions() {
+        return options;
+    }
+
+    public void setOptions(ChartOptions options) {
+        this.options = options;
     }
 
     public Data getData() {

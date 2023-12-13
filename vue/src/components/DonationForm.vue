@@ -14,6 +14,14 @@
           <input type="Number" class="input" placeholder="$1 Minimum" v-model="editDonation.amount">
         </div>
       </div>
+      <div v-if="$store.state.user.username" class="field">
+        <div class="control">
+          <label class="checkbox">
+            <input type="checkbox" v-model="editDonation.anonymous">
+            Donate Anonymously?
+          </label>
+        </div>
+      </div>
       <div class="field is-grouped">
         <div class="control">
           <button class="button is-link" type="submit">Save</button>
@@ -52,6 +60,7 @@ export default {
       const dto = {}
       dto.campaignId = this.editDonation.campaignId;
       dto.donorId = this.currentUser.id;
+      dto.anonymous = this.editDonation.anonymous;
       if (dto.donorId === undefined) {
         dto.anonymous = true;
       }
