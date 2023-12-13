@@ -73,11 +73,14 @@ hr {
 .content h3,
 .content h4,
 .content h5,
-.content h6,
-.content p,
-.content span {
+.content h6 {
   margin-top: 0.5em;
   color: var(--font-color)
+}
+
+.content p,
+.content span {
+  color: var(--font-color);
 }
 
 .tooltip-button::after {
