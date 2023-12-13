@@ -37,7 +37,6 @@
       <hr width="120px">
       {{ campaign.description }}
     </div>
-    <h6>From {{ viewDates.startDate }} to {{ viewDates.endDate }}</h6>
     <div class="progress-container box">
       <div class="block" id="progress-meter-heading">
         <h3 class="amount-raised">${{ totalDonated }}</h3>
@@ -45,8 +44,11 @@
       </div>
       <progress class="progress is-success is-small" :value="totalDonated" :max="fundingGoal"></progress>
       <div class="num-donations">{{ numberOfDonations }} donations</div>
+      <!--TODO: broken if not allowed to view-->
       <div v-if="spendRequestsObj.canView">{{ `Funds Remaining: ${totalFunds}` }}</div>
     </div>
+    <!--TODO: format these dates-->
+    <h5>From {{ viewDates.startDate }} to {{ viewDates.endDate }}</h5>
     <hr>
     <div class="side-info">
 
