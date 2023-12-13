@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
@@ -80,5 +81,23 @@ public class JdbcVoteDaoTests extends BaseDaoTests{
 
         Optional<Vote> retrievedVote = sut.getVoteByDonorAndRequestId(USER_4.getId(), REQUEST_2.getId());
         Assert.assertEquals(retrievedVote.orElseThrow(), updatedVote);
+    }
+
+    @Test
+    public void deleteVoteById_deletes_vote_given_a_valid_donor_id() {
+        boolean affected = sut.deleteVoteById(USER_4.getId(), REQUEST_2.getId());
+        Assert.assertTrue(affected);
+
+        Optional<Vote> deletedVote = sut.getVoteByDonorAndRequestId(4,2);
+        Assert.assertTrue(deletedVote.isEmpty());
+    }
+
+    @Test
+    public void deleteVoteBySpendRequestId_deletes_votes_given_a_valid_request_id() {
+        boolean affected = sut.deleteVoteBySpendRequestId(REQUEST_2.getId());
+        Assert.assertTrue(affected);
+
+        List<Vote> deletedVotes = sut.getVotesBySpendRequestId(REQUEST_2.getId());
+        Assert.assertTrue(deletedVotes.isEmpty());
     }
 }
