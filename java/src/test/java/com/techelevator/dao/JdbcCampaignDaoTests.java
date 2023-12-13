@@ -83,7 +83,7 @@ public class JdbcCampaignDaoTests extends BaseDaoTests {
         int affected = sut.markCampaignDeletedById(4);
         Assert.assertEquals(1, affected);
 
-        Campaign markedAsDeleted = sut.getCampaignById(4).orElseThrow();
+        Campaign markedAsDeleted = sut.getCampaignById(CAMPAIGN_4.getId()).orElseThrow();
         Assert.assertTrue(markedAsDeleted.isDeleted());
     }
 
@@ -156,4 +156,18 @@ public class JdbcCampaignDaoTests extends BaseDaoTests {
         Assert.assertEquals(CAMPAIGN_2.getDonationTotal(), sumCampaign2);
     }
 
+//    @Test
+//    public void linkCampaignManager_sets_campaign_manager_given_valid_campaign_and_manager_id() {
+//        NewCampaignDto expected = new NewCampaignDto(
+//                "Test Name",
+//                "Test Description",
+//                3000,
+//                5,
+//                LocalDateTime.of(2023,12,24,0,0),
+//                LocalDateTime.of(2024,1,24,0,0),
+//                true
+//        );
+//        Campaign createdCampaign = sut.createCampaign(expected);
+//        linkCampaignManager
+//    }
 }
