@@ -78,7 +78,7 @@ public class User {
       return authorities;
    }
 
-   public void setAuthoritiesFromString(Set<Authority> authorities) {
+   public void setAuthorities(Set<Authority> authorities) {
       this.authorities = authorities;
    }
 

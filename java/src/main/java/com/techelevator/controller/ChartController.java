@@ -62,7 +62,6 @@ public class ChartController {
         List<DataSet> dataSets = List.of(new DataSet(voteValues, colorList, label));
 
         // create the data
-
         if (voteValues.isEmpty()) {
             labels = new ArrayList<>(NO_VOTE_LABEL);
         } else {
