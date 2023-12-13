@@ -1,5 +1,5 @@
 <template>
-  <div class="content">
+  <div class="container content">
     <h1>Create Campaign</h1>
     <campaign-form :campaign="newCampaign"></campaign-form>
   </div>
@@ -30,6 +30,6 @@ export default {
 
 <style scoped>
 .content {
-  max-width: 500px;
+  max-width: var(--standard-form-width);
 }
 </style>
