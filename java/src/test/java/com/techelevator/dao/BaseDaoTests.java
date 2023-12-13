@@ -61,32 +61,32 @@ public abstract class BaseDaoTests {
             "Not bad!", false, true);
 
     //NON CAMPAIGN MANAGER DONATIONS
-    protected static final  Donation DONATION_5 = new Donation(
-            5, USER_5,1, "Fancy New Tech", 1000,
-            LocalDateTime.of(2024, 1,15, 0, 0),
+    protected static final Donation DONATION_5 = new Donation(
+            5, USER_5, 1, "Fancy New Tech", 1000,
+            LocalDateTime.of(2024, 1, 15, 0, 0),
             "Nice!", false, false);
-    protected static final  Donation DONATION_6 = new Donation(
-            6, USER_4,2, "Fancy New Robot", 1000,
-            LocalDateTime.of(2024, 1,15, 0, 0),
+    protected static final Donation DONATION_6 = new Donation(
+            6, USER_4, 2, "Fancy New Robot", 1000,
+            LocalDateTime.of(2024, 1, 15, 0, 0),
             "Nicer!", false, false);
-    protected static final  Donation DONATION_7 = new Donation(
-            7, USER_5,3, "Fancy New Computer", 1000,
-            LocalDateTime.of(2024, 1,15, 0, 0),
+    protected static final Donation DONATION_7 = new Donation(
+            7, USER_5, 3, "Fancy New Computer", 1000,
+            LocalDateTime.of(2024, 1, 15, 0, 0),
             "Nicest!", false, false);
-    protected static final  Donation DONATION_8 = new Donation(
-            8, USER_3,4, "Doomed to fail", 8000,
-            LocalDateTime.of(2024, 1,15, 0, 0),
+    protected static final Donation DONATION_8 = new Donation(
+            8, USER_3, 4, "Doomed to fail", 8000,
+            LocalDateTime.of(2024, 1, 15, 0, 0),
             "Create Vote Tester", false, false);
 
 
     protected static final SpendRequest REQUEST_1 = new SpendRequest(1, 1, "More Money", 5000, "Extra Awesome Tech Stuff", false,
-            LocalDateTime.of(2024, 1, 24, 0,0));
+            LocalDateTime.of(2024, 1, 24, 0, 0));
     protected static final SpendRequest REQUEST_2 = new SpendRequest(2, 2, "All the Money", 10000, "Robot Arms", false,
-            LocalDateTime.of(2024, 1, 24, 0,0));
+            LocalDateTime.of(2024, 1, 24, 0, 0));
     protected static final SpendRequest REQUEST_3 = new SpendRequest(3, 2, "No Money", 100, "Robot Legs", false,
-            LocalDateTime.of(2024, 1, 25, 0,0));
+            LocalDateTime.of(2024, 1, 25, 0, 0));
     protected static final SpendRequest REQUEST_4 = new SpendRequest(4, 2, "Flat Broke", 40000, "Out of runway", false,
-            LocalDateTime.of(2024, 1, 28, 0,0));
+            LocalDateTime.of(2024, 1, 28, 0, 0));
 
 
     protected static final Vote VOTE_1 = new Vote(USER_1, 2, false);

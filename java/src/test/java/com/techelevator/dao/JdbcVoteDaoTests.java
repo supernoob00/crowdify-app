@@ -1,6 +1,7 @@
 package com.techelevator.dao;
 
 import com.techelevator.model.NewVoteDto;
+import com.techelevator.model.UpdateVoteDto;
 import com.techelevator.model.Vote;
 import org.junit.Assert;
 import org.junit.Before;
@@ -65,5 +66,19 @@ public class JdbcVoteDaoTests extends BaseDaoTests{
 
         Assert.assertEquals(2, votes.size());
         Assert.assertEquals(List.of(VOTE_1, VOTE_2), votes);
+    }
+
+    @Test
+    public void changeVote_changes_vote() {
+        UpdateVoteDto voteToChange = new UpdateVoteDto(
+                4,
+                2,
+                false
+        );
+        Vote updatedVote = sut.changeVote(voteToChange);
+        Assert.assertNotNull(updatedVote);
+
+        Optional<Vote> retrievedVote = sut.getVoteByDonorAndRequestId(USER_4.getId(), REQUEST_2.getId());
+        Assert.assertEquals(retrievedVote.orElseThrow(), updatedVote);
     }
 }
