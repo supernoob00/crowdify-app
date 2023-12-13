@@ -86,8 +86,8 @@ export default {
 </script>
 
 <style scoped>
-input {
-  max-width: 150px;
+.content {
+  max-width: var(--login-form-width)
 }
 
 .sign-in-button {

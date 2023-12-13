@@ -28,6 +28,7 @@ export default {
   --link-white-color: #fff;
   --bg-color: white;
   --standard-form-width: 600px;
+  --login-form-width: 300px;
 }
 
 [theme="custom-dark"] {
@@ -92,5 +93,9 @@ hr {
 .tooltip-button:hover::after {
   opacity: 1;
   transform: translateY(5px);
+}
+
+.label {
+  color: var(--font-color);
 }
 </style>
