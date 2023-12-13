@@ -16,7 +16,7 @@ public class UpdateDonationDto {
     private String comment;
     private boolean refunded;
 
-    public UpdateDonationDto(int amount, String comment, boolean refunded) {
+    public UpdateDonationDto(int id, int amount, String comment, boolean refunded) {
         this.amount = amount;
         this.comment = comment;
         this.refunded = refunded;
