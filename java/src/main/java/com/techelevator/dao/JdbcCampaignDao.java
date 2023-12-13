@@ -2,7 +2,6 @@ package com.techelevator.dao;
 
 import com.techelevator.exception.DaoException;
 import com.techelevator.model.Campaign;
-import com.techelevator.model.Donation;
 import com.techelevator.model.NewCampaignDto;
 import com.techelevator.model.UpdateCampaignDto;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -185,11 +184,11 @@ public class JdbcCampaignDao {
         }
     }
 
-    private int linkCampaignManager(int campaignId, int managerId, boolean isCreator) {
+    private void linkCampaignManager(int campaignId, int managerId, boolean isCreator) {
         String sql = "INSERT INTO campaign_manager (campaign_id, manager_id, creator) " +
                 "VALUES (?,?,?)";
         try {
-            return jdbcTemplate.update(sql, campaignId, managerId, isCreator);
+            jdbcTemplate.update(sql, campaignId, managerId, isCreator);
         } catch (CannotGetJdbcConnectionException e) {
             throw new DaoException("Unable to connect to server or database", e);
         }
