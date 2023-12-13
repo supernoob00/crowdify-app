@@ -65,7 +65,7 @@
         </donation-display>
       </section>
 
-      <section v-if="spendRequestsObj.canView">
+      <section class="spend-requests" v-if="spendRequestsObj.canView">
         <h2 class="block">Spend Requests</h2>
         <p v-if="spendRequestsObj.list.length === 0">There are no spend requests created for this campaign yet.</p>
         <spend-request-display v-for="spendRequest in spendRequestsObj.list" :key="spendRequest.id"
@@ -107,9 +107,9 @@ export default {
     },
     totalApprovedRequestAmount() {
       return this.spendRequestsObj.list
-              .filter(req => req.approved)
-              .map(req => req.amount)
-              .reduce((a, b) => a + b, 0);
+        .filter(req => req.approved)
+        .map(req => req.amount)
+        .reduce((a, b) => a + b, 0);
     },
     totalFunds() {
       return this.totalDonated - this.totalApprovedRequestAmount;
@@ -184,7 +184,7 @@ export default {
 
 <style scoped>
 .content {
-  max-width: 800px;
+  /* max-width: 800px; */
   margin: 10px;
 }
 
@@ -251,5 +251,9 @@ export default {
 
 .donate-button {
   margin-left: 20px;
+}
+
+.spend-requests>h2 {
+  margin-bottom: 41px;
 }
 </style>
