@@ -3,7 +3,7 @@
     <h1>My Account</h1>
     <loading-screen v-if="isLoading"></loading-screen>
     <div class="body" v-else>
-      <section class="donations">
+      <section class="donations-section">
         <h3>My Donations</h3>
         <user-donation-display v-for="donation in donations" :key="donation.id"
           :donation="donation"></user-donation-display>
@@ -86,8 +86,17 @@ export default {
 </script>
 
 <style scoped>
+.donations-section {
+  min-width: 35%;
+}
+
+.campaigns-section {
+  display: flex;  
+}
+
 .campaigns {
   display: flex;
+  flex-direction: column;
   margin-right: 20px;
   flex-wrap: wrap;
   column-gap: 20px;
@@ -97,15 +106,12 @@ export default {
 }
 
 .campaign-collection {
-  margin-bottom: 40px;
+  margin-bottom: 36px;
+  margin-right: 36px;
 }
 
 .body {
   display: flex;
   max-width: 1000px;
-}
-
-.body section {
-  width: 50%;
 }
 </style>

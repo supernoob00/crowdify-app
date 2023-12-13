@@ -1,21 +1,27 @@
 <template>
-  <div class="campaigns block campaign-collection">
-    <campaign-card v-for="campaign in publicNotOwnedCampaigns" :key="campaign.id" :campaign="campaign"></campaign-card>
-  </div>
-
-  <div class="campaign-collection" v-if="currentUser.username !== undefined">
-    <h3>My Public Campaigns</h3>
-    <div class="campaigns block">
-      <campaign-card v-for="campaign in publicOwnedCampaigns" :key="campaign.id" :campaign="campaign"></campaign-card>
-      <span v-if="publicOwnedCampaigns.length === 0">You have no public campaigns.</span>
+  <div class="home-view">
+    <div class="campaign-collection">
+      <h3>Public Campaigns</h3>
+      <div class="campaigns">
+        <campaign-card v-for="campaign in publicNotOwnedCampaigns" :key="campaign.id"
+          :campaign="campaign"></campaign-card>
+      </div>
     </div>
-  </div>
 
-  <div class="campaign-collection" v-if="currentUser.username !== undefined">
-    <h3>My Private Campaigns</h3>
-    <div class="campaigns block">
-      <campaign-card v-for="campaign in privateOwnedCampaigns" :key="campaign.id" :campaign="campaign"></campaign-card>
-      <span v-if="privateOwnedCampaigns.length === 0">You have no private campaigns.</span>
+    <div class="campaign-collection" v-if="currentUser.username !== undefined">
+      <h3>My Public Campaigns</h3>
+      <div class="campaigns">
+        <campaign-card v-for="campaign in publicOwnedCampaigns" :key="campaign.id" :campaign="campaign"></campaign-card>
+        <span v-if="publicOwnedCampaigns.length === 0">You have no public campaigns.</span>
+      </div>
+    </div>
+
+    <div class="campaign-collection" v-if="currentUser.username !== undefined">
+      <h3>My Private Campaigns</h3>
+      <div class="campaigns">
+        <campaign-card v-for="campaign in privateOwnedCampaigns" :key="campaign.id" :campaign="campaign"></campaign-card>
+        <span v-if="privateOwnedCampaigns.length === 0">You have no private campaigns.</span>
+      </div>
     </div>
   </div>
 </template>
@@ -50,13 +56,19 @@ export default {
 </script>
 
 <style scoped>
+.home-view {
+  display: flex;
+}
+
 .content {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 }
+
 .campaigns {
   display: flex;
+  flex-direction: column;
   margin-right: 20px;
   flex-wrap: wrap;
   column-gap: 20px;
@@ -67,6 +79,7 @@ export default {
 
 .campaign-collection {
   margin-bottom: 36px;
+  margin-right: 36px;
 }
 
 .managed-private {
