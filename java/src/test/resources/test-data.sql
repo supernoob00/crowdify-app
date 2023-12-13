@@ -57,6 +57,7 @@ VALUES (2, 'No Money', 100, 'Robot Legs', false, '2024-1-25'); -- id 3
 
 INSERT INTO vote (donor_id, request_id, vote_approved)
 VALUES (1, 2, false);
-
+INSERT INTO vote (donor_id, request_id, vote_approved)
+VALUES (4, 2, true);
 
 COMMIT TRANSACTION;
