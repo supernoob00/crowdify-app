@@ -1,10 +1,7 @@
 package com.techelevator.dao;
 
 import com.techelevator.exception.DaoException;
-import com.techelevator.model.Donation;
-import com.techelevator.model.NewDonationDto;
-import com.techelevator.model.RegisterUserDto;
-import com.techelevator.model.User;
+import com.techelevator.model.*;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,6 +10,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import javax.validation.constraints.AssertTrue;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public class JdbcDonationDaoTests extends BaseDaoTests {
     private JdbcDonationDao sut;
@@ -73,4 +71,21 @@ public class JdbcDonationDaoTests extends BaseDaoTests {
         Assert.assertEquals(2, donations.size());
         Assert.assertEquals(List.of(DONATION_1, DONATION_4), donations);
     }
+
+    @Test
+    public void updateDonation_updates_a_donation() {
+        UpdateDonationDto donationToUpdate = new UpdateDonationDto(
+                1,
+               2000,
+                "Test Comment",
+                true
+        );
+
+        Donation updatedDonation = sut.updateDonation(donationToUpdate, 1);
+        Assert.assertNotNull(updatedDonation);
+
+        Optional<Donation> retrievedDonation = sut.getDonationById(updatedDonation.getDonationId());
+        Assert.assertEquals(retrievedDonation.orElseThrow(), updatedDonation);
+    }
+
 }

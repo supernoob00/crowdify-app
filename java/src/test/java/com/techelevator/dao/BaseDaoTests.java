@@ -73,6 +73,10 @@ public abstract class BaseDaoTests {
             7, USER_5,3, "Fancy New Computer", 1000,
             LocalDateTime.of(2024, 1,15, 0, 0),
             "Nicest!", false, false);
+    protected static final  Donation DONATION_8 = new Donation(
+            8, USER_3,4, "Doomed to fail", 8000,
+            LocalDateTime.of(2024, 1,15, 0, 0),
+            "Create Vote Tester", false, false);
 
 
     protected static final SpendRequest REQUEST_1 = new SpendRequest(1, 1, "More Money", 5000, "Extra Awesome Tech Stuff", false,
@@ -81,8 +85,14 @@ public abstract class BaseDaoTests {
             LocalDateTime.of(2024, 1, 24, 0,0));
     protected static final SpendRequest REQUEST_3 = new SpendRequest(3, 2, "No Money", 100, "Robot Legs", false,
             LocalDateTime.of(2024, 1, 25, 0,0));
+    protected static final SpendRequest REQUEST_4 = new SpendRequest(4, 2, "Flat Broke", 40000, "Out of runway", false,
+            LocalDateTime.of(2024, 1, 28, 0,0));
+
 
     protected static final Vote VOTE_1 = new Vote(USER_1, 2, false);
+
+    protected static final Vote VOTE_2 = new Vote(USER_4, 2, true);
+
 
     static {
         CAMPAIGN_1.setManagers(List.of(USER_1));
