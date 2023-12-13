@@ -103,4 +103,10 @@ public class JdbcUserDaoTests extends BaseDaoTests {
         Optional<User> invalid = sut.getCreatorByCampaignId(99);
         Assert.assertTrue(invalid.isEmpty());
     }
+
+    @Test
+    public void getManagersBySpendId_returns_list_of_managers_given_valid_spend_request_id() {
+        List<User> users = sut.getManagersBySpendId(REQUEST_1.getId());
+        Assert.assertEquals(List.of(USER_1), users);
+    }
 }
