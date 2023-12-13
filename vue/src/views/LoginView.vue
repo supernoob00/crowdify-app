@@ -1,5 +1,5 @@
 <template>
-  <div id="login" class="content">
+  <div id="login" class="content container">
     <form v-on:submit.prevent="login">
       <!--TODO: This is hard to see in dark mode-->
       <h1>Please Sign In</h1>
@@ -24,7 +24,7 @@
       <div class="sign-in-button control">
         <button class="button is-link" type="submit">Sign in</button>
       </div>
-      <br/>
+      <br />
       <p>
         <router-link v-bind:to="{ name: 'register' }">Need an account? Sign up.</router-link>
       </p>
@@ -59,7 +59,6 @@ export default {
         })
         .catch(error => {
           const response = error.response;
-
           if (response.status === 401) {
             this.invalidCredentials = true;
           }
@@ -73,6 +72,7 @@ export default {
 input {
   max-width: 150px;
 }
+
 .sign-in-button {
   margin-top: 24px;
 }

@@ -1,5 +1,5 @@
 <template>
-  <div class="content">
+  <div class="content container">
     <h1>Donate to {{ campaign.name }}</h1>
     <loading-screen v-if="isLoading"></loading-screen>
     <donation-form v-else :donation="editDonation"></donation-form>
@@ -53,7 +53,7 @@ export default {
 </script>
 
 <style scoped>
-.form-section {
-  max-width: 500px;
+.content {
+  max-width: var(--standard-form-width);
 }
 </style>

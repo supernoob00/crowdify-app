@@ -27,6 +27,7 @@ export default {
   --link-color: #1C75B9;
   --link-white-color: #fff;
   --bg-color: white;
+  --standard-form-width: 600px;
 }
 
 [theme="custom-dark"] {

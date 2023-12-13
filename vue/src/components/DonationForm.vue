@@ -1,7 +1,7 @@
 <template>
   <div>
     <loading-screen v-if="isLoading"></loading-screen>
-    <form v-else class="form-section" @submit.prevent="submitForm">
+    <form v-else @submit.prevent="submitForm">
       <div class="field">
         <label class="label">Comment</label>
         <div class="control">
@@ -110,8 +110,4 @@ export default {
 }
 </script>
 
-<style scoped>
-.form-section {
-  max-width: 500px;
-}
-</style>
+<style scoped></style>
