@@ -27,7 +27,6 @@ export default {
   --link-color: #1C75B9;
   --link-white-color: #fff;
   --bg-color: linear-gradient(120deg, #00d1b2, #FFFFFF);
-
   --standard-form-width: 600px;
   --login-form-width: 300px;
 }
