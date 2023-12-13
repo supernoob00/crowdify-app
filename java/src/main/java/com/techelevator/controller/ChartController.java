@@ -1,7 +1,9 @@
 package com.techelevator.controller;
 
+import com.techelevator.dao.JdbcCampaignDao;
 import com.techelevator.dao.JdbcUserDao;
 import com.techelevator.dao.JdbcVoteDao;
+import com.techelevator.model.Campaign;
 import com.techelevator.model.Vote;
 import com.techelevator.service.ChartService;
 import com.techelevator.servicemodel.*;
@@ -22,8 +24,6 @@ import java.util.List;
 @RestController
 @CrossOrigin
 public class ChartController {
-
-    private final JdbcVoteDao jdbcVoteDao;
     public static final String APPROVE_VOTE_COLOR = "rgb(19, 240, 41)";
     public static final String REJECT_VOTE_COLOR = "rgb(242, 1, 1)";
     public static final String NO_VOTE_COLOR = "rgb(111,110,110)";
@@ -33,8 +33,12 @@ public class ChartController {
     public static final List<String> VOTE_LABELS = new ArrayList<>(Arrays.asList("Yes", "No"));
     public static final List<String> NO_VOTE_LABEL = new ArrayList<>(Arrays.asList("No Votes"));
 
-    public ChartController(JdbcVoteDao jdbcVoteDao) {
+    private final JdbcVoteDao jdbcVoteDao;
+    private final JdbcCampaignDao jdbcCampaignDao;
+
+    public ChartController(JdbcVoteDao jdbcVoteDao, JdbcCampaignDao jdbcCampaignDao) {
         this.jdbcVoteDao = jdbcVoteDao;
+        this.jdbcCampaignDao = jdbcCampaignDao;
     }
 
     @GetMapping(value = "/spend-requests/{requestId}/chart", produces = MediaType.IMAGE_PNG_VALUE)
@@ -93,8 +97,19 @@ public class ChartController {
         return chartService.getChartImg(chartObject);
     }
 
+    @GetMapping(value = "/campaigns/{campaignId}/chart", produces = MediaType.IMAGE_PNG_VALUE)
+    @ResponseStatus(HttpStatus.CREATED)
+    public byte[] getLineChartByCampaign(@PathVariable int campaignId) {
+        Campaign campaign =
+        List<Integer> xAxis = new ArrayList<>();
+        int numOfDays;
 
-    public List<Integer> getVoteData (List<Vote>voteList) {
+        if ()
+
+        for ()
+    }
+
+    private List<Integer> getVoteData (List<Vote>voteList) {
         List<Integer> newVoteList = new ArrayList<>();
 
         if (voteList.isEmpty()) {
