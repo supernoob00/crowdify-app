@@ -26,7 +26,7 @@ export default {
   --font-color: #000;
   --link-color: #1C75B9;
   --link-white-color: #fff;
-  --bg-color: white;
+  --bg-color: linear-gradient(120deg, #00d1b2, #FFFFFF);;
 }
 
 [theme="custom-dark"] {
@@ -91,5 +91,9 @@ hr {
 .tooltip-button:hover::after {
   opacity: 1;
   transform: translateY(5px);
+}
+
+.box {
+  background-color: #F5F5F5;
 }
 </style>
