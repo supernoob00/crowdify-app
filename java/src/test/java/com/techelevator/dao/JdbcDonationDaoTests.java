@@ -88,4 +88,17 @@ public class JdbcDonationDaoTests extends BaseDaoTests {
         Assert.assertEquals(retrievedDonation.orElseThrow(), updatedDonation);
     }
 
+    @Test
+    public void refundDonations_sets_all_donations_to_refunded_given_valid_campaign_id() {
+        List<Donation> expected = sut.getDonationsByCampaignId(CAMPAIGN_1.getId());
+
+        for (Donation donation : expected) {
+            donation.setRefunded(true);
+        }
+        sut.refundDonations(CAMPAIGN_1.getId());
+        List<Donation> actual = sut.getDonationsByCampaignId(CAMPAIGN_1.getId());
+
+        Assert.assertEquals(expected, actual);
+    }
+
 }
