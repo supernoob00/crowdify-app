@@ -143,6 +143,5 @@ public class JdbcSpendRequestDaoTests extends BaseDaoTests {
 
         Optional<SpendRequest> retrievedRequest = sut2.getSpendRequestById(updatedRequest.getId());
         Assert.assertEquals(retrievedRequest.orElseThrow(), updatedRequest);
-
     }
 }
