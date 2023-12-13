@@ -3,7 +3,7 @@
     <div class="box" :class="campaignClass">
       <p class="has-text-weight-medium">{{ campaign.name }}</p>
       <p>${{ campaignFundingGoal }} Goal</p>
-      <p class="is-italic fund-percent">{{ `${campaignPercentage}% funded` }}</p>
+      <p class="is-italic fund-percent has-text-success">{{ `${campaignPercentage}% funded` }}</p>
     </div>
   </router-link>
 </template>
