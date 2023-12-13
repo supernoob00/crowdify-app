@@ -30,10 +30,13 @@
         </div>
       </div>
       <hr>
-      <p>{{ spendRequest.description }}</p>
-      <hr>
-      <div class="sr-header">
-        <h5>votes</h5>
+      <div id="spend-request-description" class="block box">
+        <h5>Description</h5>
+        <hr width="120px">
+        {{ spendRequest.description }}
+      </div>
+      <div class="sr-header block">
+        <h3>Votes</h3>
         <div v-if="canVote" class="buttons">
           <button class="button is-link" @click="showModal = true">{{ voteText }}</button>
         </div>
@@ -251,6 +254,7 @@ export default {
       }
       this.closeForm();
       this.getVotes();
+      this.getImage();
     }
   }
 }
@@ -259,7 +263,7 @@ export default {
 
 <style scoped>
 .content {
-  max-width: 75%;
+  /* max-width: 75%; */
   margin: 10px;
 }
 
