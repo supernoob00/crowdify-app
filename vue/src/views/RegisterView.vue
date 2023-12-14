@@ -1,5 +1,5 @@
 <template>
-  <div id="register" class="content">
+  <div id="register" class="content container">
     <form v-on:submit.prevent="register">
       <h1>Create Account</h1>
       <div class="field">
@@ -23,7 +23,7 @@
       <div class="control">
         <button class="sign-in-button button is-link" type="submit">Create Account</button>
       </div>
-      <br/>
+      <br />
       <p><router-link v-bind:to="{ name: 'login' }">Already have an account? Log in.</router-link></p>
     </form>
   </div>
@@ -86,9 +86,10 @@ export default {
 </script>
 
 <style scoped>
-input {
-  max-width: 150px;
+.content {
+  max-width: var(--login-form-width)
 }
+
 .sign-in-button {
   margin-top: 24px;
 }

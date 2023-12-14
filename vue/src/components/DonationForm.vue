@@ -1,7 +1,7 @@
 <template>
   <div>
     <loading-screen v-if="isLoading"></loading-screen>
-    <form v-else class="form-section" @submit.prevent="submitForm">
+    <form v-else @submit.prevent="submitForm">
       <div class="field">
         <label class="label">Comment</label>
         <div class="control">
@@ -12,6 +12,14 @@
         <label class="label">Amount ($)</label>
         <div class="control">
           <input type="Number" class="input" placeholder="$1 Minimum" v-model="editDonation.amount">
+        </div>
+      </div>
+      <div v-if="$store.state.user.username" class="field">
+        <div class="control">
+          <label class="checkbox">
+            <input type="checkbox" v-model="editDonation.anonymous">
+            Donate Anonymously?
+          </label>
         </div>
       </div>
       <div class="field is-grouped">
@@ -52,6 +60,7 @@ export default {
       const dto = {}
       dto.campaignId = this.editDonation.campaignId;
       dto.donorId = this.currentUser.id;
+      dto.anonymous = this.editDonation.anonymous;
       if (dto.donorId === undefined) {
         dto.anonymous = true;
       }
@@ -101,8 +110,4 @@ export default {
 }
 </script>
 
-<style scoped>
-.form-section {
-  max-width: 500px;
-}
-</style>
+<style scoped></style>

@@ -3,7 +3,7 @@
     <loading-screen v-if="isLoading"></loading-screen>
     <div v-else class="content">
       <header class="header">
-        <h1>Campaigns</h1>
+        <!-- <h1>Campaigns</h1> -->
         <router-link :to="{ name: 'CreateCampaignView' }" class="button is-link"><i
             class="fa-solid fa-plus"></i>Campaign</router-link>
       </header>

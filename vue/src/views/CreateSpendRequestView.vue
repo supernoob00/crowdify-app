@@ -1,5 +1,5 @@
 <template>
-  <div class="content">
+  <div class="content container">
     <h1>Create SpendRequest</h1>
     <spend-request-form :spend-request="newSpendRequest"></spend-request-form>
   </div>
@@ -26,4 +26,8 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.content {
+  max-width: var(--standard-form-width);
+}
+</style>

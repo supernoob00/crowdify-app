@@ -25,48 +25,54 @@
       </div>
       <div v-if="this.campaign.managers.length > 1">
         <!--TODO: This is hideous, change it later to use flexbox-->
-        <span>&nbsp|&nbsp</span>
+        <span>&nbsp;|&nbsp;</span>
         <span v-if="this.campaign.managers.length > 0">Other owners: </span>
         <span class="campaign-other-owners">{{ nonCreatorManagerNames }}</span>
       </div>
     </div>
 
+    <h5>From {{ viewDates.startDate }} to {{ viewDates.endDate }}</h5>
+
     <hr>
-    <div id="campaign-description" class="block box">
-      <h5>Description</h5>
-      <hr width="120px">
-      {{ campaign.description }}
-    </div>
-    <div class="progress-container box">
-      <div class="block" id="progress-meter-heading">
-        <h3 class="amount-raised">${{ totalDonated }}</h3>
-        <span class="goal-text"> raised of ${{ fundingGoal }} Goal</span>
+    <div class="columns mt-2">
+      <div id="camp-desc-box" class="box column mr-3 mb-0">
+        <h5>Description</h5>
+        <hr width="120px">
+        <p>{{ campaign.description }}</p>
       </div>
-      <progress class="progress is-success is-small" :value="totalDonated" :max="fundingGoal"></progress>
-      <div class="num-donations">{{ numberOfDonations }} donations</div>
-      <!--TODO: broken if not allowed to view-->
-      <div v-if="spendRequestsObj.canView">{{ `Funds Remaining: ${totalFunds}` }}</div>
+      <div class="box column">
+        <div class="block is-flex is-align-items-center" id="progress-meter-heading">
+          <h3 class="mr-1">${{ totalDonated }}</h3>
+          <span class="goal-text"> raised of ${{ fundingGoal }} Goal</span>
+        </div>
+        <progress class="progress is-success is-small" :value="totalDonated" :max="fundingGoal"></progress>
+        <p class="num-donations">Donations: {{ numberOfDonations }}</p>
+      </div>
     </div>
     <!--TODO: format these dates-->
-    <h5>From {{ viewDates.startDate }} to {{ viewDates.endDate }}</h5>
     <hr>
-    <div class="side-info">
 
-      <section class="donations">
-        <header class="donation-header">
-          <h3 class="block">Donations</h3>
-          <button data-title="This campaign is locked for further donations." :disabled="isLocked"
-            :class="{ 'tooltip-button': isLocked }" class="donate-button button is-link block"
-            @click="goToCreateDonationView">
-            Donate
-          </button>
-        </header>
+    <div class="columns">
+      <header class="column is-flex is-align-items-center">
+        <h3>Donations</h3>
+        <button data-title="This campaign is locked for further donations." :disabled="isLocked"
+          :class="{ 'tooltip-button': isLocked }" class="donate-button button is-link block ml-4"
+          @click="goToCreateDonationView">
+          Donate
+        </button>
+      </header>
+      <header v-if="spendRequestsObj.canView" class="column is-flex is-align-items-center">
+        <h3 class="mr-3">Spend Requests</h3>
+        <div>{{ `Funds Remaining: $${totalFunds}` }}</div>
+      </header>
+    </div>
+
+    <div class="columns">
+      <section class="column">
         <donation-display v-for="donation in donationsSortedByAmount" :key="donation.id" :donation="donation">
         </donation-display>
       </section>
-
-      <section class="spend-requests" v-if="spendRequestsObj.canView">
-        <h3 class="block">Spend Requests</h3>
+      <section class="column" v-if="spendRequestsObj.canView">
         <p v-if="spendRequestsObj.list.length === 0">There are no spend requests created for this campaign yet.</p>
         <spend-request-display v-for="spendRequest in spendRequestsObj.list" :key="spendRequest.id"
           :spend-request="spendRequest"></spend-request-display>
@@ -206,21 +212,9 @@ export default {
   display: flex;
 }
 
-.progress-container {
-  max-width: 500px;
-}
-
 .progress-container .goal-text,
 .progress-container .num-donations {
   color: grey;
-}
-
-.progress-container .amount-raised {
-  display: inline;
-}
-
-.progress-container progress {
-  margin-bottom: 0.5rem;
 }
 
 .campaign-creator {
@@ -247,10 +241,6 @@ export default {
 
 .donation-header>* {
   margin-right: 10px;
-}
-
-.donate-button {
-  margin-left: 20px;
 }
 
 .spend-requests>h2 {

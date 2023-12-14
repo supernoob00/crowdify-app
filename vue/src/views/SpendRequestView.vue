@@ -14,7 +14,7 @@
           </h4>
           <span>Created by </span>
           <span class="campaign-creator">{{ campaign.creator.username }}</span>
-          <p class="request-amount">{{ amountDisplay }}</p>
+          <p class="title is-4 mt-2">{{ amountDisplay }}</p>
         </div>
         <div class="buttons">
           <router-link v-if="isManager" class="button is-link" :to="{
@@ -30,22 +30,35 @@
         </div>
       </div>
       <hr>
-      <div id="spend-request-description" class="block box">
-        <h5>Description</h5>
-        <hr width="120px">
-        {{ spendRequest.description }}
-      </div>
-      <div class="sr-header block">
-        <h3>Votes</h3>
-        <div v-if="canVote" class="buttons">
-          <button class="button is-link" @click="showModal = true">{{ voteText }}</button>
+      <div class="columns mt-1">
+        <div id="sr-desc-box" class="box column mr-5 mb-0">
+          <h3>Description</h3>
+          <hr width="120px">
+          <p>{{ spendRequest.description }}</p>
+        </div>
+        <div id="vote-box" class="column box">
+          <div class="sr-header block">
+            <div>
+              <h3>Votes</h3>
+              <hr width="120px">
+            </div>
+            <div v-if="canVote" class="buttons">
+              <button class="button is-link" @click="showModal = true">{{ voteText }}</button>
+            </div>
+          </div>
+          <div class="columns" id="vote-body">
+            <section class="column" id="vote-comments">
+              <p>{{ votes.length }} out of {{ donorList.size }} votes cast</p>
+              <p>{{ approvedVotes.length }} approved</p>
+              <p>{{ disapprovedVotes.length }} rejected</p>
+              <p>{{ approvalPercent }}% approved</p>
+            </section>
+            <section class="column" id="vote-chart">
+              <img class="chart" :src="chartImg">
+            </section>
+          </div>
         </div>
       </div>
-      <p>{{ votes.length }} out of {{ donorList.size }} votes cast</p>
-      <p>{{ approvedVotes.length }} approved</p>
-      <p>{{ disapprovedVotes.length }} rejected</p>
-      <p>{{ approvalPercent }}% approved</p>
-
       <div class="modal" :class="{ 'is-active': showModal }">
         <div class="modal-background" @click="closeForm"></div>
         <div class="modal-card">
@@ -75,7 +88,6 @@
       <!-- See below only for managers (?) -->
       <!-- <div v-for="(vote, index) in votes" :key="index">{{ vote }}</div> -->
     </div>
-    <img class="chart" :src="chartImg">
   </div>
 </template>
 
@@ -164,15 +176,18 @@ export default {
     await this.getSpendRequest();
     await this.getVotes();
     this.getImage();
-    // this.chartImg = new Image(response.data);
     this.isLoading = false;
   },
   methods: {
     getImage() {
-      ChartService.getSpendRequestChart(this.spendRequestId, this.$store.state.token)
+      ChartService
+        .getSpendRequestChart(this.spendRequestId, this.$store.state.token)
         .then(response => response.blob())
         .then(blob => {
           this.chartImg = URL.createObjectURL(blob);
+        })
+        .catch(() => {
+          this.$store.commit('SET_NOTIFICATION', 'There was an error retrieving the spend request pie chart');
         })
     },
     async getCampaign() {
