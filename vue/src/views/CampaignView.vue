@@ -51,7 +51,11 @@ export default {
         const response = await CampaignService.getCampaign(this.campaignId);
         this.campaign = response.data;
       } catch (error) {
-        CampaignService.handleErrorResponse(this.$store, error, 'getting', 'campaign');
+        if (error.response.status === 403) {
+          this.$router.push({ name: 'forbidden' })
+        } else {
+          CampaignService.handleErrorResponse(this.$store, error, 'getting', 'campaign');
+        }
       }
     },
     async getSpendRequestsForCampaign() {

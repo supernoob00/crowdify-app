@@ -15,10 +15,8 @@ export default {
     return {
       newSpendRequest: {
         id: -1,
-        name: 'Creation Test name',
-        description: 'Creation Test desc',
-        endDate: "2024-01-19",
-        amount: 10,
+        name: '',
+        description: '',
         campaignId: parseInt(this.$route.params.id)
       }
     }

@@ -64,7 +64,7 @@ export default {
       if (dto.donorId === undefined) {
         dto.anonymous = true;
       }
-      //TODO: add anonymous field to create donation form.
+      dto.date = new Date().toJSON().slice(0, 10);
       dto.comment = this.editDonation.comment.trim();
       dto.amount = this.editDonation.amount * 100;
       return dto;

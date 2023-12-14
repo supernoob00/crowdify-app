@@ -63,7 +63,7 @@
         <div class="modal-background" @click="closeForm"></div>
         <div class="modal-card">
           <header class="modal-card-head">
-            <p class="modal-card-title">Vote for "{{ spendRequest.name }}"</p>
+            <p class="modal-card-title has-text-black">Vote for "{{ spendRequest.name }}"</p>
             <button class="delete" aria-label="close" @click="closeForm"></button>
           </header>
           <section class="modal-card-body">
@@ -140,7 +140,7 @@ export default {
       if ((this.approvedVotes.length + this.disapprovedVotes.length) === 0) {
         return 0;
       }
-      return this.approvedVotes.length / (this.disapprovedVotes.length + this.approvedVotes.length) * 100
+      return Math.trunc(this.approvedVotes.length / (this.disapprovedVotes.length + this.approvedVotes.length) * 100)
     },
     approvedButtonClass() {
       return { button: true, 'is-success': this.editVote.approved };

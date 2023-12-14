@@ -52,7 +52,7 @@
     <!--TODO: format these dates-->
     <hr>
 
-    <div class="columns">
+    <div id="headers" class="columns">
       <header class="column is-flex is-align-items-center">
         <h3>Donations</h3>
         <button data-title="This campaign is locked for further donations." :disabled="isLocked"
@@ -67,7 +67,7 @@
       </header>
     </div>
 
-    <div class="columns">
+    <div id="body" class="columns">
       <section class="column">
         <donation-display v-for="donation in donationsSortedByAmount" :key="donation.id" :donation="donation">
         </donation-display>
@@ -78,6 +78,9 @@
           :spend-request="spendRequest"></spend-request-display>
       </section>
     </div>
+    <div class="box">
+      <img :src="campaignChart" alt="">
+    </div>
   </div>
 </template>
 
@@ -87,6 +90,7 @@ import SpendRequestDisplay from './SpendRequestDisplay.vue';
 import CampaignService from '../services/CampaignService';
 import LoadingScreen from './LoadingScreen.vue';
 import Util from '../services/Util';
+import ChartService from '../services/ChartService';
 
 export default {
   components: {
@@ -97,7 +101,8 @@ export default {
   props: ['campaign', 'spendRequestsObj'],
   data() {
     return {
-      isLoading: false
+      isLoading: false,
+      campaignChart: ''
     }
   },
   computed: {
@@ -156,25 +161,37 @@ export default {
     }
   },
   methods: {
-    async deleteCampaign() {
+    deleteCampaign() {
       if (!confirm("Are you sure you want to delete this campaign?")) {
         return;
       }
       this.isLoading = true;
-      try {
-        const response = await CampaignService.deleteCampaign(this.campaign.id);
-        if (response.status === 204) {
-          this.$store.commit('SET_NOTIFICATION', {
-            message: 'Deleted Campaign! Any outstanding donations associated have been refunded to the donors',
-            type: 'success'
-          });
-          this.$router.push({ name: 'home' })
-        }
-      } catch (error) {
-        CampaignService.handleErrorResponse(this.$store, error, 'deleting', 'campaign');
-      } finally {
-        this.isLoading = false;
-      }
+      CampaignService
+        .deleteCampaign(this.campaign.id)
+        .then(response => {
+          if (response.status === 204) {
+            this.$store.commit('SET_NOTIFICATION', {
+              message: 'Deleted Campaign! Any outstanding donations associated have been refunded to the donors',
+              type: 'success'
+            });
+            this.$router.push({ name: 'home' });
+          }
+        })
+        .catch(error => {
+          CampaignService.handleErrorResponse(this.$store, error, 'deleting', 'campaign');
+        })
+        .finally(() => this.isLoading = false)
+    },
+    getCampaignChart() {
+      ChartService
+        .getCampaignChart(this.campaign.id, this.$store.state.token)
+        .then(response => response.blob())
+        .then(blob => {
+          this.campaignChart = URL.createObjectURL(blob);
+        })
+        .catch(() => {
+          this.$store.commit('SET_NOTIFICATION', 'There was an error retrieving the campaign line chart');
+        })
     },
     goToCreateDonationView() {
       if (!this.isLocked) {
@@ -184,6 +201,9 @@ export default {
     goToCreateSpendRequestView() {
       this.$router.push({ name: 'CreateSpendRequestView', params: { id: this.campaign.id } })
     }
+  },
+  created() {
+    this.getCampaignChart();
   }
 }
 </script>
