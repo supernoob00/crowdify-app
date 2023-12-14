@@ -2,17 +2,19 @@
   <nav class="navbar" :class="buttonClass" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
       <div class="navbar-item">
-        <img v-if="isDark" src="src\assets\logo-white.png">
-        <img v-else src="src\assets\logo-no-background.png">
+        <router-link class="navbar-item" v-bind:to="{ name: 'home' }">
+          <img v-if="isDark" src="../assets/logo-white.png">
+          <img v-else src="../assets/logo-no-background.png">
+        </router-link>
       </div>
     </div>
     <div class="navbar-start">
-      <router-link class="navbar-item" v-bind:to="{ name: 'home' }">Home</router-link>
+      <!-- <router-link class="navbar-item" v-bind:to="{ name: 'home' }">Home</router-link> -->
       <!-- Uncomment section below when presenting/releasing to production for better design -->
-      <!-- </div>
-    <div class="navbar-end"> -->
+    </div>
+    <div class="navbar-end">
       <dark-mode-toggle class="navbar-item"></dark-mode-toggle>
-      
+
       <router-link class="navbar-item" :to="{ name: 'MyAccountView', params: { id: $store.state.user.id } }"
         v-if="$store.state.token != ''">My Account</router-link>
       <div v-if="$store.state.user.username" class="navbar-item">{{ $store.state.user.username }}</div>
