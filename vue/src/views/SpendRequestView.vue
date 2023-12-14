@@ -92,7 +92,7 @@
 </template>
 
 <script>
-import campaignService from '../services/CampaignService';
+import CampaignService from '../services/CampaignService';
 import LoadingScreen from '../components/LoadingScreen.vue';
 import ChartService from '../services/ChartService';
 export default {
@@ -192,32 +192,32 @@ export default {
     },
     async getCampaign() {
       try {
-        const response = await campaignService.getCampaign(this.campaignId);
+        const response = await CampaignService.getCampaign(this.campaignId);
         if (response.status === 200) {
           this.campaign = response.data;
         }
       } catch (error) {
-        campaignService.handleErrorResponse(this.$store, error, 'getting', 'campaign');
+        CampaignService.handleErrorResponse(this.$store, error, 'getting', 'campaign');
       }
     },
     async getSpendRequest() {
       try {
-        const response = await campaignService.getSpendRequestById(this.campaignId, this.spendRequestId);
+        const response = await CampaignService.getSpendRequestById(this.campaignId, this.spendRequestId);
         if (response.status === 200) {
           this.spendRequest = response.data;
         }
       } catch (error) {
-        campaignService.handleErrorResponse(this.$store, error, 'getting', 'spend request')
+        CampaignService.handleErrorResponse(this.$store, error, 'getting', 'spend request')
       }
     },
     async getVotes() {
       try {
-        const response = await campaignService.getVotesBySpendRequestId(this.campaignId, this.spendRequestId);
+        const response = await CampaignService.getVotesBySpendRequestId(this.campaignId, this.spendRequestId);
         if (response.status === 200) {
           this.votes = response.data;
         }
       } catch (error) {
-        campaignService.handleErrorResponse(this.$store, error, 'getting', 'votes');
+        CampaignService.handleErrorResponse(this.$store, error, 'getting', 'votes');
       }
     },
     async deleteSpendRequest() {
@@ -225,13 +225,13 @@ export default {
         return;
       }
       try {
-        const response = await campaignService.deleteSpendRequestById(this.campaignId, this.spendRequestId);
+        const response = await CampaignService.deleteSpendRequestById(this.campaignId, this.spendRequestId);
         if (response.status === 204) {
           this.$store.commit("SET_NOTIFICATION", { message: 'Deleted SpendRequest!', type: 'success' });
           this.$router.push({ name: 'CampaignView', params: { id: this.campaignId } });
         }
       } catch (error) {
-        campaignService.handleErrorResponse(this.$store, error, 'deleting', 'spendRequest');
+        CampaignService.handleErrorResponse(this.$store, error, 'deleting', 'spendRequest');
       }
     },
     closeForm() {
@@ -241,30 +241,30 @@ export default {
     async submitForm() {
       if (this.hasVoted && this.editVote.approved === null) {
         try {
-          const response = await campaignService.deleteVote(this.campaignId, this.spendRequestId);
+          const response = await CampaignService.deleteVote(this.campaignId, this.spendRequestId);
           if (response.status === 204) {
             this.$store.commit('SET_NOTIFICATION', { message: 'Deleted Vote!', type: 'success' })
           }
         } catch (error) {
-          campaignService.handleErrorResponse(this.$store, error, 'deleting', 'vote');
+          CampaignService.handleErrorResponse(this.$store, error, 'deleting', 'vote');
         }
       } else if (this.hasVoted) {
         try {
-          const response = await campaignService.updateVote(this.campaignId, this.spendRequestId, this.newVoteDto);
+          const response = await CampaignService.updateVote(this.campaignId, this.spendRequestId, this.newVoteDto);
           if (response.status === 200) {
             this.$store.commit('SET_NOTIFICATION', { message: 'Updated Vote!', type: 'success' })
           }
         } catch (error) {
-          campaignService.handleErrorResponse(this.$store, error, 'updating', 'vote');
+          CampaignService.handleErrorResponse(this.$store, error, 'updating', 'vote');
         }
       } else {
         try {
-          const response = await campaignService.createVote(this.campaignId, this.spendRequestId, this.newVoteDto);
+          const response = await CampaignService.createVote(this.campaignId, this.spendRequestId, this.newVoteDto);
           if (response.status === 201) {
             this.$store.commit('SET_NOTIFICATION', { message: 'Voted!', type: 'success' })
           }
         } catch (error) {
-          campaignService.handleErrorResponse(this.$store, error, 'adding', 'vote');
+          CampaignService.handleErrorResponse(this.$store, error, 'adding', 'vote');
         }
       }
       this.closeForm();

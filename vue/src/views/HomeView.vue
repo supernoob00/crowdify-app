@@ -3,7 +3,6 @@
     <loading-screen v-if="isLoading"></loading-screen>
     <div v-else class="content">
       <header class="header">
-        <!-- <h1>Campaigns</h1> -->
         <router-link :to="{ name: 'CreateCampaignView' }" class="button is-link"><i
             class="fa-solid fa-plus"></i>Campaign</router-link>
       </header>
@@ -14,7 +13,7 @@
 
 <script>
 import CampaignList from '../components/CampaignList.vue';
-import campaignService from '../services/CampaignService'
+import CampaignService from '../services/CampaignService'
 import LoadingScreen from '../components/LoadingScreen.vue';
 export default {
   components: {
@@ -30,10 +29,10 @@ export default {
   methods: {
     async retrieveCampaigns() {
       try {
-        const response = await campaignService.listCampaigns();
+        const response = await CampaignService.listCampaigns();
         this.campaigns = response.data;
       } catch (error) {
-        campaignService.handleErrorResponse(this.$store, error, 'getting', 'campaigns');
+        CampaignService.handleErrorResponse(this.$store, error, 'getting', 'campaigns');
       } finally {
         this.isLoading = false;
       }

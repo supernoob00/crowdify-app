@@ -8,7 +8,7 @@
 
 <script>
 import CampaignForm from '../components/CampaignForm.vue';
-import campaignService from '../services/CampaignService';
+import CampaignService from '../services/CampaignService';
 import LoadingScreen from '../components/LoadingScreen.vue';
 export default {
   components: {
@@ -24,24 +24,29 @@ export default {
       },
     }
   },
-  methods: {
-    async retrieveCampaign() {
-      const campaignId = parseInt(this.$route.params.id)
-      try {
-        const response = await campaignService.getCampaign(campaignId);
-        this.campaign = response.data;
-        this.campaign.startDate = this.campaign.startDate.slice(0, 10);
-        this.campaign.endDate = this.campaign.endDate.slice(0, 10);
-        this.campaign.fundingGoal /= 100;
-      } catch (error) {
-        campaignService.handleErrorResponse(this.$store, error, 'getting', 'campaign');
-        this.$router.push({ name: 'CampaignView', params: { id: campaignId } })
-      } finally {
-        this.isLoading = false;
-      }
+  computed: {
+    campaignId() {
+      return parseInt(this.$route.params.id)
     }
   },
-  async created() {
+  methods: {
+    retrieveCampaign() {
+      CampaignService
+        .getCampaign(this.campaignId)
+        .then(response => {
+          this.campaign = response.data;
+          this.campaign.startDate = this.campaign.startDate.slice(0, 10);
+          this.campaign.endDate = this.campaign.endDate.slice(0, 10);
+          this.campaign.fundingGoal /= 100;
+        })
+        .catch(error => {
+          CampaignService.handleErrorResponse(this.$store, error, 'getting', 'campaign');
+          this.$router.push({ name: 'CampaignView', params: { id: this.campaignId } })
+        })
+        .finally(() => this.isLoading = false);
+    }
+  },
+  created() {
     this.retrieveCampaign()
   }
 }

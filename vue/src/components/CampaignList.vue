@@ -74,7 +74,6 @@ export default {
   column-gap: 20px;
   row-gap: 25px;
   justify-content: flex-start;
-  align-items: center;
 }
 
 .campaign-collection {

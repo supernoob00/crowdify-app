@@ -65,7 +65,7 @@
 </template>
 
 <script>
-import campaignService from '../services/CampaignService';
+import CampaignService from '../services/CampaignService';
 import LoadingScreen from './LoadingScreen.vue';
 export default {
   components: {
@@ -119,7 +119,7 @@ export default {
       this.isLoading = true;
       if (this.editCampaign.id === -1) {
         try {
-          const response = await campaignService.addCampaign(this.newCampaignDto);
+          const response = await CampaignService.addCampaign(this.newCampaignDto);
           if (response.status === 201) {
             const createdCampaign = response.data;
             this.$store.commit('SET_NOTIFICATION', { message: 'Created Campaign!', type: 'success' })
@@ -127,20 +127,20 @@ export default {
             this.$router.push({ name: 'CampaignView', params: { id: createdCampaign.id } })
           }
         } catch (error) {
-          campaignService.handleErrorResponse(this.$store, error, 'creating', 'campaign');
+          CampaignService.handleErrorResponse(this.$store, error, 'creating', 'campaign');
         } finally {
           this.isLoading = false;
         }
       } else {
         try {
-          const response = await campaignService.updateCampaign(this.updateCampaignDto, this.editCampaign.id);
+          const response = await CampaignService.updateCampaign(this.updateCampaignDto, this.editCampaign.id);
           if (response.status === 200) {
             this.$store.commit('SET_NOTIFICATION', { message: 'Updated Campaign!', type: 'success' });
             this.resetAddForm();
             this.$router.push({ name: 'CampaignView', params: { id: this.editCampaign.id } });
           }
         } catch (error) {
-          campaignService.handleErrorResponse(this.$store, error, 'updating', 'campaign');
+          CampaignService.handleErrorResponse(this.$store, error, 'updating', 'campaign');
         } finally {
           this.isLoading = false;
         }

@@ -44,7 +44,7 @@
 </template>
 
 <script>
-import campaignService from '../services/CampaignService';
+import CampaignService from '../services/CampaignService';
 import LoadingScreen from './LoadingScreen.vue';
 export default {
   components: {
@@ -90,7 +90,7 @@ export default {
       this.isLoading = true;
       if (this.editSpendRequest.id === -1) {
         try {
-          const response = await campaignService.createSpendRequest(this.newSpendRequestDto);
+          const response = await CampaignService.createSpendRequest(this.newSpendRequestDto);
           if (response.status === 201) {
             const createdSpendRequest = response.data;
             this.$store.commit('SET_NOTIFICATION', { message: 'Created SpendRequest!', type: 'success' })
@@ -101,13 +101,13 @@ export default {
             })
           }
         } catch (error) {
-          campaignService.handleErrorResponse(this.$store, error, 'creating', 'spendRequest');
+          CampaignService.handleErrorResponse(this.$store, error, 'creating', 'spendRequest');
         } finally {
           this.isLoading = false;
         }
       } else {
         try {
-          const response = await campaignService.putSpendRequest(this.updateSpendRequestDto);
+          const response = await CampaignService.putSpendRequest(this.updateSpendRequestDto);
           if (response.status === 200) {
             const updatedSpendRequest = response.data;
             this.$store.commit('SET_NOTIFICATION', { message: 'Updated SpendRequest!', type: 'success' });
@@ -118,7 +118,7 @@ export default {
             })
           }
         } catch (error) {
-          campaignService.handleErrorResponse(this.$store, error, 'updating', 'spendRequest');
+          CampaignService.handleErrorResponse(this.$store, error, 'updating', 'spendRequest');
         } finally {
           this.isLoading = false;
         }
