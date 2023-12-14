@@ -13,6 +13,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.Assert.fail;
+
 public class JdbcCampaignDaoTests extends BaseDaoTests {
     private JdbcCampaignDao sut;
 
@@ -87,6 +89,13 @@ public class JdbcCampaignDaoTests extends BaseDaoTests {
         Assert.assertTrue(markedAsDeleted.isDeleted());
     }
 
+    @Test(expected = DaoException.class)
+    public void markCampaignDeletedById_fails_to_delete_campaign_with_unrefunded_donations() {
+        int expected = sut.markCampaignDeletedById(CAMPAIGN_1.getId());
+        Assert.assertEquals(expected, sut.getCampaignById(CAMPAIGN_1.getId()));
+    }
+
+
     @Test
     public void getManagersCampaignsList_returns_empty_list_with_invalid_id() {
         List<Campaign> myCampaigns = sut.getCampaignsByManagerId(-1);
@@ -124,6 +133,24 @@ public class JdbcCampaignDaoTests extends BaseDaoTests {
 
         Optional<Campaign> retrievedCampaign = sut.getCampaignById(updatedCampaign.get().getId());
         Assert.assertEquals(retrievedCampaign.orElseThrow(), updatedCampaign.orElseThrow());
+    }
+
+    @Test(expected = DaoException.class)
+    public void updateCampaign_does_not_update_given_given_invalid_data() {
+        UpdateCampaignDto campaignToUpdate = new UpdateCampaignDto(
+                3,
+                "",
+                "",
+                -5000000,
+                LocalDateTime.of(2022, 1, 8, 0, 0),
+                LocalDateTime.of(2021, 1, 18, 0, 0),
+                true,
+                false
+        );
+
+        Optional<Campaign> updatedCampaign = sut.updateCampaign(campaignToUpdate);
+
+        Assert.assertNotEquals(updatedCampaign.orElseThrow(), CAMPAIGN_3);
     }
 
     @Test
