@@ -42,7 +42,7 @@ public class JdbcSpendRequestDaoTests extends BaseDaoTests {
     }
 
     @Test
-    public void getSpendRequestsByCampaign_throws_exception_given_invalid_campaign_id() {
+    public void getSpendRequestsByCampaign_returns_empty_list_given_invalid_campaign_id() {
         List<SpendRequest> requestList = sut.getSpendRequestsByCampaign(-1);
         Assert.assertTrue(requestList.isEmpty());
     }
