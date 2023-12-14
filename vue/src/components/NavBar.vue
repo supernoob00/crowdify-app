@@ -2,8 +2,8 @@
   <nav class="navbar" :class="buttonClass" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
       <div class="navbar-item">
-        <img v-if="isDark" src="src\assets\logo-white.png">
-        <img v-else src="src\assets\logo-no-background.png">
+        <img v-if="isDark" src="../assets/logo-white.png">
+        <img v-else src="../assets/logo-no-background.png">
       </div>
     </div>
     <div class="navbar-start">
