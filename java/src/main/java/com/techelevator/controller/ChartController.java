@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.awt.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
@@ -25,6 +26,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.List;
 import java.util.stream.Collectors;
 
 
@@ -84,18 +86,6 @@ public class ChartController {
         // create the chart
         Chart chart = new Chart(PIE_CHART, data);// create the chart object
 
-       /* if (voteList.isEmpty()) {
-
-
-        }*/
-       /*     ChartScales scales = new ChartScales();
-            scales.setyAxes(List.of(new AxisDisplay(false)));
-            scales.setxAxes(List.of(new AxisDisplay(true)));
-
-            ChartOptions options = new ChartOptions(scales);
-            chart.setOptions(options);
-        }*/
-
         ChartObject chartObject = new ChartObject(
                 "2",
                 "transparent",
@@ -110,29 +100,16 @@ public class ChartController {
     }
 
 
-    @GetMapping(value = "/campaigns/{campaignId}/{daysBefore}",
+    @GetMapping(value = "/campaigns/{campaignId}/chart",
             produces =
             MediaType.IMAGE_PNG_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public byte[] getLineChartByCampaign(@PathVariable int campaignId,
-                                         @PathVariable int daysBefore) {
+    public byte[] getLineChartByCampaign(@PathVariable int campaignId) {
         Campaign campaign = jdbcCampaignDao.getCampaignById(campaignId).orElseThrow(() -> {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Campaign" +
                     " not found");
                 });
-
-        // get number of days between campaign start date and end date if it
-        // has already passed, or the current date
-//        long numOfDays;
-//        if (campaign.getEndDate().isBefore(LocalDateTime.now())) {
-//            numOfDays = ChronoUnit.DAYS.between(campaign.getStartDate(),
-//                    campaign.getEndDate());
-//        } else {
-//            numOfDays = ChronoUnit.DAYS.between(campaign.getStartDate(),
-//                    LocalDateTime.now());
-//        }
-
-        LocalDateTime start = LocalDateTime.now().minusDays(daysBefore);
+        LocalDateTime start = LocalDateTime.now().minusDays(30);
 
         // create x-axis, which is the number of days since the campaign
         // start date
@@ -149,14 +126,12 @@ public class ChartController {
                         .sorted(Comparator.comparing(Donation::getDate))
                         .collect(Collectors.toList());
 
-        System.out.println("Donations size" + donations.size());
-
         // populate y-axis with values
         Iterator<Donation> donationIt = donations.iterator();
         Donation currDonation = donationIt.hasNext() ? donationIt.next() : null;
         int currSum = 0;
 
-        for (int i = 0; i < daysBefore; ) {
+        for (int i = 0; i < 30; ) {
             if (donationIt.hasNext() && ChronoUnit.DAYS.between(start, currDonation.getDate()) == i) {
                 currSum += currDonation.getAmount() / 100;
                 currDonation = donationIt.next();
@@ -166,14 +141,11 @@ public class ChartController {
             }
         }
 
-        System.out.println(donationTotal);
-
         List<DataSet> dataSets = List.of(new DataSet(donationTotal,
-                List.of(REJECT_VOTE_COLOR), "Donation history"));
+                List.of("rgb(34,139,34)"), "Donation history"));
         Data data = new Data(dataSets, dates);
         Chart chart = new Chart("line", data);
 
-        System.out.println(dates.size());
         ChartObject chartObject = new ChartObject(
                 "2",
                 "transparent",
@@ -208,8 +180,6 @@ public class ChartController {
                 axis.add(formatter.format(currDate));
                 currDate = currDate.plusDays(1);
             }
-        } else {
-            
         }
         return axis;
     }
