@@ -26,20 +26,25 @@ export default {
   --font-color: #000;
   --link-color: #1C75B9;
   --link-white-color: #fff;
-  --bg-color: white;
+  --bg-color: linear-gradient(120deg, #00d1b2, #FFFFFF);
   --standard-form-width: 600px;
   --login-form-width: 300px;
+  --box-color: #F5F5F5;
+  --box-hr-color: rgb(215, 215, 215);
 }
 
 [theme="custom-dark"] {
   --font-color: #e9e9e9;
-  --link-color: #0a86da;
+  --link-color: #7acaff;
   --link-white-color: #bdbab8;
   --bg-color: #333;
+  --bg-color: linear-gradient(120deg, #333, grey);
   --navbar-background: rgb(4, 71, 71);
   --campaign-card-background: black;
   --user-is-manager-public: teal;
   --user-is-manager-private: rgba(12, 88, 95, 0.374);
+  --box-color: grey;
+  --box-hr-color: #F5F5F5;
 }
 
 body,
@@ -73,6 +78,11 @@ hr {
   color: var(--font-color)
 }
 
+.content p,
+.content span {
+  color: var(--font-color);
+}
+
 .tooltip-button::after {
   content: attr(data-title);
   position: absolute;
@@ -96,7 +106,11 @@ hr {
 }
 
 .box {
-  background-color: #F5F5F5;
+  background-color: var(--box-color);
+}
+
+.box hr {
+  background-color: var(--box-hr-color);
 }
 
 .label {

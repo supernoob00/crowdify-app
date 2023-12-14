@@ -13,6 +13,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.Assert.fail;
+
 public class JdbcCampaignDaoTests extends BaseDaoTests {
     private JdbcCampaignDao sut;
 
@@ -83,9 +85,16 @@ public class JdbcCampaignDaoTests extends BaseDaoTests {
         int affected = sut.markCampaignDeletedById(4);
         Assert.assertEquals(1, affected);
 
-        Campaign markedAsDeleted = sut.getCampaignById(4).orElseThrow();
+        Campaign markedAsDeleted = sut.getCampaignById(CAMPAIGN_4.getId()).orElseThrow();
         Assert.assertTrue(markedAsDeleted.isDeleted());
     }
+
+    @Test(expected = DaoException.class)
+    public void markCampaignDeletedById_fails_to_delete_campaign_with_unrefunded_donations() {
+        int expected = sut.markCampaignDeletedById(CAMPAIGN_1.getId());
+        Assert.assertEquals(expected, sut.getCampaignById(CAMPAIGN_1.getId()));
+    }
+
 
     @Test
     public void getManagersCampaignsList_returns_empty_list_with_invalid_id() {
@@ -126,6 +135,24 @@ public class JdbcCampaignDaoTests extends BaseDaoTests {
         Assert.assertEquals(retrievedCampaign.orElseThrow(), updatedCampaign.orElseThrow());
     }
 
+    @Test(expected = DaoException.class)
+    public void updateCampaign_does_not_update_given_given_invalid_data() {
+        UpdateCampaignDto campaignToUpdate = new UpdateCampaignDto(
+                3,
+                "",
+                "",
+                -5000000,
+                LocalDateTime.of(2022, 1, 8, 0, 0),
+                LocalDateTime.of(2021, 1, 18, 0, 0),
+                true,
+                false
+        );
+
+        Optional<Campaign> updatedCampaign = sut.updateCampaign(campaignToUpdate);
+
+        Assert.assertNotEquals(updatedCampaign.orElseThrow(), CAMPAIGN_3);
+    }
+
     @Test
     public void getCampaignsByDonorId_returns_a_list_of_campaigns_given_a_valid_id() {
         //Non manager, one donation
@@ -156,4 +183,18 @@ public class JdbcCampaignDaoTests extends BaseDaoTests {
         Assert.assertEquals(CAMPAIGN_2.getDonationTotal(), sumCampaign2);
     }
 
+//    @Test
+//    public void linkCampaignManager_sets_campaign_manager_given_valid_campaign_and_manager_id() {
+//        NewCampaignDto expected = new NewCampaignDto(
+//                "Test Name",
+//                "Test Description",
+//                3000,
+//                5,
+//                LocalDateTime.of(2023,12,24,0,0),
+//                LocalDateTime.of(2024,1,24,0,0),
+//                true
+//        );
+//        Campaign createdCampaign = sut.createCampaign(expected);
+//        linkCampaignManager
+//    }
 }

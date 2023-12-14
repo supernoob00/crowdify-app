@@ -34,11 +34,11 @@
     <h5>From {{ viewDates.startDate }} to {{ viewDates.endDate }}</h5>
 
     <hr>
-    <div class="columns">
+    <div class="columns mt-2">
       <div id="camp-desc-box" class="box column mr-3 mb-0">
         <h5>Description</h5>
         <hr width="120px">
-        {{ campaign.description }}
+        <p>{{ campaign.description }}</p>
       </div>
       <div class="box column">
         <div class="block is-flex is-align-items-center" id="progress-meter-heading">
@@ -46,7 +46,7 @@
           <span class="goal-text"> raised of ${{ fundingGoal }} Goal</span>
         </div>
         <progress class="progress is-success is-small" :value="totalDonated" :max="fundingGoal"></progress>
-        <div class="num-donations">Donations: {{ numberOfDonations }}</div>
+        <p class="num-donations">Donations: {{ numberOfDonations }}</p>
       </div>
     </div>
     <!--TODO: format these dates-->
