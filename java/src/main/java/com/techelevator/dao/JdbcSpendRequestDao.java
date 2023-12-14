@@ -34,6 +34,8 @@ public class JdbcSpendRequestDao {
             }
         } catch (CannotGetJdbcConnectionException e) {
             throw new DaoException("Unable to connect to server or database", e);
+        } catch (DataIntegrityViolationException e) {
+            throw new DaoException("Data integrity violation", e);
         }
         return Optional.empty();
     }
@@ -54,6 +56,8 @@ public class JdbcSpendRequestDao {
             }
         } catch (CannotGetJdbcConnectionException e) {
             throw new DaoException("Unable to connect to server or database", e);
+        } catch (DataIntegrityViolationException e) {
+            throw new DaoException("Data integrity violation", e);
         }
         return requestList;
     }
@@ -115,6 +119,8 @@ public class JdbcSpendRequestDao {
                     Integer.class, campaignId), 0);
         } catch (CannotGetJdbcConnectionException e) {
             throw new DaoException("Unable to connect to server or database", e);
+        } catch (DataIntegrityViolationException e) {
+            throw new DaoException("Data integrity violation", e);
         }
     }
 
@@ -125,6 +131,8 @@ public class JdbcSpendRequestDao {
             return rowsAffected != 0;
         } catch (CannotGetJdbcConnectionException e) {
             throw new DaoException("Unable to connect to server or database", e);
+        } catch (DataIntegrityViolationException e) {
+            throw new DaoException("Data integrity violation", e);
         }
     }
 

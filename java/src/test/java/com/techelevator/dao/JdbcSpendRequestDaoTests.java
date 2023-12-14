@@ -12,105 +12,39 @@ import java.util.List;
 import java.util.Optional;
 
 public class JdbcSpendRequestDaoTests extends BaseDaoTests {
-    private JdbcUserDao sut;
-    private JdbcSpendRequestDao sut2;
+    private JdbcSpendRequestDao sut;
     @Before
     public void setup() {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-        sut = new JdbcUserDao(jdbcTemplate);
-        sut2 = new JdbcSpendRequestDao(jdbcTemplate);
-    }
-
-    @Test
-    public void getUserByUsername_given_invalid_username_returns_null() {
-        Assert.assertTrue(sut.getUserByUsername("invalid").isEmpty());
-    }
-
-    @Test
-    public void getUserByUsername_given_valid_user_returns_user() {
-        User actualUser = sut.getUserByUsername(USER_1.getUsername()).orElseThrow();
-        Assert.assertEquals(USER_1, actualUser);
-    }
-
-    @Test
-    public void getUserById_given_invalid_user_id_returns_null() {
-        Optional<User> actualUser = sut.getUserById(-1);
-        Assert.assertTrue(actualUser.isEmpty());
-    }
-
-    @Test
-    public void getUserById_given_valid_user_id_returns_user() {
-        User actualUser = sut.getUserById(USER_1.getId()).orElseThrow();
-        Assert.assertEquals(USER_1, actualUser);
-    }
-
-    @Test
-    public void getUsers_returns_all_users() {
-        List<User> users = sut.getUsers();
-
-        Assert.assertNotNull(users);
-        Assert.assertEquals(8, users.size());
-        Assert.assertEquals(USER_1, users.get(0));
-        Assert.assertEquals(USER_2, users.get(1));
-        Assert.assertEquals(USER_3, users.get(2));
-    }
-
-    @Test(expected = DaoException.class)
-    public void createUser_with_null_username() {
-        RegisterUserDto registerUserDto = new RegisterUserDto();
-        registerUserDto.setUsername(null);
-        registerUserDto.setPassword(USER_3.getPassword());
-        registerUserDto.setRole("ROLE_USER");
-        sut.createUser(registerUserDto);
-    }
-
-    @Test(expected = DaoException.class)
-    public void createUser_with_existing_username() {
-        RegisterUserDto registerUserDto = new RegisterUserDto();
-        registerUserDto.setUsername(USER_1.getUsername());
-        registerUserDto.setPassword(USER_3.getPassword());
-        registerUserDto.setRole("ROLE_USER");
-        sut.createUser(registerUserDto);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void createUser_with_null_password() {
-        RegisterUserDto registerUserDto = new RegisterUserDto();
-        registerUserDto.setUsername(USER_3.getUsername());
-        registerUserDto.setPassword(null);
-        registerUserDto.setRole("ROLE_USER");
-        sut.createUser(registerUserDto);
-    }
-
-    @Test
-    public void createUser_creates_a_user() {
-        RegisterUserDto user = new RegisterUserDto();
-        user.setUsername("new");
-        user.setPassword("user");
-        user.setRole("ROLE_USER");
-        User createdUser = sut.createUser(user);
-
-        Assert.assertNotNull(createdUser);
-
-        User retrievedUser =
-                sut.getUserByUsername(createdUser.getUsername()).orElseThrow();
-        Assert.assertEquals(retrievedUser, createdUser);
+        sut = new JdbcSpendRequestDao(jdbcTemplate);
     }
 
     @Test
     public void getSpendRequestById_returns_a_spend_request_with_valid_id() {
-        Assert.assertEquals(REQUEST_1, sut2.getSpendRequestById(REQUEST_1.getId()).orElseThrow());
-        Assert.assertEquals(REQUEST_2, sut2.getSpendRequestById(REQUEST_2.getId()).orElseThrow());
+        Assert.assertEquals(REQUEST_1, sut.getSpendRequestById(REQUEST_1.getId()).orElseThrow());
+        Assert.assertEquals(REQUEST_2, sut.getSpendRequestById(REQUEST_2.getId()).orElseThrow());
+    }
+
+    @Test
+    public void getSpendRequestById_returns_empty_when_given_invalid_request_id() {
+        Optional<SpendRequest> affected = sut.getSpendRequestById(-1);
+        Assert.assertTrue(affected.isEmpty());
     }
 
     @Test
     public void getSpendRequestsByCampaign_returns_a_spend_request_with_valid_id() {
-        List<SpendRequest> returnedSpendReqsList = sut2.getSpendRequestsByCampaign(1);
+        List<SpendRequest> returnedSpendReqsList = sut.getSpendRequestsByCampaign(1);
         Assert.assertEquals(REQUEST_1, returnedSpendReqsList.get(0));
 
-        returnedSpendReqsList = sut2.getSpendRequestsByCampaign(2);
+        returnedSpendReqsList = sut.getSpendRequestsByCampaign(2);
         Assert.assertEquals(REQUEST_2, returnedSpendReqsList.get(0));
         Assert.assertEquals(REQUEST_3, returnedSpendReqsList.get(1));
+    }
+
+    @Test
+    public void getSpendRequestsByCampaign_throws_exception_given_invalid_campaign_id() {
+        List<SpendRequest> requestList = sut.getSpendRequestsByCampaign(-1);
+        Assert.assertTrue(requestList.isEmpty());
     }
 
     @Test
@@ -122,10 +56,21 @@ public class JdbcSpendRequestDaoTests extends BaseDaoTests {
                 "Test Description",
                 LocalDateTime.of(2024, 1, 25, 0, 0)
         );
-        SpendRequest createdRequest = sut2.createSpendRequest(newSpendRequest);
-        Optional <SpendRequest> retrievedRequest = sut2.getSpendRequestById(createdRequest.getId());
+        SpendRequest createdRequest = sut.createSpendRequest(newSpendRequest);
+        Optional <SpendRequest> retrievedRequest = sut.getSpendRequestById(createdRequest.getId());
         Assert.assertTrue(retrievedRequest.isPresent());
         Assert.assertEquals(retrievedRequest.orElseThrow(), createdRequest);
+    }
+
+    @Test (expected = DaoException.class)
+    public void createSpendRequest_throws_exception_given_invalid_data() {
+        NewSpendRequestDto newSpendRequest = new NewSpendRequestDto();
+        newSpendRequest.setCampaignId(1);
+        newSpendRequest.setRequestName("Test Name");
+        newSpendRequest.setAmount(-1000);
+        newSpendRequest.setDescription("Test Description");
+        newSpendRequest.setEndDate(LocalDateTime.of(2021,12,15,0,0));
+        sut.createSpendRequest(newSpendRequest);
     }
 
     @Test
@@ -138,10 +83,33 @@ public class JdbcSpendRequestDaoTests extends BaseDaoTests {
                 LocalDateTime.of(2024, 2, 4, 0, 0)
         );
 
-        SpendRequest updatedRequest = sut2.updateSpendRequest(requestToUpdate, 3);
+        SpendRequest updatedRequest = sut.updateSpendRequest(requestToUpdate, 3);
         Assert.assertNotNull(updatedRequest);
 
-        Optional<SpendRequest> retrievedRequest = sut2.getSpendRequestById(updatedRequest.getId());
+        Optional<SpendRequest> retrievedRequest = sut.getSpendRequestById(updatedRequest.getId());
         Assert.assertEquals(retrievedRequest.orElseThrow(), updatedRequest);
+    }
+
+    @Test(expected = DaoException.class)
+    public void updateSpendRequest_throws_exception_given_invalid_data() {
+        UpdateSpendRequestDto requestToUpdate = new UpdateSpendRequestDto();
+        requestToUpdate.setAmount(-1000);
+        requestToUpdate.setDescription("Test Description");
+        requestToUpdate.setApproved(true);
+        requestToUpdate.setEndDate(LocalDateTime.of(2024, 2, 4, 0, 0));
+
+        sut.updateSpendRequest(requestToUpdate, 2);
+    }
+
+    @Test
+    public void deleteSpendRequestById_deletes_a_spend_request_given_valid_request_id() {
+        boolean affected = sut.deleteSpendRequestById(CAMPAIGN_3.getId());
+        Assert.assertTrue(affected);
+    }
+
+    @Test (expected = DaoException.class)
+    public void deleteSpendRequestById_throws_exception_when_spend_request_has_unrefunded_donations() {
+        boolean affected = sut.deleteSpendRequestById(REQUEST_2.getId());
+        Assert.assertFalse(affected);
     }
 }
