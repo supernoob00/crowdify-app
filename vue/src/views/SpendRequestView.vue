@@ -63,7 +63,7 @@
         <div class="modal-background" @click="closeForm"></div>
         <div class="modal-card">
           <header class="modal-card-head">
-            <p class="modal-card-title">Vote for "{{ spendRequest.name }}"</p>
+            <p class="modal-card-title has-text-black">Vote for "{{ spendRequest.name }}"</p>
             <button class="delete" aria-label="close" @click="closeForm"></button>
           </header>
           <section class="modal-card-body">
