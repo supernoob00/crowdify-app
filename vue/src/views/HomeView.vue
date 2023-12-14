@@ -6,6 +6,7 @@
         <router-link :to="{ name: 'CreateCampaignView' }" class="button is-link"><i
             class="fa-solid fa-plus"></i>Campaign</router-link>
       </header>
+      <all-campaigns-info :campaigns="campaigns"></all-campaigns-info>
       <campaign-list :campaigns="campaigns"></campaign-list>
     </div>
   </div>
@@ -15,10 +16,12 @@
 import CampaignList from '../components/CampaignList.vue';
 import CampaignService from '../services/CampaignService'
 import LoadingScreen from '../components/LoadingScreen.vue';
+import AllCampaignsInfo from '../components/AllCampaignsInfo.vue';
 export default {
   components: {
     CampaignList,
-    LoadingScreen
+    LoadingScreen,
+    AllCampaignsInfo
   },
   data() {
     return {
