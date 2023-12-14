@@ -9,6 +9,7 @@ public class DataSet {
     private List<Integer> data;
     private List<String> backgroundColor;
     private String label;
+    private int pointRadius = 0;
 
     public DataSet(List<Integer> data, List<String> backgroundColor, String label) {
         this.data = data;
@@ -39,6 +40,15 @@ public class DataSet {
     public void setLabel(String label) {
         this.label = label;
     }
+
+    public int getPointRadius() {
+        return pointRadius;
+    }
+
+    public void setPointRadius(int pointRadius) {
+        this.pointRadius = pointRadius;
+    }
+
     @Override
     public String toString() {
         return "DataSet{" +
@@ -47,6 +57,4 @@ public class DataSet {
                 ", label='" + label + '\'' +
                 '}';
     }
-
-
 }

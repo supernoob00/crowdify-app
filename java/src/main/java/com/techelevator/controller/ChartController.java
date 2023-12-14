@@ -9,12 +9,16 @@ import com.techelevator.model.Donation;
 import com.techelevator.model.Vote;
 import com.techelevator.service.ChartService;
 import com.techelevator.servicemodel.*;
+import org.springframework.cglib.core.Local;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.time.temporal.ChronoUnit;
 
 import java.nio.file.Files;
@@ -105,9 +109,13 @@ public class ChartController {
         return chartService.getChartImg(chartObject);
     }
 
-    @GetMapping(value = "/campaigns/{campaignId}/chart", produces = MediaType.IMAGE_PNG_VALUE)
+
+    @GetMapping(value = "/campaigns/{campaignId}/{daysBefore}",
+            produces =
+            MediaType.IMAGE_PNG_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public byte[] getLineChartByCampaign(@PathVariable int campaignId) {
+    public byte[] getLineChartByCampaign(@PathVariable int campaignId,
+                                         @PathVariable int daysBefore) {
         Campaign campaign = jdbcCampaignDao.getCampaignById(campaignId).orElseThrow(() -> {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Campaign" +
                     " not found");
@@ -115,39 +123,42 @@ public class ChartController {
 
         // get number of days between campaign start date and end date if it
         // has already passed, or the current date
-        long numOfDays;
-        if (campaign.getEndDate().isBefore(LocalDateTime.now())) {
-            numOfDays = ChronoUnit.DAYS.between(campaign.getStartDate(),
-                    campaign.getEndDate());
-        } else {
-            numOfDays = ChronoUnit.DAYS.between(campaign.getStartDate(),
-                    LocalDateTime.now());
-        }
+//        long numOfDays;
+//        if (campaign.getEndDate().isBefore(LocalDateTime.now())) {
+//            numOfDays = ChronoUnit.DAYS.between(campaign.getStartDate(),
+//                    campaign.getEndDate());
+//        } else {
+//            numOfDays = ChronoUnit.DAYS.between(campaign.getStartDate(),
+//                    LocalDateTime.now());
+//        }
+
+        LocalDateTime start = LocalDateTime.now().minusDays(daysBefore);
 
         // create x-axis, which is the number of days since the campaign
         // start date
-        List<Integer> xAxis = new ArrayList<>();
-        for (int i = 0; i < numOfDays; i++) {
-            xAxis.add(i);
-        }
+        List<String> dates = donationChartXAxis(start, LocalDateTime.now());
 
         // create the y-axis, which is the sum of all donations up to the
         // specific day on the x-axis
         List<Integer> donationTotal = new ArrayList<>();
 
         // sort the donations by date (earliest to latest)
-        List<Donation> donations = jdbcDonationDao.getDonationsByCampaignId(campaignId);
-        donations.sort(Comparator.comparing(Donation::getDate));
+        List<Donation> donations =
+                jdbcDonationDao.getDonationsByCampaignId(campaignId).stream()
+                        .filter(d -> d.getDate().isAfter(start))
+                        .sorted(Comparator.comparing(Donation::getDate))
+                        .collect(Collectors.toList());
+
+        System.out.println("Donations size" + donations.size());
 
         // populate y-axis with values
         Iterator<Donation> donationIt = donations.iterator();
         Donation currDonation = donationIt.hasNext() ? donationIt.next() : null;
         int currSum = 0;
 
-        for (int i = 0; i < xAxis.size(); ) {
-            if (donationIt.hasNext() && ChronoUnit.DAYS.between(campaign.getStartDate(),
-                    currDonation.getDate()) == i) {
-                currSum += currDonation.getAmount();
+        for (int i = 0; i < daysBefore; ) {
+            if (donationIt.hasNext() && ChronoUnit.DAYS.between(start, currDonation.getDate()) == i) {
+                currSum += currDonation.getAmount() / 100;
                 currDonation = donationIt.next();
             } else {
                 donationTotal.add(currSum);
@@ -155,26 +166,52 @@ public class ChartController {
             }
         }
 
-        List<String> yAxis = donationTotal.stream()
-                        .map(i -> Integer.toString(i))
-                        .collect(Collectors.toList());
+        System.out.println(donationTotal);
 
-        List<DataSet> dataSets = List.of(new DataSet(xAxis, yAxis, "Donation " +
-                "history"));
-        Data data = new Data(dataSets, List.of("Test"));
+        List<DataSet> dataSets = List.of(new DataSet(donationTotal,
+                List.of(REJECT_VOTE_COLOR), "Donation history"));
+        Data data = new Data(dataSets, dates);
         Chart chart = new Chart("line", data);
 
+        System.out.println(dates.size());
         ChartObject chartObject = new ChartObject(
                 "2",
                 "transparent",
-                "200",
-                "200",
+                "500",
+                "500",
                 1.0,
                 "png",
                 chart);
 
         ChartService chartService = new ChartService();
         return chartService.getChartImg(chartObject);
+    }
+
+    private List<String> donationChartXAxis(LocalDateTime start,
+                                            LocalDateTime end) {
+        if (end.equals(start) || end.isBefore(start)) {
+            throw new IllegalArgumentException("End date cannot be before " +
+                    "start date");
+        }
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd");
+
+        List<String> axis = new ArrayList<>();
+
+        long daysApart = ChronoUnit.DAYS.between(start, end);
+
+        LocalDate currDate = start.toLocalDate();
+        LocalDate endDate = end.toLocalDate();
+
+        if (daysApart < 90) {
+            while (currDate.isBefore(endDate)) {
+                axis.add(formatter.format(currDate));
+                currDate = currDate.plusDays(1);
+            }
+        } else {
+            
+        }
+        return axis;
     }
 
     private List<Integer> getVoteData (List<Vote>voteList) {
