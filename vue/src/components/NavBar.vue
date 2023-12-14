@@ -8,8 +8,8 @@
     <div class="navbar-start">
       <router-link class="navbar-item" v-bind:to="{ name: 'home' }">Home</router-link>
       <!-- Uncomment section below when presenting/releasing to production for better design -->
-      <!-- </div>
-    <div class="navbar-end"> -->
+    </div>
+    <div class="navbar-end">
       <dark-mode-toggle class="navbar-item"></dark-mode-toggle>
       <router-link class="navbar-item" :to="{ name: 'MyAccountView', params: { id: $store.state.user.id } }"
         v-if="$store.state.token != ''">My Account</router-link>

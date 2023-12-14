@@ -1,6 +1,6 @@
 <template>
   <div class="loading">
-    <img src="../assets/ms_paint_loading_screen.gif" width="250">
+    <!-- <img src="../assets/ms_paint_loading_screen.gif" width="250"> -->
   </div>
 </template>
 

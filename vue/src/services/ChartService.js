@@ -5,5 +5,12 @@ export default {
         'Authorization': 'Bearer ' + token
       }
     });
+  },
+  getCampaignChart(campaignId, token) {
+    return fetch(`${import.meta.env.VITE_REMOTE_API}/campaigns/${campaignId}/chart`, {
+      headers: {
+        'Authorization': 'Bearer ' + token
+      }
+    });
   }
 }

@@ -29,31 +29,37 @@ VALUES
 200000, '2023-06-22 19:10:25', '2024-06-23 19:10:25', true),
 ('World''s Most Burnt Pizza', 'Support our quest for the Worlds Most Burnt Pizza! 🔥🍕 Help us turn culinary mishaps into a triumph. Your contribution fuels our crispy endeavors, and backers enjoy exclusive access to our charred creations. Let''s redefine perfection – back us now! #BurntPizzaMasterpiece',
 50000, '2023-06-22 19:10:25', '2024-06-23 19:10:25', true),
-('Support for Nemo''s PHD', 'Help Fred''s Fish Get a Degree! Fred, our goldfish, dreams of being a marine biologist. We''re raising funds for an underwater university for Fred. With your support, he''ll dive into a world of knowledge. Let''s make Fred''s aquatic dreams come true! 🐟🎓 #FishyPhD',
+('Support for Fred''s PHD', 'Help our Fish Get a Degree! Fred, our goldfish, dreams of being a marine biologist. We''re raising funds for an underwater university for Fred. With your support, he''ll dive into a world of knowledge. Let''s make Fred''s aquatic dreams come true! 🐟🎓 #FishyPhD',
 5000000, '2023-06-22 19:10:25', '2024-06-23 19:10:25', true);
 
 INSERT INTO campaign_manager (campaign_id, manager_id, creator) VALUES
 (1, 1, true),
-(1, 2, false),
 (2, 3, true),
+(2, 2, false),
 (3, 1, true),
 (4, 3, true);
 
 INSERT INTO donation (donor_id, campaign_id, donation_amount, donation_date, donation_comment, refunded, anonymous) VALUES
 (1, 1, 5000, '2023-12-11 20:00:00','Happy to help!', false, false),
-(1, 2, 500, '2023-11-30 20:00:00','Might be interesting...', false, false),
 (2, 1, 5000, '2023-12-11 20:00:00','Going all in!', false, true),
 (3, 1, 5000, '2023-12-11 20:00:00','Love it!', false, false),
-(4, 2, 5000, '2024-06-22 20:00:00','It''s cool to be able to support in a real way with my money in this fashion!', false, true);
+(4, 1, 5000, '2023-12-11 20:00:00','Cool beans!', false, false),
+(4, 1, 20000, '2023-12-11 20:00:00','This better take off...', false, false),
+(5, 1, 10000, '2023-12-11 20:00:00','', false, false),
+(4, 2, 5000, '2024-06-22 20:00:00','Rocks Rock!', false, true),
+(1, 2, 1000, '2023-11-30 20:00:00','Might be interesting...', false, false);
 
 INSERT INTO spend_request (campaign_id, request_amount, request_name, request_description, request_approved, end_date) VALUES
-(1, 2000,'I''m going to waste this money', 'some monies', false, '2025-06-22 19:10:25'), --id 1
+(1, 30000,'I bet a little too much on the ponies...', 'Just need some help with my very normal addiction. The hotdog will come soon enough!', false, '2025-06-22 19:10:25'), --id 1
 (1, 1500,'Throwin away some more lol', 'more money', false, '2026-06-22 19:10:25'), --id 2
 (2, 2100, 'I need a new car','cash', false, '2026-06-22 19:10:25'); --id 3
 
 INSERT INTO vote (donor_id, request_id, vote_approved) VALUES
 --invalid vote, because this is a manager (1, 1, true),
-(3, 1, true),
+(2, 1, true),
+(3, 1, false),
+(4, 1, false),
+(5, 1, true),
 (4, 3, true);
 --invalid vote, because this is not a donor to the campaign (4, 1, true)
 
