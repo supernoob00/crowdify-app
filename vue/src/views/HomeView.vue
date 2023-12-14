@@ -14,7 +14,7 @@
 
 <script>
 import CampaignList from '../components/CampaignList.vue';
-import campaignService from '../services/CampaignService'
+import CampaignService from '../services/CampaignService'
 import LoadingScreen from '../components/LoadingScreen.vue';
 export default {
   components: {
@@ -30,10 +30,10 @@ export default {
   methods: {
     async retrieveCampaigns() {
       try {
-        const response = await campaignService.listCampaigns();
+        const response = await CampaignService.listCampaigns();
         this.campaigns = response.data;
       } catch (error) {
-        campaignService.handleErrorResponse(this.$store, error, 'getting', 'campaigns');
+        CampaignService.handleErrorResponse(this.$store, error, 'getting', 'campaigns');
       } finally {
         this.isLoading = false;
       }
