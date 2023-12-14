@@ -15,7 +15,7 @@
 
       <router-link class="navbar-item" :to="{ name: 'MyAccountView', params: { id: $store.state.user.id } }"
         v-if="$store.state.token != ''">My Account</router-link>
-      <div v-if="$store.state.user.username" class="navbar-item">{{ $store.state.user.username }}</div>
+      <div v-if="$store.state.user.username" class="navbar-item"> Hi, {{ $store.state.user.username }}!</div>
       <div class="buttons">
         <div class="navbar-item">
           <router-link class="button is-primary" v-bind:to="{ name: 'register' }" v-if="$store.state.token === ''">Sign
