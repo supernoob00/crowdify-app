@@ -9,8 +9,6 @@
       </div>
     </div>
     <div class="navbar-start">
-      <!-- <router-link class="navbar-item" v-bind:to="{ name: 'home' }">Home</router-link> -->
-      <!-- Uncomment section below when presenting/releasing to production for better design -->
     </div>
     <div class="navbar-end">
       <dark-mode-toggle class="navbar-item"></dark-mode-toggle>

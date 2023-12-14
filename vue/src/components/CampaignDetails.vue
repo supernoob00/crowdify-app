@@ -91,7 +91,6 @@ import CampaignService from '../services/CampaignService';
 import LoadingScreen from './LoadingScreen.vue';
 import Util from '../services/Util';
 import ChartService from '../services/ChartService';
-import CreateDonationView from '../views/CreateDonationView.vue';
 
 export default {
   components: {
