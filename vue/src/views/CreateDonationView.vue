@@ -20,8 +20,7 @@ export default {
       editDonation: {
         id: -1,
         campaignId: parseInt(this.$route.params.id),
-        comment: 'Test Comment', // should be empty string by default
-        amount: 10
+        comment: '',
       },
       campaign: {},
       isLoading: true,

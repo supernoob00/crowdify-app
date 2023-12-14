@@ -109,11 +109,11 @@ public class ChartController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Campaign" +
                     " not found");
                 });
-        LocalDateTime start = LocalDateTime.now().minusDays(30);
+        LocalDateTime start = LocalDateTime.now().minusDays(28);
 
         // create x-axis, which is the number of days since the campaign
         // start date
-        List<String> dates = donationChartXAxis(start, LocalDateTime.now());
+        List<String> dates = donationChartXAxis(start, LocalDateTime.now().plusDays(2));
 
         // create the y-axis, which is the sum of all donations up to the
         // specific day on the x-axis

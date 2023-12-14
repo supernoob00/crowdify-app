@@ -57,8 +57,7 @@
         <button class="button is-light" @click.prevent="resetAddForm">Reset Form</button>
       </div>
       <div class="control">
-        <button class="button is-danger"
-          @click.prevent="$router.push({ name: 'CampaignView', params: { id: campaign.id } })">Cancel</button>
+        <button class="button is-danger" @click.prevent="cancelForm">Cancel</button>
       </div>
     </div>
   </form>
@@ -173,6 +172,13 @@ export default {
         public: false,
       }
     },
+    cancelForm() {
+      if (this.campaign.id === -1) {
+        this.$router.push({ name: 'home' });
+      } else {
+        this.$router.push({ name: 'CampaignView', params: { id: this.campaign.id } });
+      }
+    }
   }
 
 }
