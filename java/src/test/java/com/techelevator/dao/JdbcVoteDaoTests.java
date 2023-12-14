@@ -1,5 +1,6 @@
 package com.techelevator.dao;
 
+import com.techelevator.exception.DaoException;
 import com.techelevator.model.NewVoteDto;
 import com.techelevator.model.UpdateVoteDto;
 import com.techelevator.model.Vote;
@@ -7,8 +8,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
-
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,6 +31,15 @@ public class JdbcVoteDaoTests extends BaseDaoTests{
         Assert.assertEquals(retrievedVote.orElseThrow(), createdVote);
     }
 
+    @Test (expected = DaoException.class)
+    public void createSpendRequest_throws_exception_given_invalid_data() {
+        NewVoteDto voteToCreate = new NewVoteDto();
+        voteToCreate.setDonorId(-1);
+        voteToCreate.setRequestId(-1);
+        voteToCreate.setVoteApproved(false);
+        sut.createVote(voteToCreate);
+    }
+
     @Test
     public void managers_of_campaigns_can_vote_for_spend_reqs_of_campaigns_they_do_not_manage() {
         Optional<Vote> vote = sut.getVoteByDonorAndRequestId(1,2);
@@ -43,6 +51,12 @@ public class JdbcVoteDaoTests extends BaseDaoTests{
         Optional<Vote> vote = sut.getVoteByDonorAndRequestId(1,2);
         Assert.assertTrue(vote.isPresent());
         Assert.assertEquals(vote.get(), VOTE_1);
+    }
+
+    @Test
+    public void getVoteByDonorAndRequestId_returns_empty_given_invalid_data() {
+        Optional<Vote> vote = sut.getVoteByDonorAndRequestId(-1,-1);
+        Assert.assertTrue(vote.isEmpty());
     }
 
     @Test
@@ -83,6 +97,16 @@ public class JdbcVoteDaoTests extends BaseDaoTests{
         Assert.assertEquals(retrievedVote.orElseThrow(), updatedVote);
     }
 
+    @Test (expected = Exception.class)
+    public void changeVote_throws_exception_given_invalid_data() {
+        UpdateVoteDto voteToChange = new UpdateVoteDto();
+        voteToChange.setApproved(false);
+        voteToChange.setUserId(-1);
+        voteToChange.setRequestId(-1);
+
+        sut.changeVote(voteToChange);
+    }
+
     @Test
     public void deleteVoteById_deletes_vote_given_a_valid_donor_id() {
         boolean affected = sut.deleteVoteById(USER_4.getId(), REQUEST_2.getId());
@@ -90,6 +114,12 @@ public class JdbcVoteDaoTests extends BaseDaoTests{
 
         Optional<Vote> deletedVote = sut.getVoteByDonorAndRequestId(4,2);
         Assert.assertTrue(deletedVote.isEmpty());
+    }
+
+    @Test
+    public void deleteVoteById_fails_when_given_invalid_donor_and_request_id() {
+        boolean affected = sut.deleteVoteById(-1, -1);
+        Assert.assertFalse(affected);
     }
 
     @Test
