@@ -1,7 +1,7 @@
 <template>
   <router-link :to="{ name: 'CampaignView', params: { id: campaign.id } }">
     <div class="box campaign">
-      <p class="has-text-weight-medium">{{ campaign.name }}</p>
+      <p class="title is-6">{{ campaign.name }}</p>
       <p>${{ campaignFundingGoal }} Goal</p>
       <p class="is-italic fund-percent has-text-success">{{ `${campaignPercentage}% funded` }}</p>
     </div>
@@ -30,7 +30,7 @@ export default {
 
 <style scoped>
 .campaign {
-  min-width: 150px;
+  width: 225px;
 }
 
 a:link,
