@@ -140,7 +140,7 @@ export default {
       if ((this.approvedVotes.length + this.disapprovedVotes.length) === 0) {
         return 0;
       }
-      return this.approvedVotes.length / (this.disapprovedVotes.length + this.approvedVotes.length) * 100
+      return Math.trunc(this.approvedVotes.length / (this.disapprovedVotes.length + this.approvedVotes.length) * 100)
     },
     approvedButtonClass() {
       return { button: true, 'is-success': this.editVote.approved };
