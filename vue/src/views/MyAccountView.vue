@@ -3,7 +3,7 @@
     <h1>My Account</h1>
     <loading-screen v-if="isLoading"></loading-screen>
     <div class="body" v-else>
-      <section class="donations-section">
+      <section class="mr-5">
         <h3>My Donations</h3>
         <user-donation-display v-for="donation in donations" :key="donation.id"
           :donation="donation"></user-donation-display>
@@ -86,10 +86,6 @@ export default {
 </script>
 
 <style scoped>
-.donations-section {
-  min-width: 35%;
-}
-
 .campaigns-section {
   display: flex;
 }
