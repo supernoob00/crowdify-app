@@ -99,12 +99,11 @@ hr {
   transform: translateY(5px);
 }
 
-<<<<<<< HEAD
 .box {
   background-color: #F5F5F5;
-=======
+}
+
 .label {
   color: var(--font-color);
->>>>>>> 0571c23dfaeaa8d151645cf1fa84cd1f2fa70a80
 }
 </style>

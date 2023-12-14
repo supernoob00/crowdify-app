@@ -1,9 +1,11 @@
 package com.techelevator.controller;
 
 import com.techelevator.dao.JdbcCampaignDao;
+import com.techelevator.dao.JdbcDonationDao;
 import com.techelevator.dao.JdbcUserDao;
 import com.techelevator.dao.JdbcVoteDao;
 import com.techelevator.model.Campaign;
+import com.techelevator.model.Donation;
 import com.techelevator.model.Vote;
 import com.techelevator.service.ChartService;
 import com.techelevator.servicemodel.*;
@@ -11,14 +13,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.time.temporal.ChronoUnit;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -35,10 +38,14 @@ public class ChartController {
 
     private final JdbcVoteDao jdbcVoteDao;
     private final JdbcCampaignDao jdbcCampaignDao;
+    private final JdbcDonationDao jdbcDonationDao;
 
-    public ChartController(JdbcVoteDao jdbcVoteDao, JdbcCampaignDao jdbcCampaignDao) {
+    public ChartController(JdbcVoteDao jdbcVoteDao,
+                           JdbcCampaignDao jdbcCampaignDao,
+                           JdbcDonationDao jdbcDonationDao) {
         this.jdbcVoteDao = jdbcVoteDao;
         this.jdbcCampaignDao = jdbcCampaignDao;
+        this.jdbcDonationDao = jdbcDonationDao;
     }
 
     @GetMapping(value = "/spend-requests/{requestId}/chart", produces = MediaType.IMAGE_PNG_VALUE)
@@ -91,7 +98,8 @@ public class ChartController {
                 "200",
                 "200",
                 1.0,
-                "png", chart);
+                "png",
+                chart);
 
         ChartService chartService = new ChartService();
         return chartService.getChartImg(chartObject);
@@ -100,13 +108,73 @@ public class ChartController {
     @GetMapping(value = "/campaigns/{campaignId}/chart", produces = MediaType.IMAGE_PNG_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public byte[] getLineChartByCampaign(@PathVariable int campaignId) {
-        Campaign campaign =
+        Campaign campaign = jdbcCampaignDao.getCampaignById(campaignId).orElseThrow(() -> {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Campaign" +
+                    " not found");
+                });
+
+        // get number of days between campaign start date and end date if it
+        // has already passed, or the current date
+        long numOfDays;
+        if (campaign.getEndDate().isBefore(LocalDateTime.now())) {
+            numOfDays = ChronoUnit.DAYS.between(campaign.getStartDate(),
+                    campaign.getEndDate());
+        } else {
+            numOfDays = ChronoUnit.DAYS.between(campaign.getStartDate(),
+                    LocalDateTime.now());
+        }
+
+        // create x-axis, which is the number of days since the campaign
+        // start date
         List<Integer> xAxis = new ArrayList<>();
-        int numOfDays;
+        for (int i = 0; i < numOfDays; i++) {
+            xAxis.add(i);
+        }
 
-        if ()
+        // create the y-axis, which is the sum of all donations up to the
+        // specific day on the x-axis
+        List<Integer> donationTotal = new ArrayList<>();
 
-        for ()
+        // sort the donations by date (earliest to latest)
+        List<Donation> donations = jdbcDonationDao.getDonationsByCampaignId(campaignId);
+        donations.sort(Comparator.comparing(Donation::getDate));
+
+        // populate y-axis with values
+        Iterator<Donation> donationIt = donations.iterator();
+        Donation currDonation = donationIt.hasNext() ? donationIt.next() : null;
+        int currSum = 0;
+
+        for (int i = 0; i < xAxis.size(); ) {
+            if (donationIt.hasNext() && ChronoUnit.DAYS.between(campaign.getStartDate(),
+                    currDonation.getDate()) == i) {
+                currSum += currDonation.getAmount();
+                currDonation = donationIt.next();
+            } else {
+                donationTotal.add(currSum);
+                i++;
+            }
+        }
+
+        List<String> yAxis = donationTotal.stream()
+                        .map(i -> Integer.toString(i))
+                        .collect(Collectors.toList());
+
+        List<DataSet> dataSets = List.of(new DataSet(xAxis, yAxis, "Donation " +
+                "history"));
+        Data data = new Data(dataSets, List.of("Test"));
+        Chart chart = new Chart("line", data);
+
+        ChartObject chartObject = new ChartObject(
+                "2",
+                "transparent",
+                "200",
+                "200",
+                1.0,
+                "png",
+                chart);
+
+        ChartService chartService = new ChartService();
+        return chartService.getChartImg(chartObject);
     }
 
     private List<Integer> getVoteData (List<Vote>voteList) {
