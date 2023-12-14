@@ -84,7 +84,7 @@
 <script>
 import DonationDisplay from './DonationDisplay.vue';
 import SpendRequestDisplay from './SpendRequestDisplay.vue';
-import campaignService from '../services/CampaignService';
+import CampaignService from '../services/CampaignService';
 import LoadingScreen from './LoadingScreen.vue';
 import Util from '../services/Util';
 
@@ -162,7 +162,7 @@ export default {
       }
       this.isLoading = true;
       try {
-        const response = await campaignService.deleteCampaign(this.campaign.id);
+        const response = await CampaignService.deleteCampaign(this.campaign.id);
         if (response.status === 204) {
           this.$store.commit('SET_NOTIFICATION', {
             message: 'Deleted Campaign! Any outstanding donations associated have been refunded to the donors',
@@ -171,7 +171,7 @@ export default {
           this.$router.push({ name: 'home' })
         }
       } catch (error) {
-        campaignService.handleErrorResponse(this.$store, error, 'deleting', 'campaign');
+        CampaignService.handleErrorResponse(this.$store, error, 'deleting', 'campaign');
       } finally {
         this.isLoading = false;
       }

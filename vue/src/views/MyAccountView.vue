@@ -32,7 +32,7 @@
 
 <script>
 import UserDonationDisplay from '../components/UserDonationDisplay.vue';
-import campaignService from '../services/CampaignService';
+import CampaignService from '../services/CampaignService';
 import LoadingScreen from '../components/LoadingScreen.vue';
 import CampaignCard from '../components/CampaignCard.vue';
 export default {
@@ -62,18 +62,18 @@ export default {
   methods: {
     async getMyDonations() {
       try {
-        const response = await campaignService.getDonationsByUser(this.currentUser.id);
+        const response = await CampaignService.getDonationsByUser(this.currentUser.id);
         this.donations = response.data;
       } catch (error) {
-        campaignService.handleErrorResponse(this.$store, error, 'getting', 'user donations');
+        CampaignService.handleErrorResponse(this.$store, error, 'getting', 'user donations');
       }
     },
     async getMyCampaigns() {
       try {
-        const response = await campaignService.getCampaignsUserManages(this.currentUser.id);
+        const response = await CampaignService.getCampaignsUserManages(this.currentUser.id);
         this.myCampaigns = response.data;
       } catch (error) {
-        campaignService.handleErrorResponse(this.$store, error, 'getting', 'user campaigns');
+        CampaignService.handleErrorResponse(this.$store, error, 'getting', 'user campaigns');
       }
     }
   },
@@ -91,7 +91,7 @@ export default {
 }
 
 .campaigns-section {
-  display: flex;  
+  display: flex;
 }
 
 .campaigns {

@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import campaignService from '../services/CampaignService';
+import CampaignService from '../services/CampaignService';
 import LoadingScreen from '../components/LoadingScreen.vue';
 import DonationForm from '../components/DonationForm.vue';
 export default {
@@ -35,12 +35,12 @@ export default {
   methods: {
     async getCampaign() {
       try {
-        const response = await campaignService.getCampaign(this.campaignId);
+        const response = await CampaignService.getCampaign(this.campaignId);
         if (response.status === 200) {
           this.campaign = response.data;
         }
       } catch (error) {
-        campaignService.handleErrorResponse(this.$store, error, 'getting', 'campaign');
+        CampaignService.handleErrorResponse(this.$store, error, 'getting', 'campaign');
       } finally {
         this.isLoading = false;
       }
