@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import campaignService from '../services/CampaignService';
+import CampaignService from '../services/CampaignService';
 import LoadingScreen from './LoadingScreen.vue';
 export default {
   components: {
@@ -77,14 +77,14 @@ export default {
       }
       this.isLoading = true;
       try {
-        const response = await campaignService.createDonation(this.newDonationDto);
+        const response = await CampaignService.createDonation(this.newDonationDto);
         if (response.status === 201) {
           this.$store.commit('SET_NOTIFICATION', { message: 'Created Donation!', type: 'success' })
           this.resetAddForm();
           this.$router.push({ name: 'CampaignView', params: { id: this.editDonation.campaignId } })
         }
       } catch (error) {
-        campaignService.handleErrorResponse(this.$store, error, 'creating', 'donation');
+        CampaignService.handleErrorResponse(this.$store, error, 'creating', 'donation');
       } finally {
         this.isLoading = false;
       }

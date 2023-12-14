@@ -9,7 +9,7 @@
 <script>
 import SpendRequestForm from '../components/SpendRequestForm.vue';
 import LoadingScreen from '../components/LoadingScreen.vue';
-import campaignService from '../services/CampaignService';
+import CampaignService from '../services/CampaignService';
 export default {
   components: {
     SpendRequestForm,
@@ -32,12 +32,12 @@ export default {
   methods: {
     async getSpendRequest() {
       try {
-        const response = await campaignService.getSpendRequestById(this.campaignId, this.spendRequestId);
+        const response = await CampaignService.getSpendRequestById(this.campaignId, this.spendRequestId);
         this.spendRequestToEdit = response.data;
         this.spendRequestToEdit.amount /= 100;
         this.spendRequestToEdit.endDate = this.spendRequestToEdit.endDate.slice(0, 10);
       } catch (error) {
-        campaignService.handleErrorResponse(this.$store, error, 'getting', 'spendRequest');
+        CampaignService.handleErrorResponse(this.$store, error, 'getting', 'spendRequest');
         this.$router.push({ name: 'SpendRequestView', params: { campaignId: this.campaignId, spendRequestId: this.spendRequestId } });
       } finally {
         this.isLoading = false;
