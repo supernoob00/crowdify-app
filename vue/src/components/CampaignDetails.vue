@@ -78,7 +78,9 @@
           :spend-request="spendRequest"></spend-request-display>
       </section>
     </div>
-    <img :src="campaignChart" alt="">
+    <div class="box">
+      <img :src="campaignChart" alt="">
+    </div>
   </div>
 </template>
 
