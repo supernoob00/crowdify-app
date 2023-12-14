@@ -18,7 +18,6 @@ public class JdbcDonationDaoTests extends BaseDaoTests {
     @Before
     public void setup() {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-        JdbcUserDao userDao = new JdbcUserDao(jdbcTemplate);
         sut = new JdbcDonationDao(jdbcTemplate);
     }
 
@@ -36,14 +35,13 @@ public class JdbcDonationDaoTests extends BaseDaoTests {
 
     // TODO: test not needed right now
     @Test
-    public void getDonations_returns_all_donations() {
-//        List<Donation> donations = sut.getDonations();
-//
-//        Assert.assertNotNull(donations);
-//        Assert.assertEquals(3, donations.size());
-//        Assert.assertEquals(DONATION_1, donations.get(0));
-//        Assert.assertEquals(DONATION_2, donations.get(1));
-//        Assert.assertEquals(DONATION_3, donations.get(2));
+    public void getDonationsByCampaignId_returns_all_donations_for_valid_campaign_id() {
+        List<Donation> donations = sut.getDonationsByCampaignId(CAMPAIGN_1.getId());
+
+        Assert.assertNotNull(donations);
+        Assert.assertEquals(2, donations.size());
+        Assert.assertEquals(DONATION_1, donations.get(0));
+        Assert.assertEquals(DONATION_5, donations.get(1));
     }
 
     @Test
@@ -86,6 +84,19 @@ public class JdbcDonationDaoTests extends BaseDaoTests {
 
         Optional<Donation> retrievedDonation = sut.getDonationById(updatedDonation.getDonationId());
         Assert.assertEquals(retrievedDonation.orElseThrow(), updatedDonation);
+    }
+
+    @Test (expected = DaoException.class)
+    public void updateDonation_throws_exception_given_invalid_data() {
+        UpdateDonationDto donation = new UpdateDonationDto(
+                1,
+                -1000,
+                "Test",
+                false
+        );
+        Optional<Donation> updatedDonation = Optional.ofNullable(sut.updateDonation(donation, 1));
+        Assert.assertTrue(updatedDonation.isEmpty());
+
     }
 
     @Test
