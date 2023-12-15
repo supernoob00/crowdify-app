@@ -1,6 +1,6 @@
 <template>
   <div class="content container">
-    <h1>Edit SpendRequest</h1>
+    <h1>Edit Spend Request</h1>
     <loading-screen v-if="isLoading"></loading-screen>
     <spend-request-form v-else :spend-request="spendRequestToEdit"></spend-request-form>
   </div>
