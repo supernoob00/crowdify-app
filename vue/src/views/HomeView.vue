@@ -2,11 +2,12 @@
   <div class="home">
     <loading-screen v-if="isLoading"></loading-screen>
     <div v-else class="content">
+      <all-campaigns-info :campaigns="campaigns"></all-campaigns-info>
       <header class="header">
+        <h3 class="is-size-2">Campaigns</h3>
         <router-link :to="{ name: 'CreateCampaignView' }" class="button is-link"><i
             class="fa-solid fa-plus"></i>Campaign</router-link>
       </header>
-      <all-campaigns-info :campaigns="campaigns"></all-campaigns-info>
       <campaign-list :campaigns="campaigns"></campaign-list>
     </div>
   </div>

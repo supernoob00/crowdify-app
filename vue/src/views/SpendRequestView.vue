@@ -36,7 +36,7 @@
           <hr width="120px">
           <p>{{ spendRequest.description }}</p>
         </div>
-        <div id="vote-box" class="column box">
+        <div id="vote-box" class="column box vote-container">
           <div class="sr-header block">
             <div>
               <h3>Votes</h3>
@@ -282,9 +282,16 @@ export default {
   margin: 10px;
 }
 
+.vote-container {
+  padding-left: 36px;
+  padding-right: 36px;
+}
+
 .sr-header {
   display: flex;
   justify-content: space-between;
+  align-items: start;
+  padding-right: 15%;
 }
 
 .sr-header .buttons>* {

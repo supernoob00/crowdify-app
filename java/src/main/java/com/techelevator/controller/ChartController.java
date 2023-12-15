@@ -142,7 +142,7 @@ public class ChartController {
         }
 
         List<DataSet> dataSets = List.of(new DataSet(donationTotal,
-                List.of("rgb(34,139,34)"), "Donation history"));
+                List.of("rgb(34,139,34)"), "Donation History"));
         Data data = new Data(dataSets, dates);
         Chart chart = new Chart("line", data);
 

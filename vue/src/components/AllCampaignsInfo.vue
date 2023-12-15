@@ -1,7 +1,19 @@
 <template>
-    <div class="box campaign">
-      <p class="title is-6">{{ totalCampaignCount }} campaigns funded</p>
-      <p>{{ totalDonations }}</p>
+    <div class="box info">
+      <div class="info-card">
+        <span class="title is-1">{{ totalCampaignCount }}</span>
+        <span class="title is-5">Campaigns Funded</span>
+      </div>
+      <div class="vertical-line"></div>
+      <div class="info-card">
+        <span class="title is-1">${{ totalDonations }}</span>
+        <span class="title is-5">In Donations</span>
+      </div>
+      <div class="vertical-line"></div>
+      <div class="info-card">
+        <span class="title is-1">{{ numberOfDonations }}</span>
+        <span class="title is-5">Times Donated</span>
+      </div>
     </div>
 </template>
 
@@ -20,10 +32,11 @@ export default {
                 .map(cam => cam.donations)
                 .flatMap(donos => donos)
                 .map(dono => dono.amount)
-                .reduce((total, dono) => total + dono, 0);
+                .reduce((total, dono) => total + dono, 0) / 100;
     },
     numberOfDonations() {
-        return this.campaigns.map(cam => cam.donations)
+        return this.campaigns
+                .map(cam => cam.donations)
                 .reduce((count, donos) => count + donos.length, 0);
     }
   },
@@ -34,3 +47,21 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+  .info {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 32px;
+  }
+
+  .vertical-line {
+    border-left: thick solid lightgray;
+  }
+
+  .info-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+</style>

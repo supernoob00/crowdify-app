@@ -19,7 +19,7 @@
     </div>
 
     <div class="campaign-owner-info">
-      <div>
+      <div class="is-size-4">
         <span>Created by </span>
         <span class="campaign-creator">{{ campaign.creator.username }}</span>
       </div>
@@ -31,7 +31,7 @@
       </div>
     </div>
 
-    <h5>From {{ viewDates.startDate }} to {{ viewDates.endDate }}</h5>
+    <h5 class="has-text-weight-normal">From {{ viewDates.startDate }} to {{ viewDates.endDate }}</h5>
 
     <hr>
     <div class="columns mt-2">
@@ -78,9 +78,9 @@
           :spend-request="spendRequest"></spend-request-display>
       </section>
     </div>
-    <div class="box">
-      <img :src="campaignChart" alt="">
-    </div>
+      <div class="box chart-container">
+        <img :src="campaignChart" alt="">
+      </div>
   </div>
 </template>
 
@@ -153,10 +153,10 @@ export default {
     },
     viewDates() {
       const uptoDateIndex = 10;
-      const uptoTimeIndex = 16;
+      const uptoTimeIndex = 10;
       return {
-        startDate: this.campaign.startDate.slice(0, uptoDateIndex),
-        endDate: this.campaign.endDate.slice(0, uptoTimeIndex) // TODO: change slice index
+        startDate: this.campaign.startDate.slice(0, uptoDateIndex).replaceAll("-", "/"),
+        endDate: this.campaign.endDate.slice(0, uptoTimeIndex).replaceAll("-", "/") // TODO: change slice index
       }
     }
   },
@@ -265,5 +265,11 @@ export default {
 
 .spend-requests>h2 {
   margin-bottom: 41px;
+}
+
+.chart-container {
+  display:flex;
+  justify-content: center;
+  max-width: 500px;
 }
 </style>

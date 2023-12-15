@@ -1,9 +1,9 @@
 <template>
   <div class="content">
-    <h1>My Account</h1>
+    <h1 class="is-size-2">My Account</h1>
     <loading-screen v-if="isLoading"></loading-screen>
     <div class="body" v-else>
-      <section class="mr-5">
+      <section class="donations">
         <h3>My Donations</h3>
         <user-donation-display v-for="donation in donations" :key="donation.id"
           :donation="donation"></user-donation-display>
@@ -14,7 +14,7 @@
           <div class="campaigns block">
             <campaign-card v-for="campaign in publicOwnedCampaigns" :key="campaign.id"
               :campaign="campaign"></campaign-card>
-            <span v-if="publicOwnedCampaigns.length === 0">You have no public campaigns</span>
+            <span v-if="publicOwnedCampaigns.length === 0">You have no public campaigns.</span>
           </div>
         </div>
         <div class="campaign-collection">
@@ -22,7 +22,7 @@
           <div class="campaigns block">
             <campaign-card v-for="campaign in privateOwnedCampaigns" :key="campaign.id"
               :campaign="campaign"></campaign-card>
-            <span v-if="privateOwnedCampaigns.length === 0">You have no private campaigns</span>
+            <span v-if="privateOwnedCampaigns.length === 0">You have no private campaigns.</span>
           </div>
         </div>
       </section>
@@ -86,6 +86,9 @@ export default {
 </script>
 
 <style scoped>
+.donations {
+  margin-right: 96px;
+}
 .campaigns-section {
   display: flex;
 }
@@ -93,17 +96,15 @@ export default {
 .campaigns {
   display: flex;
   flex-direction: column;
-  margin-right: 20px;
   flex-wrap: wrap;
   column-gap: 20px;
   row-gap: 25px;
   justify-content: flex-start;
-  align-items: center;
 }
 
 .campaign-collection {
   margin-bottom: 36px;
-  margin-right: 36px;
+  margin-right: 72px;
 }
 
 .body {
