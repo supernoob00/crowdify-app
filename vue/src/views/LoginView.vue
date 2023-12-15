@@ -10,7 +10,7 @@
         <div role="alert" v-if="this.$route.query.registration">
           Thank you for registering, please sign in.
         </div>
-        <div class="field">
+        <div class="field mt-6">
           <label class="label">Username</label>
           <div class="control">
             <input type="text" class="input" v-model="user.username" required autofocus />
