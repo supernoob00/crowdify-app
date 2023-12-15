@@ -1,6 +1,6 @@
 <template>
   <div class="content container">
-    <h1>Create SpendRequest</h1>
+    <h1>Create Spend Request</h1>
     <spend-request-form :spend-request="newSpendRequest"></spend-request-form>
   </div>
 </template>
