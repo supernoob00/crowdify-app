@@ -1,7 +1,6 @@
 <template>
   <div class="home-view">
     <div class="campaign-collection">
-      <h3>Public Campaigns</h3>
       <div class="campaigns">
         <campaign-card v-for="campaign in publicNotOwnedCampaigns" :key="campaign.id"
           :campaign="campaign"></campaign-card>
@@ -56,19 +55,17 @@ export default {
 </script>
 
 <style scoped>
-.home-view {
+/* .home-view {
   display: flex;
-}
+} */
 
 .content {
   display: flex;
-  flex-direction: column;
   justify-content: space-between;
 }
 
 .campaigns {
   display: flex;
-  flex-direction: column;
   margin-right: 20px;
   flex-wrap: wrap;
   column-gap: 20px;

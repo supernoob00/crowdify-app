@@ -2,7 +2,9 @@
   <div class="home">
     <loading-screen v-if="isLoading"></loading-screen>
     <div v-else class="content">
+      <all-campaigns-info :campaigns="campaigns"></all-campaigns-info>
       <header class="header">
+        <h3 class="is-size-2">Campaigns</h3>
         <router-link :to="{ name: 'CreateCampaignView' }" class="button is-link"><i
             class="fa-solid fa-plus"></i>Campaign</router-link>
       </header>
@@ -15,10 +17,12 @@
 import CampaignList from '../components/CampaignList.vue';
 import CampaignService from '../services/CampaignService'
 import LoadingScreen from '../components/LoadingScreen.vue';
+import AllCampaignsInfo from '../components/AllCampaignsInfo.vue';
 export default {
   components: {
     CampaignList,
-    LoadingScreen
+    LoadingScreen,
+    AllCampaignsInfo
   },
   data() {
     return {
