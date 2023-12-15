@@ -23,7 +23,7 @@
         <span>Created by </span>
         <span class="campaign-creator">{{ campaign.creator.username }}</span>
       </div>
-      <div v-if="this.campaign.managers.length > 1">
+      <div class="is-size-4" v-if="this.campaign.managers.length > 1">
         <!--TODO: This is hideous, change it later to use flexbox-->
         <span>&nbsp;|&nbsp;</span>
         <span v-if="this.campaign.managers.length > 0">Other owners: </span>
