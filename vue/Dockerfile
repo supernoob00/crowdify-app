@@ -21,4 +21,4 @@ RUN npm run build
 
 EXPOSE 5173
 
-ENTRYPOINT ["npm", "run", "dev"]
+ENTRYPOINT ["npm", "run", "start"]
