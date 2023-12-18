@@ -1,4 +1,4 @@
-import { createRouter as createRouter, createWebHistory } from 'vue-router'
+import { createRouter as createRouter, createWebHashHistory } from 'vue-router'
 import { useStore } from 'vuex'
 
 import HomeView from '../views/HomeView.vue';
@@ -125,7 +125,7 @@ const routes = [
 
 // Create the router
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHashHistory(),
   routes: routes
 });
 
